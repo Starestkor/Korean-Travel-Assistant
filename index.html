@@ -1,663 +1,626 @@
 
-
-<!DOCTYPE html>
-<!-- Defines this document as HTML. -->
-<html lang="en">
-<!-- Sets the primary interface language to English. -->
-
-<head>
-    <!-- Starts browser settings. -->
-    <meta charset="UTF-8">
-    <!-- Supports Korean and other languages. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Makes the interface responsive on mobile devices. -->
-    <title>Korean Travel Assistant</title>
-    <!-- Sets the browser tab title. -->
-
-    <style>
-        /* Applies consistent sizing to all elements. */
-        * { box-sizing: border-box; }
-
-        /* Styles the entire application. */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f4f5f8;
-            color: #222;
-        }
-
-        /* Styles the main heading. */
-        h1 { text-align: center; font-size: 25px; }
-
-        /* Styles introductory text. */
-        .description {
-            text-align: center;
-            color: #666;
-            margin-bottom: 28px;
-        }
-
-        /* Limits the content width. */
-        .container { max-width: 520px; margin: 0 auto; }
-
-        /* Sets the common button font. */
-        button { font-size: 16px; cursor: pointer; }
-
-        /* Styles the place selection buttons. */
-        .menu-button {
-            width: 100%;
-            padding: 18px;
-            margin-bottom: 12px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            text-align: left;
-        }
-
-        /* Styles the conversation panel. */
-        .chat-box {
-            background: white;
-            border-radius: 14px;
-            padding: 16px;
-            margin-top: 16px;
-        }
-
-        /* Styles individual messages. */
-        .message {
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 14px;
-            line-height: 1.6;
-        }
-
-        /* Styles staff messages. */
-        .staff { background: #edf1f8; margin-right: 18px; }
-
-        /* Styles user messages. */
-        .user { background: #e2f4e9; margin-left: 18px; }
-
-        /* Styles speaker labels. */
-        .speaker {
-            font-size: 12px;
-            font-weight: bold;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        /* Styles the English sentence. */
-        .english-text { font-size: 17px; font-weight: bold; }
-
-        /* Styles the Korean expression. */
-        .korean-text {
-            font-size: 20px;
-            font-weight: bold;
-            color: #246b43;
-            margin-top: 12px;
-        }
-
-        /* Styles the romanized Korean pronunciation. */
-        .romanization {
-            font-size: 15px;
-            color: #526b5d;
-            font-style: italic;
-            margin-top: 5px;
-        }
-
-        /* Styles the Korean expression label. */
-        .korean-label {
-            font-size: 11px;
-            color: #777;
-            margin-top: 12px;
-        }
-
-        /* Styles the answer choices container. */
-        .choices {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 18px;
-        }
-
-        /* Styles each answer choice. */
-        .choice-button {
-            padding: 14px;
-            background: white;
-            border: 1px solid #4778c7;
-            border-radius: 10px;
-            text-align: left;
-            line-height: 1.5;
-        }
-
-        /* Styles Korean text inside choices. */
-        .choice-korean {
-            display: block;
-            color: #246b43;
-            font-size: 16px;
-            margin-top: 7px;
-        }
-
-        /* Styles romanization inside choices. */
-        .choice-roman {
-            display: block;
-            color: #526b5d;
-            font-size: 13px;
-            font-style: italic;
-            margin-top: 4px;
-        }
-
-        /* Styles the voice input panels. */
-        .voice-panel {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 14px;
-            padding: 16px;
-            margin-top: 20px;
-        }
-
-        /* Styles microphone buttons. */
-        .mic-button {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            background: #263b60;
-            color: white;
-            margin-top: 10px;
-        }
-
-        /* Styles speech recognition results. */
-        .transcript {
-            background: #f4f5f8;
-            border-radius: 10px;
-            padding: 12px;
-            min-height: 45px;
-            margin-top: 12px;
-            line-height: 1.5;
-        }
-
-        /* Styles the manual text input. */
-        .text-input {
-            width: 100%;
-            padding: 13px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        /* Styles action buttons. */
-        .send-button, .restart-button, .back-button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            margin-top: 12px;
-        }
-
-        /* Styles the send button. */
-        .send-button { background: #4778c7; color: white; }
-
-        /* Styles the restart button. */
-        .restart-button { background: #263b60; color: white; }
-
-        /* Styles the back button. */
-        .back-button { background: #e5e7eb; }
-
-        /* Hides inactive screens. */
-        .hidden { display: none; }
-
-        /* Styles the completion message. */
-        .completion {
-            padding: 18px;
-            background: #e2f4e9;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        /* Styles secondary instructions. */
-        .hint { color: #666; font-size: 13px; line-height: 1.5; }
-    </style>
-</head>
-
-<body>
-    <!-- Displays the application title in English. -->
-    <h1>🇰🇷 Korean Travel Assistant</h1>
-
-    <!-- Displays the English introduction. -->
-    <p class="description">Your communication guide in Korea.</p>
-
-    <!-- Contains all application screens. -->
-    <div class="container">
-
-        <!-- Displays the place selection screen. -->
-        <div id="place-screen">
-            <h2>Choose a place</h2>
-            <button class="menu-button" onclick="openCafe()">☕ Cafe</button>
-            <button class="menu-button" onclick="showComingSoon('Restaurant')">🍽️ Restaurant</button>
-            <button class="menu-button" onclick="showComingSoon('Transportation')">🚇 Transportation</button>
-            <button class="menu-button" onclick="showComingSoon('Shopping')">🛍️ Shopping</button>
-            <button class="menu-button" onclick="showComingSoon('Accommodation')">🏨 Accommodation</button>
-        </div>
-
-        <!-- Displays cafe situations. -->
-        <div id="cafe-screen" class="hidden">
-            <h2>☕ Cafe</h2>
-            <p>What would you like to do?</p>
-            <button class="menu-button" onclick="startConversation()">🥤 Order a drink</button>
-            <button class="back-button" onclick="goHome()">← Back to places</button>
-        </div>
-
-        <!-- Displays the conversation screen. -->
-        <div id="chat-screen" class="hidden">
-            <h2>Ordering at a Cafe</h2>
-            <div id="chat-box" class="chat-box"></div>
-            <div id="choices" class="choices"></div>
-
-            <!-- Provides speech recognition for staff speech. -->
-            <div class="voice-panel">
-                <strong>🎧 Understand the staff</strong>
-                <p class="hint">Record what the staff says in Korean.</p>
-                <button class="mic-button" onclick="startListening('staff')">🎙️ Recognize staff speech</button>
-                <div id="staff-transcript" class="transcript">Staff speech will appear here.</div>
-                <button class="send-button" onclick="processStaffSpeech()">Understand staff message</button>
-            </div>
-
-            <!-- Provides speech recognition for user responses. -->
-            <div class="voice-panel">
-                <strong>🎤 Say something else</strong>
-                <p class="hint">Speak in Korean or type your own response.</p>
-                <button class="mic-button" onclick="startListening('user')">🎙️ Speak in Korean</button>
-                <div id="user-transcript" class="transcript">Your speech will appear here.</div>
-                <input id="typed-response" class="text-input" type="text" placeholder="Type your response in Korean">
-                <button class="send-button" onclick="submitUserSpeech()">Send my response</button>
-            </div>
-
-            <button class="restart-button" onclick="startConversation()">↻ Start again</button>
-            <button class="back-button" onclick="openCafe()">← Back to cafe</button>
-        </div>
-    </div>
-
-    <script>
-        // Stores the conversation data, including English, Korean, and romanization.
-        const conversation = {
-            // The staff welcomes the customer.
-            start: {
-                speaker: "staff",
-                english: "Hello! Are you ready to order?",
-                korean: "어서 오세요. 주문하시겠어요?",
-                roman: "Eoseo oseyo. Jumunhasigesseoyo?",
-                choices: [
-                    { english: "I'd like an iced Americano, please.", korean: "아이스 아메리카노 하나 주세요.", roman: "Aiseu amerikano hana juseyo.", next: "americano" },
-                    { english: "I'd like a hot latte, please.", korean: "따뜻한 라테 하나 주세요.", roman: "Ttatteuthan rate hana juseyo.", next: "latte" },
-                    { english: "I'd like something else.", korean: "다른 음료로 주문하고 싶어요.", roman: "Dareun eumryoro jumunhago sipeoyo.", next: "other-drink" }
-                ]
-            },
-
-            // The customer orders an iced Americano.
-            americano: {
-                speaker: "user",
-                english: "I'd like an iced Americano, please.",
-                korean: "아이스 아메리카노 하나 주세요.",
-                roman: "Aiseu amerikano hana juseyo.",
-                next: "size"
-            },
-
-            // The customer orders a hot latte.
-            latte: {
-                speaker: "user",
-                english: "I'd like a hot latte, please.",
-                korean: "따뜻한 라테 하나 주세요.",
-                roman: "Ttatteuthan rate hana juseyo.",
-                next: "size"
-            },
-
-            // The customer asks for another drink.
-            "other-drink": {
-                speaker: "user",
-                english: "I'd like something else.",
-                korean: "다른 음료로 주문하고 싶어요.",
-                roman: "Dareun eumryoro jumunhago sipeoyo.",
-                next: "size"
-            },
-
-            // The staff asks about the size.
-            size: {
-                speaker: "staff",
-                english: "What size would you like?",
-                korean: "사이즈는 어떻게 드릴까요?",
-                roman: "Saijeuneun eotteoke deurilkkayo?",
-                choices: [
-                    { english: "Tall size, please.", korean: "톨 사이즈요.", roman: "Tol saijeuyo.", next: "tall" },
-                    { english: "Grande size, please.", korean: "그란데 사이즈요.", roman: "Geuraende saijeuyo.", next: "grande" },
-                    { english: "Venti size, please.", korean: "벤티 사이즈요.", roman: "Benti saijeuyo.", next: "venti" }
-                ]
-            },
-
-            // The customer chooses tall.
-            tall: {
-                speaker: "user",
-                english: "Tall size, please.",
-                korean: "톨 사이즈요.",
-                roman: "Tol saijeuyo.",
-                next: "takeout"
-            },
-
-            // The customer chooses grande.
-            grande: {
-                speaker: "user",
-                english: "Grande size, please.",
-                korean: "그란데 사이즈요.",
-                roman: "Geuraende saijeuyo.",
-                next: "takeout"
-            },
-
-            // The customer chooses venti.
-            venti: {
-                speaker: "user",
-                english: "Venti size, please.",
-                korean: "벤티 사이즈요.",
-                roman: "Benti saijeuyo.",
-                next: "takeout"
-            },
-
-            // The staff asks whether the customer wants to stay.
-            takeout: {
-                speaker: "staff",
-                english: "For here or to go?",
-                korean: "드시고 가시나요? 포장하시나요?",
-                roman: "Deusigo gasinayo? Pojanghasinayo?",
-                choices: [
-                    { english: "For here, please.", korean: "먹고 갈게요.", roman: "Meokgo galgeyo.", next: "here" },
-                    { english: "To go, please.", korean: "포장해 주세요.", roman: "Pojanghae juseyo.", next: "togo" }
-                ]
-            },
-
-            // The customer chooses to stay.
-            here: {
-                speaker: "user",
-                english: "For here, please.",
-                korean: "먹고 갈게요.",
-                roman: "Meokgo galgeyo.",
-                next: "payment"
-            },
-
-            // The customer chooses takeaway.
-            togo: {
-                speaker: "user",
-                english: "To go, please.",
-                korean: "포장해 주세요.",
-                roman: "Pojanghae juseyo.",
-                next: "payment"
-            },
-
-            // The staff requests the customer's card.
-            payment: {
-                speaker: "staff",
-                english: "May I have your card, please?",
-                korean: "카드 주시겠어요?",
-                roman: "Kadeu jusigesseoyo?",
-                choices: [
-                    { english: "Sure, here it is.", korean: "네, 여기 있습니다.", roman: "Ne, yeogi itseumnida.", next: "finish" }
-                ]
-            },
-
-            // The conversation ends.
-            finish: {
-                speaker: "user",
-                english: "Sure, here it is.",
-                korean: "네, 여기 있습니다.",
-                roman: "Ne, yeogi itseumnida.",
-                end: true
-            }
-        };
-
-        // Stores the current conversation step.
-        let currentStep = "start";
-
-        // Stores the current speech recognition target.
-        let listeningFor = "";
-
-        // Checks whether speech recognition is supported.
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-        // Creates a speech recognition instance when available.
-        let recognition = SpeechRecognition ? new SpeechRecognition() : null;
-
-        // Configures speech recognition.
-        if (recognition) {
-            recognition.lang = "ko-KR";
-            recognition.continuous = false;
-            recognition.interimResults = true;
-        }
-
-        // Hides all application screens.
-        function hideAllScreens() {
-            document.getElementById("place-screen").classList.add("hidden");
-            document.getElementById("cafe-screen").classList.add("hidden");
-            document.getElementById("chat-screen").classList.add("hidden");
-        }
-
-        // Opens the cafe screen.
-        function openCafe() {
-            hideAllScreens();
-            document.getElementById("cafe-screen").classList.remove("hidden");
-        }
-
-        // Displays an English notice for unfinished sections.
-        function showComingSoon(place) {
-            alert(place + " is coming soon!");
-        }
-
-        // Returns to the place selection screen.
-        function goHome() {
-            hideAllScreens();
-            document.getElementById("place-screen").classList.remove("hidden");
-        }
-
-        // Starts or restarts the conversation.
-        function startConversation() {
-            currentStep = "start";
-            document.getElementById("chat-box").innerHTML = "";
-            document.getElementById("staff-transcript").textContent = "Staff speech will appear here.";
-            document.getElementById("user-transcript").textContent = "Your speech will appear here.";
-            document.getElementById("typed-response").value = "";
-            hideAllScreens();
-            document.getElementById("chat-screen").classList.remove("hidden");
-            showStep(currentStep);
-        }
-
-        // Displays a conversation step.
-        function showStep(stepId) {
-            const step = conversation[stepId];
-            currentStep = stepId;
-            const chatBox = document.getElementById("chat-box");
-            const message = document.createElement("div");
-            message.className = "message " + step.speaker;
-
-            // Creates the speaker label.
-            const speaker = document.createElement("div");
-            speaker.className = "speaker";
-            speaker.textContent = step.speaker === "staff" ? "STAFF" : "YOUR RESPONSE";
-            message.appendChild(speaker);
-
-            // Displays the English sentence first.
-            const english = document.createElement("div");
-            english.className = "english-text";
-            english.textContent = step.english;
-            message.appendChild(english);
-
-            // Displays the Korean expression second.
-            const label = document.createElement("div");
-            label.className = "korean-label";
-            label.textContent = "KOREAN EXPRESSION";
-            message.appendChild(label);
-
-            const korean = document.createElement("div");
-            korean.className = "korean-text";
-            korean.textContent = step.korean;
-            message.appendChild(korean);
-
-            // Displays romanization underneath the Korean expression.
-            const roman = document.createElement("div");
-            roman.className = "romanization";
-            roman.textContent = step.roman;
-            message.appendChild(roman);
-
-            // Adds the message to the conversation.
-            chatBox.appendChild(message);
-            message.scrollIntoView({ behavior: "smooth", block: "nearest" });
-
-            // Clears the previous choices.
-            const choicesBox = document.getElementById("choices");
-            choicesBox.innerHTML = "";
-
-            // Creates buttons when the current step has choices.
-            if (step.choices) {
-                step.choices.forEach(function(choice) {
-                    const button = document.createElement("button");
-                    button.className = "choice-button";
-
-                    // Displays the English choice first.
-                    const englishChoice = document.createElement("div");
-                    englishChoice.textContent = choice.english;
-                    button.appendChild(englishChoice);
-
-                    // Displays the Korean choice underneath.
-                    const koreanChoice = document.createElement("span");
-                    koreanChoice.className = "choice-korean";
-                    koreanChoice.textContent = choice.korean;
-                    button.appendChild(koreanChoice);
-
-                    // Displays romanization below the Korean choice.
-                    const romanChoice = document.createElement("span");
-                    romanChoice.className = "choice-roman";
-                    romanChoice.textContent = choice.roman;
-                    button.appendChild(romanChoice);
-
-                    // Moves to the selected next step.
-                    button.onclick = function() {
-                        showStep(choice.next);
-                    };
-
-                    choicesBox.appendChild(button);
-                });
-            } else if (step.next) {
-                // Creates a button to continue the conversation.
-                const button = document.createElement("button");
-                button.className = "choice-button";
-                button.textContent = "Continue";
-                button.onclick = function() {
-                    showStep(step.next);
-                };
-                choicesBox.appendChild(button);
-            } else if (step.end) {
-                // Displays the completion message.
-                const completion = document.createElement("div");
-                completion.className = "completion";
-                completion.textContent = "Order completed! Thank you.";
-                choicesBox.appendChild(completion);
-            }
-        }
-
-        // Starts Korean speech recognition.
-        function startListening(target) {
-            if (!recognition) {
-                alert("Speech recognition is not supported in this browser. Please use text input.");
-                return;
-            }
-
-            listeningFor = target;
-            const outputId = target === "staff" ? "staff-transcript" : "user-transcript";
-            document.getElementById(outputId).textContent = "Listening...";
-
-            // Displays the recognized Korean speech.
-            recognition.onresult = function(event) {
-                const result = event.results[event.results.length - 1][0].transcript;
-                document.getElementById(outputId).textContent = result;
-            };
-
-            // Displays speech recognition errors in English.
-            recognition.onerror = function(event) {
-                document.getElementById(outputId).textContent = "Recognition error: " + event.error;
-            };
-
-            // Starts listening.
-            recognition.start();
-        }
-
-        // Processes recognized staff speech using basic keyword matching.
-        function processStaffSpeech() {
-            const text = document.getElementById("staff-transcript").textContent;
-
-            if (!text || text.includes("will appear") || text === "Listening...") {
-                alert("Please recognize the staff speech first.");
-                return;
-            }
-
-            if (text.includes("사이즈") || text.includes("크기")) {
-                showStep("size");
-            } else if (text.includes("포장") || text.includes("드시고") || text.includes("매장")) {
-                showStep("takeout");
-            } else if (text.includes("카드") || text.includes("결제")) {
-                showStep("payment");
-            } else if (text.includes("주문")) {
-                showStep("start");
-            } else {
-                alert("Speech recognized. AI conversation understanding will be added in a later version.");
-            }
-        }
-
-        // Processes a spoken or typed user response.
-        function submitUserSpeech() {
-            const voiceText = document.getElementById("user-transcript").textContent;
-            const typedText = document.getElementById("typed-response").value.trim();
-
-            // Uses typed text first, if available.
-            const text = typedText || voiceText;
-
-            if (!text || text.includes("will appear") || text === "Listening...") {
-                alert("Please speak or type your response first.");
-                return;
-            }
-
-            // Adds the user's own words to the conversation.
-            addFreeMessage(text);
-
-            // Uses basic Korean keyword matching for this prototype.
-            if (text.includes("아메리카노") || text.includes("라테") || text.includes("라떼")) {
-                showStep("size");
-            } else if (text.includes("톨") || text.includes("그란데") || text.includes("벤티")) {
-                showStep("takeout");
-            } else if (text.includes("포장") || text.includes("먹고") || text.includes("매장")) {
-                showStep("payment");
-            } else if (text.includes("카드") || text.includes("결제")) {
-                showStep("finish");
-            } else {
-                alert("Your response was recognized. AI understanding will be added in a later version.");
-            }
-
-            document.getElementById("typed-response").value = "";
-        }
-
-        // Adds a free-form user message to the conversation.
-        function addFreeMessage(text) {
-            const chatBox = document.getElementById("chat-box");
-            const message = document.createElement("div");
-            message.className = "message user";
-
-            const speaker = document.createElement("div");
-            speaker.className = "speaker";
-            speaker.textContent = "YOUR SPEECH";
-            message.appendChild(speaker);
-
-            const spokenText = document.createElement("div");
-            spokenText.textContent = text;
-            message.appendChild(spokenText);
-
-            chatBox.appendChild(message);
-            message.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        }
-    </script>
-</body>
-</html>
-<!-- Ends the HTML document. -->
+<!DOCTYPE html> <!-- HTML 문서입니다. -->
+<html lang="en"> <!-- 화면 기본 언어는 영어입니다. -->
+<head> <!-- 페이지 설정을 시작합니다. -->
+<meta charset="UTF-8"> <!-- 한글 표시를 지원합니다. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 모바일 화면에 맞춥니다. -->
+<title>Seoul Moments</title> <!-- 브라우저 탭 제목입니다. -->
+
+<style> /* 디자인 CSS를 시작합니다. */
+* { box-sizing: border-box; } /* 모든 요소의 크기 계산을 통일합니다. */
+
+body { /* 전체 배경 디자인입니다. */
+  margin: 0; /* 기본 여백을 제거합니다. */
+  min-height: 100vh; /* 화면 높이 전체를 사용합니다. */
+  font-family: "Avenir Next", "Segoe UI", sans-serif; /* 글꼴을 설정합니다. */
+  color: #3e4b42; /* 기본 글자색입니다. */
+  background: linear-gradient(145deg, #f6f2e9, #e5ece3 55%, #f0e8e1); /* 차분한 파스텔 배경입니다. */
+} /* 전체 배경 설정을 마칩니다. */
+
+button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합니다. */
+
+.app { /* 앱 전체 영역입니다. */
+  width: min(100% - 28px, 760px); /* 화면 크기에 맞는 너비입니다. */
+  margin: auto; /* 가운데 정렬합니다. */
+  padding: 25px 0 40px; /* 위아래 여백입니다. */
+} /* 앱 영역 설정을 마칩니다. */
+
+.header { /* 상단 브랜드 영역입니다. */
+  display: flex; /* 가로로 배치합니다. */
+  justify-content: space-between; /* 양쪽 끝에 배치합니다. */
+  align-items: center; /* 세로 가운데 정렬합니다. */
+  padding: 5px 4px 22px; /* 내부 여백입니다. */
+} /* 헤더 설정을 마칩니다. */
+
+.logo { /* 앱 이름입니다. */
+  font-family: Georgia, serif; /* 세리프 글꼴을 사용합니다. */
+  font-size: 27px; /* 제목 크기입니다. */
+  letter-spacing: -1px; /* 글자 간격을 조정합니다. */
+  color: #435448; /* 제목 색상입니다. */
+} /* 로고 설정을 마칩니다. */
+
+.header-icon { /* 상단 작은 원형 아이콘입니다. */
+  width: 40px; /* 너비입니다. */
+  height: 40px; /* 높이입니다. */
+  border-radius: 50%; /* 원형으로 만듭니다. */
+  display: grid; /* 가운데 정렬을 위한 그리드입니다. */
+  place-items: center; /* 아이콘을 가운데 배치합니다. */
+  background: rgba(255,255,255,.55); /* 반투명 배경입니다. */
+  border: 1px solid rgba(255,255,255,.85); /* 밝은 테두리입니다. */
+  box-shadow: 0 5px 15px rgba(60,75,60,.08); /* 부드러운 그림자입니다. */
+} /* 상단 아이콘 설정을 마칩니다. */
+
+.glass { /* 유리 질감 공통 스타일입니다. */
+  background: rgba(255,255,255,.48); /* 반투명 흰색입니다. */
+  border: 1px solid rgba(255,255,255,.8); /* 유리 테두리입니다. */
+  backdrop-filter: blur(18px); /* 배경 블러 효과입니다. */
+  -webkit-backdrop-filter: blur(18px); /* iOS Safari용 블러입니다. */
+  box-shadow: 0 12px 35px rgba(60,75,60,.09), inset 0 1px 0 white; /* 입체 그림자입니다. */
+} /* 유리 스타일을 마칩니다. */
+
+.main { /* 메인 콘텐츠 카드입니다. */
+  border-radius: 28px; /* 둥근 모서리입니다. */
+  padding: 22px; /* 내부 여백입니다. */
+  min-height: 500px; /* 기본 높이입니다. */
+} /* 메인 카드 설정을 마칩니다. */
+
+.heading { /* 화면 제목입니다. */
+  font-family: Georgia, serif; /* 세리프 글꼴입니다. */
+  font-size: 27px; /* 제목 크기입니다. */
+  font-weight: 500; /* 글자 두께입니다. */
+  margin: 4px 0 7px; /* 제목 여백입니다. */
+  color: #435448; /* 제목 색상입니다. */
+} /* 제목 설정을 마칩니다. */
+
+.subheading { /* 짧은 보조 설명입니다. */
+  margin: 0 0 20px; /* 아래 여백입니다. */
+  color: #929387; /* 보조 글자색입니다. */
+  font-size: 12px; /* 글자 크기입니다. */
+} /* 보조 설명 설정을 마칩니다. */
+
+.place-grid { /* 장소 카드 그리드입니다. */
+  display: grid; /* 그리드 레이아웃입니다. */
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* 두 열로 나눕니다. */
+  gap: 13px; /* 카드 사이 간격입니다. */
+} /* 장소 그리드 설정을 마칩니다. */
+
+.place-card { /* 장소 선택 카드입니다. */
+  position: relative; /* 카드 안의 글자 위치 기준입니다. */
+  height: 155px; /* 카드 높이입니다. */
+  border: 1px solid rgba(255,255,255,.85); /* 밝은 테두리입니다. */
+  border-radius: 19px; /* 둥근 모서리입니다. */
+  overflow: hidden; /* 이미지가 카드 밖으로 나가지 않게 합니다. */
+  padding: 0; /* 기본 여백을 제거합니다. */
+  background: #dce3d9; /* 이미지가 없을 때의 배경입니다. */
+  cursor: pointer; /* 클릭 가능한 카드입니다. */
+  box-shadow: 0 8px 22px rgba(55,70,55,.12); /* 입체 그림자입니다. */
+  transition: transform .2s, box-shadow .2s; /* 부드러운 움직임입니다. */
+} /* 장소 카드 설정을 마칩니다. */
+
+.place-card:hover { /* 카드에 마우스를 올렸을 때입니다. */
+  transform: translateY(-3px); /* 살짝 떠오릅니다. */
+  box-shadow: 0 13px 27px rgba(55,70,55,.17); /* 그림자를 강조합니다. */
+} /* 마우스 효과를 마칩니다. */
+
+.place-card img { /* 장소 사진입니다. */
+  width: 100%; /* 카드 너비에 맞춥니다. */
+  height: 100%; /* 카드 높이에 맞춥니다. */
+  object-fit: cover; /* 사진 비율을 유지하며 채웁니다. */
+  display: block; /* 이미지 아래 여백을 제거합니다. */
+  transition: transform .4s; /* 이미지 확대를 부드럽게 합니다. */
+} /* 장소 이미지 설정을 마칩니다. */
+
+.place-card:hover img { transform: scale(1.04); } /* 마우스를 올리면 사진이 살짝 확대됩니다. */
+
+.place-overlay { /* 사진 위 어두운 그라데이션입니다. */
+  position: absolute; /* 카드 위에 겹쳐 배치합니다. */
+  inset: 0; /* 카드 전체를 덮습니다. */
+  background: linear-gradient(transparent 35%, rgba(25,35,29,.65)); /* 아래쪽을 어둡게 만듭니다. */
+} /* 사진 오버레이를 마칩니다. */
+
+.place-name { /* 사진 위 장소 이름입니다. */
+  position: absolute; /* 사진 위에 배치합니다. */
+  left: 15px; /* 왼쪽 여백입니다. */
+  bottom: 14px; /* 아래 여백입니다. */
+  color: white; /* 흰색 글자입니다. */
+  font-size: 16px; /* 글자 크기입니다. */
+  font-weight: 650; /* 글자 두께입니다. */
+  text-shadow: 0 2px 8px rgba(0,0,0,.25); /* 글자 그림자입니다. */
+} /* 장소 이름 설정을 마칩니다. */
+
+.back-button { /* 뒤로 가기 버튼입니다. */
+  border: 0; /* 기본 테두리를 제거합니다. */
+  background: transparent; /* 배경을 투명하게 합니다. */
+  color: #8b907f; /* 글자색입니다. */
+  padding: 4px 0 17px; /* 여백입니다. */
+  cursor: pointer; /* 클릭 가능한 버튼입니다. */
+  font-size: 13px; /* 글자 크기입니다. */
+} /* 뒤로 가기 버튼 설정을 마칩니다. */
+
+.scenario-card { /* 상황 선택 카드입니다. */
+  display: flex; /* 아이콘과 글자를 가로로 배치합니다. */
+  align-items: center; /* 세로 가운데 정렬합니다. */
+  gap: 15px; /* 아이콘과 글자 간격입니다. */
+  width: 100%; /* 가로 전체를 사용합니다. */
+  padding: 17px; /* 내부 여백입니다. */
+  margin-bottom: 12px; /* 카드 아래 간격입니다. */
+  border-radius: 18px; /* 둥근 모서리입니다. */
+  border: 1px solid rgba(255,255,255,.85); /* 밝은 테두리입니다. */
+  background: rgba(255,255,255,.55); /* 반투명 배경입니다. */
+  box-shadow: 0 6px 17px rgba(60,75,60,.07); /* 은은한 그림자입니다. */
+  text-align: left; /* 글자를 왼쪽 정렬합니다. */
+  cursor: pointer; /* 클릭 가능한 버튼입니다. */
+} /* 상황 카드 설정을 마칩니다. */
+
+.scenario-icon { /* 상황 아이콘 영역입니다. */
+  width: 48px; /* 너비입니다. */
+  height: 48px; /* 높이입니다. */
+  border-radius: 15px; /* 둥근 사각형입니다. */
+  display: grid; /* 가운데 정렬을 위한 그리드입니다. */
+  place-items: center; /* 아이콘을 가운데 놓습니다. */
+  background: linear-gradient(145deg, #f5eee1, #e2e9df); /* 파스텔 배경입니다. */
+  font-size: 23px; /* 아이콘 크기입니다. */
+} /* 상황 아이콘 설정을 마칩니다. */
+
+.scenario-name { /* 상황 이름입니다. */
+  font-size: 15px; /* 글자 크기입니다. */
+  color: #49584c; /* 글자색입니다. */
+  font-weight: 600; /* 글자 두께입니다. */
+} /* 상황 이름 설정을 마칩니다. */
+
+.dialogue-card { /* 스태프 대사 카드입니다. */
+  padding: 22px; /* 내부 여백입니다. */
+  border-radius: 23px; /* 둥근 모서리입니다. */
+  background: linear-gradient(145deg, rgba(255,255,255,.8), rgba(255,255,255,.42)); /* 유리 그라데이션입니다. */
+  border: 1px solid white; /* 밝은 테두리입니다. */
+  box-shadow: 0 10px 27px rgba(60,75,60,.08); /* 부드러운 그림자입니다. */
+} /* 대화 카드 설정을 마칩니다. */
+
+.speaker { /* 말하는 사람 표시입니다. */
+  color: #aa9674; /* 샴페인 골드 색상입니다. */
+  font-size: 10px; /* 작은 글씨입니다. */
+  letter-spacing: 2px; /* 자간입니다. */
+  font-weight: 700; /* 글자 두께입니다. */
+  margin-bottom: 13px; /* 아래 여백입니다. */
+} /* 화자 표시 설정을 마칩니다. */
+
+.english { /* 영어 문장입니다. */
+  color: #758074; /* 보조 색상입니다. */
+  font-size: 14px; /* 글자 크기입니다. */
+  line-height: 1.5; /* 줄 간격입니다. */
+  margin-bottom: 12px; /* 아래 여백입니다. */
+} /* 영어 문장 설정을 마칩니다. */
+
+.korean { /* 한국어 문장입니다. */
+  color: #39483f; /* 진한 글자색입니다. */
+  font-size: 23px; /* 한국어를 크게 표시합니다. */
+  font-weight: 650; /* 글자를 강조합니다. */
+  line-height: 1.5; /* 줄 간격입니다. */
+  word-break: keep-all; /* 한글 단어가 어색하게 끊기지 않게 합니다. */
+} /* 한국어 문장 설정을 마칩니다. */
+
+.roman { /* 로마자 발음입니다. */
+  color: #99998d; /* 은은한 회색입니다. */
+  font-size: 12px; /* 작은 글자입니다. */
+  font-style: italic; /* 기울임꼴입니다. */
+  margin-top: 8px; /* 위쪽 간격입니다. */
+  line-height: 1.5; /* 줄 간격입니다. */
+} /* 로마자 발음 설정을 마칩니다. */
+
+.choice-list { /* 응답 선택지 목록입니다. */
+  display: flex; /* 세로 배치입니다. */
+  flex-direction: column; /* 세로 방향으로 놓습니다. */
+  gap: 10px; /* 선택지 사이 간격입니다. */
+  margin-top: 17px; /* 위쪽 간격입니다. */
+} /* 선택지 목록 설정을 마칩니다. */
+
+.choice { /* 개별 응답 버튼입니다. */
+  width: 100%; /* 전체 너비입니다. */
+  padding: 16px 18px; /* 내부 여백입니다. */
+  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
+  border-radius: 17px; /* 둥근 모서리입니다. */
+  background: rgba(255,255,255,.52); /* 반투명 배경입니다. */
+  color: #465448; /* 글자색입니다. */
+  text-align: left; /* 왼쪽 정렬입니다. */
+  cursor: pointer; /* 클릭 가능한 버튼입니다. */
+  box-shadow: 0 6px 16px rgba(60,75,60,.07); /* 부드러운 그림자입니다. */
+  transition: transform .15s, background .15s; /* 반응을 부드럽게 합니다. */
+} /* 선택지 버튼 설정을 마칩니다. */
+
+.choice:active { /* 버튼을 누르는 순간입니다. */
+  transform: scale(.985); /* 살짝 눌리는 효과입니다. */
+  background: rgba(222,233,218,.8); /* 세이지 색상으로 바뀝니다. */
+} /* 버튼 클릭 효과를 마칩니다. */
+
+.choice-en { /* 선택지 영어입니다. */
+  display: block; /* 별도 줄에 표시합니다. */
+  font-size: 13px; /* 글자 크기입니다. */
+  color: #798477; /* 보조 색상입니다. */
+  margin-bottom: 5px; /* 아래 간격입니다. */
+} /* 선택지 영어 설정을 마칩니다. */
+
+.choice-ko { /* 선택지 한국어입니다. */
+  display: block; /* 별도 줄에 표시합니다. */
+  font-size: 16px; /* 글자 크기입니다. */
+  font-weight: 600; /* 글자를 강조합니다. */
+  margin-bottom: 4px; /* 아래 간격입니다. */
+} /* 선택지 한국어 설정을 마칩니다. */
+
+.choice-ro { /* 선택지 로마자 발음입니다. */
+  display: block; /* 별도 줄에 표시합니다. */
+  font-size: 11px; /* 작은 글자입니다. */
+  color: #99998d; /* 은은한 회색입니다. */
+  font-style: italic; /* 기울임꼴입니다. */
+} /* 선택지 로마자 설정을 마칩니다. */
+
+.tools { /* 입력 및 음성 버튼 영역입니다. */
+  display: flex; /* 가로로 배치합니다. */
+  gap: 8px; /* 버튼 사이 간격입니다. */
+  margin-top: 18px; /* 위쪽 간격입니다. */
+} /* 도구 영역 설정을 마칩니다. */
+
+.tool-button { /* 작은 기능 버튼입니다. */
+  flex: 1; /* 같은 너비를 사용합니다. */
+  padding: 12px 8px; /* 내부 여백입니다. */
+  border: 1px solid rgba(255,255,255,.85); /* 밝은 테두리입니다. */
+  border-radius: 14px; /* 둥근 모서리입니다. */
+  background: rgba(255,255,255,.45); /* 반투명 배경입니다. */
+  color: #667466; /* 글자색입니다. */
+  cursor: pointer; /* 클릭 가능한 버튼입니다. */
+  font-size: 12px; /* 작은 글씨입니다. */
+} /* 기능 버튼 설정을 마칩니다. */
+
+.input-row { /* 직접 입력 영역입니다. */
+  display: flex; /* 입력창과 버튼을 가로로 배치합니다. */
+  gap: 8px; /* 간격입니다. */
+  margin-top: 12px; /* 위쪽 여백입니다. */
+} /* 입력 행 설정을 마칩니다. */
+
+.input-row input { /* 텍스트 입력창입니다. */
+  flex: 1; /* 남은 공간을 사용합니다. */
+  min-width: 0; /* 모바일에서 넘치지 않도록 합니다. */
+  padding: 12px; /* 내부 여백입니다. */
+  border: 1px solid rgba(255,255,255,.9); /* 테두리입니다. */
+  border-radius: 13px; /* 둥근 모서리입니다. */
+  background: rgba(255,255,255,.65); /* 반투명 배경입니다. */
+  outline: none; /* 기본 외곽선을 제거합니다. */
+} /* 입력창 설정을 마칩니다. */
+
+.send-button { /* 전송 버튼입니다. */
+  border: 0; /* 기본 테두리를 제거합니다. */
+  border-radius: 13px; /* 둥근 모서리입니다. */
+  padding: 0 16px; /* 좌우 여백입니다. */
+  background: #cbd9c7; /* 세이지 배경입니다. */
+  color: #435448; /* 글자색입니다. */
+  cursor: pointer; /* 클릭 가능한 버튼입니다. */
+} /* 전송 버튼 설정을 마칩니다. */
+
+.status { /* 음성 인식 상태입니다. */
+  color: #929387; /* 은은한 글자색입니다. */
+  font-size: 11px; /* 작은 글자입니다. */
+  margin-top: 10px; /* 위쪽 간격입니다. */
+  min-height: 17px; /* 공간을 유지합니다. */
+} /* 상태 안내 설정을 마칩니다. */
+
+.hidden { display: none !important; } /* 요소를 숨깁니다. */
+
+@media (max-width: 420px) { /* 작은 휴대폰 화면 설정입니다. */
+  .main { padding: 16px; } /* 메인 카드 여백을 줄입니다. */
+  .place-card { height: 135px; } /* 장소 카드 높이를 줄입니다. */
+  .heading { font-size: 24px; } /* 제목 크기를 줄입니다. */
+  .korean { font-size: 21px; } /* 한국어 크기를 조정합니다. */
+} /* 모바일 설정을 마칩니다. */
+</style> <!-- CSS를 종료합니다. -->
+</head> <!-- 페이지 설정을 종료합니다. -->
+
+<body> <!-- 실제 화면 내용을 시작합니다. -->
+<main class="app"> <!-- 앱 전체 영역입니다. -->
+
+<header class="header"> <!-- 상단 브랜드입니다. -->
+  <div class="logo">Seoul Moments</div> <!-- 앱 이름입니다. -->
+  <div class="header-icon">✦</div> <!-- 간단한 장식 아이콘입니다. -->
+</header> <!-- 상단 브랜드를 종료합니다. -->
+
+<section class="main glass"> <!-- 메인 유리 카드입니다. -->
+
+<section id="places"> <!-- 장소 선택 화면입니다. -->
+  <h1 class="heading">Where to?</h1> <!-- 간결한 제목입니다. -->
+  <p class="subheading">Choose your destination</p> <!-- 짧은 안내입니다. -->
+
+  <div class="place-grid"> <!-- 장소 사진 목록입니다. -->
+
+    <button class="place-card" onclick="selectPlace('Cafe')"> <!-- 카페 선택 버튼입니다. -->
+      <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700" alt="Cafe"> <!-- 카페 사진입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-name">Cafe</span> <!-- 장소 이름입니다. -->
+    </button> <!-- 카페 버튼을 종료합니다. -->
+
+    <button class="place-card" onclick="selectPlace('Restaurant')"> <!-- 식당 선택 버튼입니다. -->
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700" alt="Restaurant"> <!-- 식당 사진입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-name">Restaurant</span> <!-- 장소 이름입니다. -->
+    </button> <!-- 식당 버튼을 종료합니다. -->
+
+    <button class="place-card" onclick="selectPlace('Transportation')"> <!-- 교통 선택 버튼입니다. -->
+      <img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700" alt="Transportation"> <!-- 교통 사진입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-name">Transport</span> <!-- 장소 이름입니다. -->
+    </button> <!-- 교통 버튼을 종료합니다. -->
+
+    <button class="place-card" onclick="selectPlace('Shopping')"> <!-- 쇼핑 선택 버튼입니다. -->
+      <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700" alt="Shopping"> <!-- 쇼핑 사진입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-name">Shopping</span> <!-- 장소 이름입니다. -->
+    </button> <!-- 쇼핑 버튼을 종료합니다. -->
+
+    <button class="place-card" onclick="selectPlace('Accommodation')"> <!-- 숙소 선택 버튼입니다. -->
+      <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700" alt="Accommodation"> <!-- 숙소 사진입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-name">Stay</span> <!-- 장소 이름입니다. -->
+    </button> <!-- 숙소 버튼을 종료합니다. -->
+
+  </div> <!-- 장소 사진 목록을 종료합니다. -->
+</section> <!-- 장소 선택 화면을 종료합니다. -->
+
+<section id="scenarios" class="hidden"> <!-- 상황 선택 화면입니다. -->
+  <button class="back-button" onclick="goPlaces()">← Back</button> <!-- 장소 화면으로 돌아갑니다. -->
+  <h1 class="heading" id="placeHeading">Cafe</h1> <!-- 선택한 장소 이름입니다. -->
+  <p class="subheading">What would you like to do?</p> <!-- 상황 선택 안내입니다. -->
+
+  <button class="scenario-card" onclick="startCafe()"> <!-- 주문 상황 선택 버튼입니다. -->
+    <span class="scenario-icon">☕</span> <!-- 커피 아이콘입니다. -->
+    <span class="scenario-name">Order a drink</span> <!-- 상황 이름입니다. -->
+  </button> <!-- 주문 상황 버튼을 종료합니다. -->
+
+  <button class="scenario-card" onclick="comingSoon()"> <!-- 결제 상황 선택 버튼입니다. -->
+    <span class="scenario-icon">💳</span> <!-- 결제 아이콘입니다. -->
+    <span class="scenario-name">Payment</span> <!-- 상황 이름입니다. -->
+  </button> <!-- 결제 상황 버튼을 종료합니다. -->
+
+  <button class="scenario-card" onclick="comingSoon()"> <!-- 요청 상황 선택 버튼입니다. -->
+    <span class="scenario-icon">🗣️</span> <!-- 대화 아이콘입니다. -->
+    <span class="scenario-name">Make a request</span> <!-- 상황 이름입니다. -->
+  </button> <!-- 요청 상황 버튼을 종료합니다. -->
+</section> <!-- 상황 선택 화면을 종료합니다. -->
+
+<section id="conversation" class="hidden"> <!-- 실제 대화 화면입니다. -->
+  <button class="back-button" onclick="goScenarios()">← Back</button> <!-- 상황 선택으로 돌아갑니다. -->
+  <div class="dialogue-card"> <!-- 스태프 대사 카드입니다. -->
+    <div class="speaker" id="speaker">STAFF</div> <!-- 화자 표시입니다. -->
+    <div class="english" id="english"></div> <!-- 영어 문장입니다. -->
+    <div class="korean" id="korean"></div> <!-- 한국어 문장입니다. -->
+    <div class="roman" id="roman"></div> <!-- 로마자 발음입니다. -->
+  </div> <!-- 대사 카드를 종료합니다. -->
+
+  <div class="choice-list" id="choices"></div> <!-- 사용자 선택지를 표시합니다. -->
+
+  <div class="input-row"> <!-- 직접 입력 영역입니다. -->
+    <input id="userInput" placeholder="Type in Korean..." type="text"> <!-- 한국어 문장 입력창입니다. -->
+    <button class="send-button" onclick="submitText()">Send</button> <!-- 입력 전송 버튼입니다. -->
+  </div> <!-- 입력 영역을 종료합니다. -->
+
+  <div class="tools"> <!-- 음성 및 이동 버튼 영역입니다. -->
+    <button class="tool-button" onclick="listen('user')">🎙 Speak</button> <!-- 사용자 음성 입력 버튼입니다. -->
+    <button class="tool-button" onclick="listen('staff')">🎧 Staff</button> <!-- 스태프 음성 인식 버튼입니다. -->
+  </div> <!-- 기능 버튼 영역을 종료합니다. -->
+
+  <div class="status" id="status">Choose a response or speak Korean.</div> <!-- 상태 안내입니다. -->
+</section> <!-- 대화 화면을 종료합니다. -->
+
+</section> <!-- 메인 유리 카드를 종료합니다. -->
+</main> <!-- 앱 영역을 종료합니다. -->
+
+<script> // JavaScript를 시작합니다.
+
+const screens = ["places", "scenarios", "conversation"]; // 화면 이름을 배열로 저장합니다.
+let currentPlace = ""; // 현재 선택한 장소입니다.
+let currentStep = "start"; // 현재 대화 단계입니다.
+
+const cafeSteps = { // 카페 대화 데이터를 저장합니다.
+
+  start: { // 첫 대화입니다.
+    english: "Hello! What can I get for you?", // 스태프 영어입니다.
+    korean: "안녕하세요! 무엇을 드릴까요?", // 스태프 한국어입니다.
+    roman: "Annyeonghaseyo! Mueoseul deurilkkayo?", // 스태프 발음입니다.
+    choices: [ // 사용자 선택지입니다.
+      { english: "One iced Americano, please.", korean: "아이스 아메리카노 하나 주세요.", roman: "Aiseu Americano hana juseyo.", next: "decaf" }, // 아메리카노 주문입니다.
+      { english: "One latte, please.", korean: "라테 하나 주세요.", roman: "Rate hana juseyo.", next: "decaf" } // 라테 주문입니다.
+    ] // 선택지를 종료합니다.
+  }, // 첫 대화를 종료합니다.
+
+  decaf: { // 디카페인 질문입니다.
+    english: "Would you like it decaffeinated?", // 스태프 영어입니다.
+    korean: "디카페인으로 드릴까요?", // 스태프 한국어입니다.
+    roman: "Dikapeineuro deurilkkayo?", // 스태프 발음입니다.
+    choices: [ // 사용자 선택지입니다.
+      { english: "Yes, decaf, please.", korean: "네, 디카페인으로 주세요.", roman: "Ne, dikapeineuro juseyo.", next: "shot" }, // 디카페인을 선택합니다.
+      { english: "No, regular is fine.", korean: "아니요, 일반으로 주세요.", roman: "Aniyo, ilbaneuro juseyo.", next: "shot" } // 일반 커피를 선택합니다.
+    ] // 선택지를 종료합니다.
+  }, // 디카페인 단계를 종료합니다.
+
+  shot: { // 샷 추가 질문입니다.
+    english: "Would you like an extra shot?", // 스태프 영어입니다.
+    korean: "샷 추가해 드릴까요?", // 스태프 한국어입니다.
+    roman: "Syat chugahae deurilkkayo?", // 스태프 발음입니다.
+    choices: [ // 사용자 선택지입니다.
+      { english: "Yes, please.", korean: "네, 추가해 주세요.", roman: "Ne, chugahae juseyo.", next: "size" }, // 샷 추가입니다.
+      { english: "No, thank you.", korean: "아니요, 괜찮아요.", roman: "Aniyo, gwaenchanayo.", next: "size" } // 샷 추가 거절입니다.
+    ] // 선택지를 종료합니다.
+  }, // 샷 단계를 종료합니다.
+
+  size: { // 사이즈 질문입니다.
+    english: "What size would you like?", // 스태프 영어입니다.
+    korean: "어떤 사이즈로 드릴까요?", // 스태프 한국어입니다.
+    roman: "Eotteon saijeuro deurilkkayo?", // 스태프 발음입니다.
+    choices: [ // 사용자 선택지입니다.
+      { english: "A medium, please.", korean: "미디엄으로 주세요.", roman: "Midieomeuro juseyo.", next: "temperature" }, // 미디엄입니다.
+      { english: "A large, please.", korean: "라지로 주세요.", roman: "Rajiro juseyo.", next: "temperature" } // 라지입니다.
+    ] // 선택지를 종료합니다.
+  }, // 사이즈 단계를 종료합니다.
+
+  temperature: { // 온도 질문입니다.
+    english: "Would you like it hot or iced?", // 스태프 영어입니다.
+    korean: "따뜻하게 드릴까요, 아이스로 드릴까요?", // 스태프 한국어입니다.
+    roman: "Ttatteuthage deurilkkayo, aiseuro deurilkkayo?", // 스태프 발음입니다.
+    choices: [ // 사용자 선택지입니다.
+      { english: "Iced, please.", korean: "아이스로 주세요.", roman: "Aiseuro juseyo.", next: "takeout" }, // 아이스입니다.
+      { english: "Hot, please.", korean: "따뜻하게 해 주세요.", roman: "Ttatteuthage hae juseyo.", next: "takeout" } // 따뜻한 음료입니다.
+    ] // 선택지를 종료합니다.
+  }, // 온도 단계를 종료합니다.
+
+  takeout: { // 매장 또는 포장 질문입니다.
+    english: "For here or to go?", // 스태프 영어입니다.
+    korean: "드시고 가시나요, 포장하시나요?", // 스태프 한국어입니다.
+    roman: "Deusigo gasinayo, pojanghasinayo?", // 스태프 발음입니다.
+    choices: [ // 사용자 선택지입니다.
+      { english: "For here, please.", korean: "먹고 갈게요.", roman: "Meokgo galgeyo.", next: "payment" }, // 매장 이용입니다.
+      { english: "To go, please.", korean: "포장해 주세요.", roman: "Pojanghae juseyo.", next: "payment" } // 포장입니다.
+    ] // 선택지를 종료합니다.
+  }, // 매장 이용 단계를 종료합니다.
+
+  payment: { // 카드 결제 안내입니다.
+    english: "Please insert your card here.", // 스태프 영어입니다.
+    korean: "카드를 여기에 꽂아 주세요.", // 스태프 한국어입니다.
+    roman: "Kadeureul yeogie kkoja juseyo.", // 스태프 발음입니다.
+    choices: [ // 사용자 선택지입니다.
+      { english: "Here you go.", korean: "여기 있습니다.", roman: "Yeogi itseumnida.", next: "receipt" } // 카드를 건넵니다.
+    ] // 선택지를 종료합니다.
+  }, // 결제 단계를 종료합니다.
+
+  receipt: { // 영수증 질문입니다.
+    english: "Would you like a receipt?", // 스태프 영어입니다.
+    korean: "영수증 드릴까요?", // 스태프 한국어입니다.
+    roman: "Yeongsujeung deurilkkayo?", // 스태프 발음입니다.
+    choices: [ // 사용자 선택지입니다.
+      { english: "Yes, please.", korean: "네, 주세요.", roman: "Ne, juseyo.", next: "finish" }, // 영수증을 받습니다.
+      { english: "No, thank you.", korean: "아니요, 괜찮아요.", roman: "Aniyo, gwaenchanayo.", next: "finish" } // 영수증을 거절합니다.
+    ] // 선택지를 종료합니다.
+  }, // 영수증 단계를 종료합니다.
+
+  finish: { // 주문 완료 안내입니다.
+    english: "I'll call your name when it's ready.", // 스태프 영어입니다.
+    korean: "준비되면 불러 드릴게요.", // 스태프 한국어입니다.
+    roman: "Junbidoemyeon bulleo deurilgeyo.", // 스태프 발음입니다.
+    choices: [ // 마지막 선택지입니다.
+      { english: "Thank you!", korean: "감사합니다!", roman: "Gamsahamnida!", next: "complete" } // 감사 인사입니다.
+    ] // 선택지를 종료합니다.
+  }, // 주문 완료 단계를 종료합니다.
+
+  complete: { // 대화 종료입니다.
+    english: "Enjoy your drink!", // 스태프 영어입니다.
+    korean: "맛있게 드세요!", // 스태프 한국어입니다.
+    roman: "Masitge deuseyo!", // 스태프 발음입니다.
+    choices: [ // 다시 시작하는 선택지입니다.
+      { english: "Start again", korean: "다시 시작하기", roman: "Dasi sijakhagi.", next: "start" } // 처음으로 돌아갑니다.
+    ] // 선택지를 종료합니다.
+  } // 대화 종료 데이터를 마칩니다.
+}; // 카페 대화 데이터를 종료합니다.
+
+function showScreen(name) { // 지정한 화면만 보여주는 함수입니다.
+  screens.forEach(id => document.getElementById(id).classList.add("hidden")); // 모든 화면을 먼저 숨깁니다.
+  document.getElementById(name).classList.remove("hidden"); // 선택한 화면만 표시합니다.
+} // 화면 전환 함수를 종료합니다.
+
+function selectPlace(place) { // 장소를 선택했을 때 실행합니다.
+  currentPlace = place; // 선택한 장소를 저장합니다.
+  document.getElementById("placeHeading").textContent = place; // 상황 화면에 장소 이름을 표시합니다.
+  showScreen("scenarios"); // 상황 선택 화면으로 이동합니다.
+} // 장소 선택 함수를 종료합니다.
+
+function startCafe() { // 카페 주문 상황을 시작합니다.
+  currentStep = "start"; // 대화를 첫 단계로 초기화합니다.
+  showScreen("conversation"); // 대화 화면으로 이동합니다.
+  renderStep(); // 첫 대사를 표시합니다.
+} // 카페 대화 시작 함수를 종료합니다.
+
+function comingSoon() { // 아직 준비되지 않은 상황을 선택했을 때입니다.
+  alert("This situation will be added soon."); // 준비 중이라는 안내를 표시합니다.
+} // 준비 중 함수를 종료합니다.
+
+function renderStep() { // 현재 대화 단계를 표시합니다.
+  const step = cafeSteps[currentStep]; // 현재 단계 데이터를 가져옵니다.
+  document.getElementById("speaker").textContent = "STAFF"; // 화자를 스태프로 설정합니다.
+  document.getElementById("english").textContent = step.english; // 영어를 표시합니다.
+  document.getElementById("korean").textContent = step.korean; // 한국어를 표시합니다.
+  document.getElementById("roman").textContent = step.roman; // 로마자 발음을 표시합니다.
+
+  const list = document.getElementById("choices"); // 선택지 영역을 가져옵니다.
+  list.innerHTML = ""; // 이전 선택지를 지웁니다.
+
+  step.choices.forEach(choice => { // 모든 선택지를 하나씩 처리합니다.
+    const button = document.createElement("button"); // 새 버튼을 만듭니다.
+    button.className = "choice"; // 버튼 디자인을 적용합니다.
+    button.innerHTML = `<span class="choice-en">${choice.english}</span><span class="choice-ko">${choice.korean}</span><span class="choice-ro">${choice.roman}</span>`; // 세 가지 언어 정보를 표시합니다.
+    button.onclick = () => chooseAnswer(choice); // 클릭하면 응답을 선택합니다.
+    list.appendChild(button); // 선택지 영역에 버튼을 추가합니다.
+  }); // 선택지 반복을 종료합니다.
+} // 대화 표시 함수를 종료합니다.
+
+function chooseAnswer(choice) { // 사용자가 응답을 선택했을 때입니다.
+  currentStep = choice.next; // 다음 단계로 이동합니다.
+  renderStep(); // 다음 대사를 표시합니다.
+  document.getElementById("status").textContent = "Response selected."; // 선택 완료를 안내합니다.
+} // 응답 선택 함수를 종료합니다.
+
+function submitText() { // 직접 입력한 문장을 처리합니다.
+  const input = document.getElementById("userInput"); // 입력창을 가져옵니다.
+  const text = input.value.trim().replace(/\s/g, ""); // 입력값의 공백을 제거합니다.
+  if (!text) return; // 빈 입력이면 종료합니다.
+  const step = cafeSteps[currentStep]; // 현재 단계 데이터를 가져옵니다.
+  const match = step.choices.find(choice => choice.korean.replace(/\s/g, "").includes(text) || text.includes(choice.korean.replace(/\s/g, ""))); // 입력과 비슷한 선택지를 찾습니다.
+  if (match) chooseAnswer(match); // 일치하는 선택지가 있으면 선택합니다.
+  else document.getElementById("status").textContent = "Please choose one of the responses for now."; // 일치하는 선택지가 없으면 안내합니다.
+  input.value = ""; // 입력창을 비웁니다.
+} // 텍스트 입력 함수를 종료합니다.
+
+function listen(mode) { // 음성 인식을 시작합니다.
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; // 브라우저 음성 인식 기능을 확인합니다.
+  if (!SpeechRecognition) { document.getElementById("status").textContent = "Speech recognition is not supported here."; return; } // 지원하지 않으면 안내합니다.
+
+  const recognition = new SpeechRecognition(); // 음성 인식 객체를 생성합니다.
+  recognition.lang = "ko-KR"; // 한국어 인식으로 설정합니다.
+  recognition.interimResults = false; // 최종 결과만 받습니다.
+  document.getElementById("status").textContent = "Listening..."; // 듣기 상태를 표시합니다.
+
+  recognition.onresult = event => { // 인식 결과가 도착하면 실행합니다.
+    const spoken = event.results[0][0].transcript; // 인식된 문장을 가져옵니다.
+    document.getElementById("status").textContent = "Recognized: " + spoken; // 인식 결과를 표시합니다.
+    if (mode === "user") { // 사용자 음성 모드인지 확인합니다.
+      document.getElementById("userInput").value = spoken; // 인식한 문장을 입력창에 넣습니다.
+      submitText(); // 입력한 문장을 처리합니다.
+    } else { // 스태프 음성 모드입니다.
+      const normalized = spoken.replace(/\s/g, ""); // 공백을 제거합니다.
+      if (normalized.includes("디카페인")) currentStep = "decaf"; // 디카페인 질문 단계로 이동합니다.
+      else if (normalized.includes("샷")) currentStep = "shot"; // 샷 질문 단계로 이동합니다.
+      else if (normalized.includes("사이즈")) currentStep = "size"; // 사이즈 질문 단계로 이동합니다.
+      else if (normalized.includes("따뜻하게") || normalized.includes("아이스")) currentStep = "temperature"; // 온도 질문 단계로 이동합니다.
+      else if (normalized.includes("포장") || normalized.includes("드시고")) currentStep = "takeout"; // 매장 또는 포장 질문 단계로 이동합니다.
+      else if (normalized.includes("카드")) currentStep = "payment"; // 결제 단계로 이동합니다.
+      else if (normalized.includes("영수증")) currentStep = "receipt"; // 영수증 단계로 이동합니다.
+      else if (normalized.includes("준비되면")) currentStep = "finish"; // 주문 완료 단계로 이동합니다.
+      renderStep(); // 인식한 단계의 대사를 표시합니다.
+    } // 음성 모드별 처리를 종료합니다.
+  }; // 인식 결과 처리를 종료합니다.
+
+  recognition.onerror = event => { // 음성 인식 오류가 발생하면 실행합니다.
+    document.getElementById("status").textContent = "Error: " + event.error; // 오류를 표시합니다.
+  }; // 오류 처리를 종료합니다.
+
+  recognition.start(); // 음성 인식을 시작합니다.
+} // 음성 인식 함수를 종료합니다.
+
+function goPlaces() { // 장소 선택 화면으로 돌아갑니다.
+  showScreen("places"); // 장소 선택 화면을 표시합니다.
+} // 장소 이동 함수를 종료합니다.
+
+function goScenarios() { // 상황 선택 화면으로 돌아갑니다.
+  showScreen("scenarios"); // 상황 선택 화면을 표시합니다.
+} // 상황 이동 함수를 종료합니다.
+
+document.getElementById("userInput").addEventListener("keydown", event => { // 입력창의 키보드 입력을 감지합니다.
+  if (event.key === "Enter") submitText(); // Enter 키를 누르면 입력을 전송합니다.
+}); // 키보드 이벤트 설정을 종료합니다.
+
+</script> <!-- JavaScript를 종료합니다. -->
+</body> <!-- 화면 내용을 종료합니다. -->
+</html> <!-- HTML 문서를 종료합니다. -->
