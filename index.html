@@ -1,12 +1,155 @@
-<!DOCTYPE html> <!-- HTML 문서임을 선언 -->
-<html lang="ko"> <!-- 한국어 문서 시작 -->
-<head> <!-- 문서 설정 시작 -->
-    <meta charset="UTF-8"> <!-- 한글 인코딩 설정 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 모바일 화면에 맞춤 -->
-    <title>Korean Travel Assistant</title> <!-- 브라우저 제목 -->
-</head> <!-- 문서 설정 끝 -->
-<body> <!-- 화면에 표시할 내용 시작 -->
-    <h1>한국 여행 도우미</h1> <!-- 가장 큰 제목 -->
-    <p>외국인을 위한 한국 여행 도우미입니다.</p> <!-- 설명 문장 -->
-</body> <!-- 화면에 표시할 내용 끝 -->
-</html> <!-- HTML 문서 끝 -->
+
+<!DOCTYPE html>
+<!-- HTML 문서의 시작을 알립니다. -->
+<html lang="ko">
+<!-- 페이지의 기본 언어를 한국어로 설정합니다. -->
+
+<head>
+    <!-- 브라우저에 필요한 설정을 작성합니다. -->
+    <meta charset="UTF-8">
+    <!-- 한글이 깨지지 않도록 설정합니다. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 휴대폰 화면 크기에 맞게 페이지를 표시합니다. -->
+    <title>Korean Travel Assistant</title>
+    <!-- 브라우저 탭에 표시될 제목입니다. -->
+
+    <style>
+        /* 페이지 전체의 기본 디자인입니다. */
+        body {
+            /* 기본 글꼴을 설정합니다. */
+            font-family: Arial, sans-serif;
+            /* 페이지 바깥 여백을 제거합니다. */
+            margin: 0;
+            /* 페이지 배경색을 설정합니다. */
+            background-color: #f5f6fa;
+            /* 글자 색상을 설정합니다. */
+            color: #222222;
+            /* 글자와 요소의 간격을 설정합니다. */
+            padding: 24px;
+        }
+
+        /* 메인 화면의 제목입니다. */
+        h1 {
+            /* 제목을 가운데 정렬합니다. */
+            text-align: center;
+            /* 제목 크기를 설정합니다. */
+            font-size: 27px;
+        }
+
+        /* 페이지 소개 문장입니다. */
+        .description {
+            /* 문장을 가운데 정렬합니다. */
+            text-align: center;
+            /* 글자 색상을 회색으로 설정합니다. */
+            color: #666666;
+            /* 아래쪽 여백을 설정합니다. */
+            margin-bottom: 30px;
+        }
+
+        /* 장소 버튼들을 담는 영역입니다. */
+        .place-list {
+            /* 버튼을 세로 방향으로 배치합니다. */
+            display: flex;
+            /* 세로 방향으로 정렬합니다. */
+            flex-direction: column;
+            /* 버튼 사이의 간격을 설정합니다. */
+            gap: 14px;
+            /* 최대 너비를 설정합니다. */
+            max-width: 500px;
+            /* 화면 가운데에 배치합니다. */
+            margin: 0 auto;
+        }
+
+        /* 각각의 장소 버튼 디자인입니다. */
+        .place-button {
+            /* 버튼 안쪽 여백을 설정합니다. */
+            padding: 20px;
+            /* 테두리를 제거합니다. */
+            border: none;
+            /* 모서리를 둥글게 만듭니다. */
+            border-radius: 14px;
+            /* 버튼 배경색을 흰색으로 설정합니다. */
+            background-color: white;
+            /* 글자 크기를 설정합니다. */
+            font-size: 19px;
+            /* 글자를 왼쪽으로 정렬합니다. */
+            text-align: left;
+            /* 마우스 포인터 모양을 변경합니다. */
+            cursor: pointer;
+        }
+
+        /* 버튼을 눌렀을 때의 배경색입니다. */
+        .place-button:active {
+            /* 누르는 동안 배경색을 변경합니다. */
+            background-color: #dce8ff;
+        }
+
+        /* 선택 결과를 보여주는 영역입니다. */
+        #result {
+            /* 결과 영역의 위쪽 여백입니다. */
+            margin-top: 28px;
+            /* 결과 글자를 가운데 정렬합니다. */
+            text-align: center;
+            /* 결과 글자 크기를 설정합니다. */
+            font-size: 17px;
+            /* 결과 글자 색상을 설정합니다. */
+            color: #2455a4;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 메인 화면의 제목입니다. -->
+    <h1>🇰🇷 한국 여행 도우미</h1>
+
+    <!-- 웹사이트의 간단한 소개입니다. -->
+    <p class="description">
+        외국인을 위한 실생활 한국어 여행 도우미
+    </p>
+
+    <!-- 사용자가 선택할 장소 목록입니다. -->
+    <div class="place-list">
+
+        <!-- 카페 선택 버튼입니다. -->
+        <button class="place-button" onclick="selectPlace('카페')">
+            ☕ 카페
+        </button>
+
+        <!-- 식당 선택 버튼입니다. -->
+        <button class="place-button" onclick="selectPlace('식당')">
+            🍽️ 식당
+        </button>
+
+        <!-- 교통 선택 버튼입니다. -->
+        <button class="place-button" onclick="selectPlace('교통')">
+            🚇 교통
+        </button>
+
+        <!-- 쇼핑 선택 버튼입니다. -->
+        <button class="place-button" onclick="selectPlace('쇼핑')">
+            🛍️ 쇼핑
+        </button>
+
+        <!-- 숙소 선택 버튼입니다. -->
+        <button class="place-button" onclick="selectPlace('숙소')">
+            🏨 숙소
+        </button>
+
+    </div>
+
+    <!-- 사용자가 선택한 장소를 표시합니다. -->
+    <p id="result">원하는 장소를 선택해 주세요.</p>
+
+    <script>
+        // 사용자가 장소 버튼을 누르면 실행되는 함수입니다.
+        function selectPlace(place) {
+
+            // 선택한 장소를 화면에 표시합니다.
+            document.getElementById("result").textContent =
+                place + "을(를) 선택했습니다!";
+
+        }
+    </script>
+</body>
+</html>
+<!-- HTML 문서의 끝입니다. -->
