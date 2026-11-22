@@ -4,349 +4,70 @@
 <head> <!-- 페이지 설정을 시작합니다. -->
 <meta charset="UTF-8"> <!-- 한글 표시를 지원합니다. -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 모바일 화면에 맞춥니다. -->
-<title>Seoul Moments</title> <!-- 브라우저 탭 제목입니다. -->
+<title>Seoul Moments</title> <!-- 브라우저 제목입니다. -->
 
 <style> /* 디자인 CSS를 시작합니다. */
-
 * { box-sizing: border-box; } /* 모든 요소의 크기 계산을 통일합니다. */
-
-body { /* 전체 배경 디자인입니다. */
-  margin: 0; /* 기본 여백을 제거합니다. */
-  min-height: 100vh; /* 화면 전체 높이를 사용합니다. */
-  font-family: "Avenir Next", "Segoe UI", sans-serif; /* 글꼴을 설정합니다. */
-  color: #465267; /* 기본 글자색을 설정합니다. */
-  background: linear-gradient(135deg, #f1edf9 0%, #eaf2f8 45%, #f9edf1 100%); /* 파스텔 배경입니다. */
-  background-attachment: fixed; /* 스크롤해도 배경을 고정합니다. */
-} /* 배경 설정을 마칩니다. */
-
-button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합니다. */
-
-button { -webkit-tap-highlight-color: transparent; } /* 모바일 터치 시 기본 강조색을 제거합니다. */
-
-.app { /* 앱 전체 영역입니다. */
-  width: min(100% - 28px, 760px); /* 화면 크기에 맞는 너비입니다. */
-  margin: auto; /* 가운데 정렬합니다. */
-  padding: 25px 0 40px; /* 위아래 여백입니다. */
-} /* 앱 영역 설정을 마칩니다. */
-
-.header { /* 상단 브랜드 영역입니다. */
-  display: flex; /* 가로로 배치합니다. */
-  justify-content: space-between; /* 양쪽 끝에 배치합니다. */
-  align-items: center; /* 세로 가운데 정렬합니다. */
-  padding: 5px 4px 22px; /* 내부 여백입니다. */
-} /* 헤더 설정을 마칩니다. */
-
-.logo { /* 앱 이름입니다. */
-  font-family: Georgia, serif; /* 세리프 글꼴을 사용합니다. */
-  font-size: 27px; /* 제목 크기입니다. */
-  letter-spacing: -1px; /* 글자 간격을 조정합니다. */
-  color: #586784; /* 차분한 블루그레이입니다. */
-} /* 로고 설정을 마칩니다. */
-
-.header-icon { /* 상단 원형 아이콘입니다. */
-  width: 40px; /* 너비입니다. */
-  height: 40px; /* 높이입니다. */
-  border-radius: 50%; /* 원형으로 만듭니다. */
-  display: grid; /* 가운데 정렬을 위한 그리드입니다. */
-  place-items: center; /* 아이콘을 가운데 배치합니다. */
-  background: rgba(255,255,255,.58); /* 반투명 흰색입니다. */
-  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
-  box-shadow: 0 7px 20px rgba(100,115,150,.13); /* 부드러운 그림자입니다. */
-  color: #A18CB9; /* 라일락 색상입니다. */
-} /* 상단 아이콘 설정을 마칩니다. */
-
-.glass { /* 공통 유리 질감입니다. */
-  background: rgba(255,255,255,.53); /* 반투명 흰색 배경입니다. */
-  border: 1px solid rgba(255,255,255,.85); /* 유리 테두리입니다. */
-  backdrop-filter: blur(20px); /* 배경을 흐리게 합니다. */
-  -webkit-backdrop-filter: blur(20px); /* iOS Safari용 블러입니다. */
-  box-shadow: 0 18px 45px rgba(100,112,145,.15), 0 5px 14px rgba(100,112,145,.07), inset 0 1px 0 rgba(255,255,255,.95); /* 입체적인 그림자입니다. */
-} /* 유리 스타일을 마칩니다. */
-
-.main { /* 메인 콘텐츠 카드입니다. */
-  border-radius: 28px; /* 둥근 모서리입니다. */
-  padding: 22px; /* 내부 여백입니다. */
-  min-height: 500px; /* 기본 높이입니다. */
-  box-shadow: 0 20px 55px rgba(104,116,150,.16), 0 7px 20px rgba(104,116,150,.08), inset 0 1px 0 white; /* 메인 박스를 강조합니다. */
-} /* 메인 카드 설정을 마칩니다. */
-
-.heading { /* 화면 제목입니다. */
-  font-family: Georgia, serif; /* 세리프 글꼴입니다. */
-  font-size: 27px; /* 제목 크기입니다. */
-  font-weight: 500; /* 글자 두께입니다. */
-  margin: 4px 0 7px; /* 제목 여백입니다. */
-  color: #596A88; /* 파스텔 블루그레이입니다. */
-} /* 제목 설정을 마칩니다. */
-
-.subheading { /* 보조 설명입니다. */
-  margin: 0 0 20px; /* 아래 여백입니다. */
-  color: #9997AB; /* 부드러운 라일락 그레이입니다. */
-  font-size: 12px; /* 글자 크기입니다. */
-} /* 보조 설명 설정을 마칩니다. */
-
-.place-grid { /* 장소 카드 그리드입니다. */
-  display: grid; /* 그리드 레이아웃입니다. */
-  grid-template-columns: repeat(2, minmax(0, 1fr)); /* 두 열로 나눕니다. */
-  gap: 13px; /* 카드 사이 간격입니다. */
-} /* 장소 그리드 설정을 마칩니다. */
-
-.place-card { /* 장소 선택 카드입니다. */
-  position: relative; /* 내부 요소의 위치 기준입니다. */
-  height: 140px; /* 카드 높이를 적당하게 설정합니다. */
-  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
-  border-radius: 19px; /* 둥근 모서리입니다. */
-  overflow: hidden; /* 이미지가 카드 밖으로 나가지 않게 합니다. */
-  padding: 0; /* 기본 여백을 제거합니다. */
-  background: #E8EAF3; /* 이미지가 없을 때의 배경입니다. */
-  cursor: pointer; /* 클릭 가능한 카드입니다. */
-  box-shadow: 0 10px 25px rgba(100,115,150,.17), inset 0 1px 0 white; /* 카드 그림자입니다. */
-  transition: transform .2s, box-shadow .2s; /* 움직임을 부드럽게 합니다. */
-} /* 장소 카드 설정을 마칩니다. */
-
-.place-card:hover { /* 마우스를 올렸을 때입니다. */
-  transform: translateY(-3px); /* 살짝 떠오릅니다. */
-  box-shadow: 0 15px 30px rgba(100,115,150,.22); /* 그림자를 강조합니다. */
-} /* 마우스 효과를 마칩니다. */
-
-.place-card img { /* 장소 사진입니다. */
-  width: 100%; /* 카드 너비에 맞춥니다. */
-  height: 100%; /* 카드 높이에 맞춥니다. */
-  object-fit: cover; /* 사진 비율을 유지하며 채웁니다. */
-  display: block; /* 이미지 아래 여백을 제거합니다. */
-  opacity: .88; /* 사진을 살짝 부드럽게 만듭니다. */
-  transition: transform .4s; /* 확대 효과를 부드럽게 합니다. */
-} /* 장소 이미지 설정을 마칩니다. */
-
-.place-card:hover img { transform: scale(1.04); } /* 사진을 살짝 확대합니다. */
-
-.place-overlay { /* 사진 위 그라데이션입니다. */
-  position: absolute; /* 사진 위에 배치합니다. */
-  inset: 0; /* 카드 전체를 덮습니다. */
-  background: linear-gradient(transparent 35%, rgba(38,49,65,.55)); /* 아래쪽만 살짝 어둡게 합니다. */
-} /* 사진 오버레이를 마칩니다. */
-
-.place-name { /* 장소 이름입니다. */
-  position: absolute; /* 사진 위에 배치합니다. */
-  left: 15px; /* 왼쪽 여백입니다. */
-  bottom: 14px; /* 아래 여백입니다. */
-  color: white; /* 흰색 글자입니다. */
-  font-size: 16px; /* 글자 크기입니다. */
-  font-weight: 650; /* 글자 두께입니다. */
-  text-shadow: 0 2px 8px rgba(0,0,0,.25); /* 글자 그림자입니다. */
-} /* 장소 이름 설정을 마칩니다. */
-
-.back-button { /* 뒤로 가기 버튼입니다. */
-  border: 0; /* 기본 테두리를 제거합니다. */
-  background: transparent; /* 배경을 투명하게 합니다. */
-  color: #8D91AD; /* 파스텔 블루그레이입니다. */
-  padding: 4px 0 17px; /* 여백입니다. */
-  cursor: pointer; /* 클릭 가능한 버튼입니다. */
-  font-size: 13px; /* 글자 크기입니다. */
-} /* 뒤로 가기 버튼 설정을 마칩니다. */
-
-.scenario-card { /* 상황 선택 카드입니다. */
-  display: flex; /* 아이콘과 글자를 가로로 배치합니다. */
-  align-items: center; /* 세로 가운데 정렬합니다. */
-  gap: 15px; /* 아이콘과 글자 간격입니다. */
-  width: 100%; /* 전체 너비입니다. */
-  padding: 16px; /* 내부 여백입니다. */
-  margin-bottom: 13px; /* 아래 간격입니다. */
-  border-radius: 18px; /* 둥근 모서리입니다. */
-  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
-  background: rgba(255,255,255,.58); /* 반투명 배경입니다. */
-  box-shadow: 0 9px 23px rgba(105,118,150,.13), inset 0 1px 0 white; /* 입체 그림자입니다. */
-  text-align: left; /* 왼쪽 정렬합니다. */
-  cursor: pointer; /* 클릭 가능한 버튼입니다. */
-  transition: transform .2s, box-shadow .2s; /* 부드러운 효과입니다. */
-} /* 상황 카드 설정을 마칩니다. */
-
-.scenario-card:active { transform: scale(.985); } /* 누르면 살짝 작아집니다. */
-
-.scenario-icon { /* 상황 아이콘 영역입니다. */
-  width: 46px; /* 너비입니다. */
-  height: 46px; /* 높이입니다. */
-  border-radius: 15px; /* 둥근 사각형입니다. */
-  display: grid; /* 가운데 정렬을 위한 그리드입니다. */
-  place-items: center; /* 아이콘을 가운데 놓습니다. */
-  background: linear-gradient(145deg, #F1ECFA, #E5F0F5); /* 라벤더와 블루 파스텔입니다. */
-  font-size: 22px; /* 아이콘 크기입니다. */
-  box-shadow: 0 5px 13px rgba(125,130,170,.10); /* 아이콘 그림자입니다. */
-} /* 상황 아이콘 설정을 마칩니다. */
-
-.scenario-name { /* 상황 이름입니다. */
-  font-size: 15px; /* 글자 크기입니다. */
-  color: #64748E; /* 블루그레이입니다. */
-  font-weight: 600; /* 글자 두께입니다. */
-} /* 상황 이름 설정을 마칩니다. */
-
-.dialogue-card { /* 스태프 대사 카드입니다. */
-  padding: 21px; /* 내부 여백입니다. */
-  border-radius: 23px; /* 둥근 모서리입니다. */
-  background: linear-gradient(145deg, rgba(240,245,255,.88), rgba(255,255,255,.65)); /* 파스텔 블루 글래스입니다. */
-  border: 1px solid rgba(255,255,255,.95); /* 밝은 테두리입니다. */
-  backdrop-filter: blur(22px); /* 유리 블러 효과입니다. */
-  -webkit-backdrop-filter: blur(22px); /* iOS Safari용 블러입니다. */
-  box-shadow: 0 15px 34px rgba(105,128,175,.17), 0 5px 13px rgba(105,128,175,.08), inset 0 1px 0 white; /* 대화 카드 그림자입니다. */
-} /* 대화 카드 설정을 마칩니다. */
-
-.speaker { /* 말하는 사람 표시입니다. */
-  color: #D49AA5; /* 소프트 코랄입니다. */
-  font-size: 10px; /* 작은 글씨입니다. */
-  letter-spacing: 2px; /* 자간입니다. */
-  font-weight: 750; /* 글자 두께입니다. */
-  margin-bottom: 13px; /* 아래 여백입니다. */
-} /* 화자 표시 설정을 마칩니다. */
-
-.english { /* 영어 문장입니다. */
-  color: #668AC5; /* 파스텔 블루입니다. */
-  font-size: 15px; /* 글자 크기입니다. */
-  font-weight: 600; /* 글자를 선명하게 합니다. */
-  line-height: 1.55; /* 줄 간격입니다. */
-  margin-bottom: 12px; /* 아래 여백입니다. */
-} /* 영어 문장 설정을 마칩니다. */
-
-.korean { /* 한국어 문장입니다. */
-  color: #639879; /* 세이지 그린입니다. */
-  font-size: 22px; /* 한국어 글자 크기입니다. */
-  font-weight: 700; /* 글자를 강조합니다. */
-  line-height: 1.55; /* 줄 간격입니다. */
-  word-break: keep-all; /* 한글 단어가 어색하게 끊기지 않게 합니다. */
-} /* 한국어 문장 설정을 마칩니다. */
-
-.roman { /* 로마자 발음입니다. */
-  color: #A18AB9; /* 파스텔 라일락입니다. */
-  font-size: 13px; /* 글자 크기입니다. */
-  font-style: italic; /* 기울임꼴입니다. */
-  margin-top: 9px; /* 위쪽 간격입니다. */
-  line-height: 1.5; /* 줄 간격입니다. */
-} /* 로마자 발음 설정을 마칩니다. */
-
-.choice-list { /* 응답 선택지 목록입니다. */
-  display: flex; /* 세로로 배치합니다. */
-  flex-direction: column; /* 세로 방향입니다. */
-  gap: 11px; /* 선택지 사이 간격입니다. */
-  margin-top: 18px; /* 위쪽 간격입니다. */
-} /* 선택지 목록 설정을 마칩니다. */
-
-.choice { /* 개별 응답 버튼입니다. */
-  width: 100%; /* 전체 너비입니다. */
-  padding: 15px 17px; /* 내부 여백입니다. */
-  border: 1px solid rgba(255,255,255,.95); /* 밝은 테두리입니다. */
-  border-radius: 17px; /* 둥근 모서리입니다. */
-  background: rgba(255,255,255,.66); /* 반투명 흰색입니다. */
-  text-align: left; /* 왼쪽 정렬합니다. */
-  cursor: pointer; /* 클릭 가능한 버튼입니다. */
-  backdrop-filter: blur(16px); /* 유리 블러 효과입니다. */
-  -webkit-backdrop-filter: blur(16px); /* iOS Safari용 블러입니다. */
-  box-shadow: 0 10px 24px rgba(112,125,160,.15), 0 3px 8px rgba(112,125,160,.07), inset 0 1px 0 white; /* 입체적인 그림자입니다. */
-  transition: transform .15s, background .15s, box-shadow .15s; /* 반응을 부드럽게 합니다. */
-} /* 선택지 버튼 설정을 마칩니다. */
-
-.choice:active { /* 버튼을 누르는 순간입니다. */
-  transform: scale(.985); /* 살짝 눌리는 효과입니다. */
-  background: rgba(237,241,250,.9); /* 연한 블루로 바뀝니다. */
-  box-shadow: 0 4px 12px rgba(112,125,160,.12); /* 그림자를 줄입니다. */
-} /* 버튼 클릭 효과를 마칩니다. */
-
-.choice-en { /* 선택지 영어입니다. */
-  display: block; /* 별도 줄에 표시합니다. */
-  font-size: 14px; /* 글자 크기입니다. */
-  font-weight: 600; /* 글자 두께입니다. */
-  color: #668AC5; /* 파스텔 블루입니다. */
-  margin-bottom: 7px; /* 아래 간격입니다. */
-  line-height: 1.45; /* 줄 간격입니다. */
-} /* 선택지 영어 설정을 마칩니다. */
-
-.choice-ko { /* 선택지 한국어입니다. */
-  display: block; /* 별도 줄에 표시합니다. */
-  font-size: 17px; /* 글자 크기입니다. */
-  font-weight: 700; /* 글자를 강조합니다. */
-  color: #639879; /* 세이지 그린입니다. */
-  margin-bottom: 5px; /* 아래 간격입니다. */
-  line-height: 1.5; /* 줄 간격입니다. */
-} /* 선택지 한국어 설정을 마칩니다. */
-
-.choice-ro { /* 선택지 로마자 발음입니다. */
-  display: block; /* 별도 줄에 표시합니다. */
-  font-size: 12px; /* 작은 글자입니다. */
-  color: #A18AB9; /* 라일락입니다. */
-  font-style: italic; /* 기울임꼴입니다. */
-  line-height: 1.5; /* 줄 간격입니다. */
-} /* 선택지 로마자 설정을 마칩니다. */
-
-.tools { /* 음성 버튼 영역입니다. */
-  display: flex; /* 가로로 배치합니다. */
-  gap: 9px; /* 버튼 사이 간격입니다. */
-  margin-top: 18px; /* 위쪽 간격입니다. */
-} /* 도구 영역 설정을 마칩니다. */
-
-.tool-button { /* 작은 기능 버튼입니다. */
-  flex: 1; /* 같은 너비를 사용합니다. */
-  padding: 12px 8px; /* 내부 여백입니다. */
-  border: 1px solid rgba(255,255,255,.95); /* 밝은 테두리입니다. */
-  border-radius: 14px; /* 둥근 모서리입니다. */
-  background: rgba(255,255,255,.62); /* 반투명 배경입니다. */
-  color: #7D89A8; /* 블루그레이입니다. */
-  cursor: pointer; /* 클릭 가능한 버튼입니다. */
-  font-size: 12px; /* 작은 글씨입니다. */
-  box-shadow: 0 7px 17px rgba(112,125,160,.12); /* 은은한 그림자입니다. */
-} /* 기능 버튼 설정을 마칩니다. */
-
-.input-row { /* 직접 입력 영역입니다. */
-  display: flex; /* 입력창과 버튼을 가로로 배치합니다. */
-  gap: 8px; /* 간격입니다. */
-  margin-top: 13px; /* 위쪽 여백입니다. */
-} /* 입력 행 설정을 마칩니다. */
-
-.input-row input { /* 텍스트 입력창입니다. */
-  flex: 1; /* 남은 공간을 사용합니다. */
-  min-width: 0; /* 모바일에서 넘치지 않도록 합니다. */
-  padding: 12px; /* 내부 여백입니다. */
-  border: 1px solid rgba(255,255,255,.95); /* 밝은 테두리입니다. */
-  border-radius: 13px; /* 둥근 모서리입니다. */
-  background: rgba(255,255,255,.7); /* 반투명 흰색입니다. */
-  color: #5D718E; /* 입력 글자색입니다. */
-  outline: none; /* 기본 외곽선을 제거합니다. */
-  box-shadow: 0 5px 14px rgba(112,125,160,.08); /* 은은한 그림자입니다. */
-} /* 입력창 설정을 마칩니다. */
-
-.input-row input::placeholder { color: #A5A5B8; } /* 입력 안내 문구 색상입니다. */
-
-.input-row input:focus { border-color: #B9C9E7; } /* 입력창을 선택하면 테두리가 바뀝니다. */
-
-.send-button { /* 전송 버튼입니다. */
-  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
-  border-radius: 13px; /* 둥근 모서리입니다. */
-  padding: 0 16px; /* 좌우 여백입니다. */
-  background: linear-gradient(135deg, #DCE9F8, #E9E0F5); /* 블루와 라일락입니다. */
-  color: #687A9A; /* 글자색입니다. */
-  cursor: pointer; /* 클릭 가능한 버튼입니다. */
-  box-shadow: 0 6px 15px rgba(112,125,160,.13); /* 그림자입니다. */
-} /* 전송 버튼 설정을 마칩니다. */
-
-.status { /* 음성 인식 상태입니다. */
-  color: #9997AB; /* 라일락 그레이입니다. */
-  font-size: 11px; /* 작은 글자입니다. */
-  margin-top: 11px; /* 위쪽 간격입니다. */
-  min-height: 17px; /* 공간을 유지합니다. */
-} /* 상태 안내 설정을 마칩니다. */
-
+body { margin: 0; min-height: 100vh; font-family: "Avenir Next", "Segoe UI", sans-serif; color: #58647B; background: linear-gradient(135deg,#F1EDF9,#EAF2F8 48%,#F9EDF1); background-attachment: fixed; } /* 파스텔 배경입니다. */
+button, input { font: inherit; } /* 버튼과 입력창 글꼴을 통일합니다. */
+button { -webkit-tap-highlight-color: transparent; } /* 모바일 터치 강조색을 제거합니다. */
+.app { width: min(100% - 28px,760px); margin: auto; padding: 25px 0 40px; } /* 앱 전체 영역입니다. */
+.header { display: flex; justify-content: space-between; align-items: center; padding: 5px 4px 22px; } /* 상단 브랜드 영역입니다. */
+.logo { font-family: Georgia,serif; font-size: 27px; letter-spacing: -1px; color: #586784; } /* 앱 이름입니다. */
+.header-icon { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.58); border: 1px solid white; box-shadow: 0 7px 20px rgba(100,115,150,.13); color: #A18CB9; } /* 상단 장식입니다. */
+.glass { background: rgba(255,255,255,.53); border: 1px solid rgba(255,255,255,.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 18px 45px rgba(100,112,145,.15),0 5px 14px rgba(100,112,145,.07),inset 0 1px 0 white; } /* 공통 유리 스타일입니다. */
+.main { border-radius: 28px; padding: 22px; min-height: 500px; box-shadow: 0 20px 55px rgba(104,116,150,.16),0 7px 20px rgba(104,116,150,.08),inset 0 1px 0 white; } /* 메인 카드입니다. */
+.heading { font-family: Georgia,serif; font-size: 27px; font-weight: 500; margin: 4px 0 7px; color: #596A88; } /* 화면 제목입니다. */
+.subheading { margin: 0 0 20px; color: #9997AB; font-size: 12px; } /* 보조 설명입니다. */
+.place-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px; } /* 장소 카드 그리드입니다. */
+.place-card { position: relative; height: 140px; border: 1px solid white; border-radius: 19px; overflow: hidden; padding: 0; background: #E8EAF3; cursor: pointer; box-shadow: 0 10px 25px rgba(100,115,150,.17); transition: transform .2s,box-shadow .2s; } /* 장소 카드입니다. */
+.place-card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(100,115,150,.22); } /* 장소 카드 호버 효과입니다. */
+.place-card img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .88; transition: transform .4s; } /* 장소 사진입니다. */
+.place-card:hover img { transform: scale(1.04); } /* 사진 확대 효과입니다. */
+.place-overlay { position: absolute; inset: 0; background: linear-gradient(transparent 35%,rgba(38,49,65,.55)); } /* 사진 위 그라데이션입니다. */
+.place-name { position: absolute; left: 15px; bottom: 14px; color: white; font-size: 16px; font-weight: 650; text-shadow: 0 2px 8px rgba(0,0,0,.25); } /* 장소 이름입니다. */
+.back-button { border: 0; background: transparent; color: #8D91AD; padding: 4px 0 17px; cursor: pointer; font-size: 13px; } /* 뒤로 가기 버튼입니다. */
+.scenario-list { display: flex; flex-direction: column; gap: 12px; } /* 상황 목록입니다. */
+.scenario-card { display: flex; align-items: center; gap: 15px; width: 100%; padding: 16px; border-radius: 18px; border: 1px solid white; background: rgba(255,255,255,.58); box-shadow: 0 9px 23px rgba(105,118,150,.13),inset 0 1px 0 white; text-align: left; cursor: pointer; transition: transform .2s; } /* 상황 선택 카드입니다. */
+.scenario-card:active { transform: scale(.985); } /* 상황 카드 클릭 효과입니다. */
+.scenario-icon { width: 46px; height: 46px; flex-shrink: 0; border-radius: 15px; display: grid; place-items: center; background: linear-gradient(145deg,#F1ECFA,#E5F0F5); font-size: 22px; box-shadow: 0 5px 13px rgba(125,130,170,.10); } /* 상황 아이콘입니다. */
+.scenario-text { flex: 1; } /* 상황 텍스트 영역입니다. */
+.scenario-name { font-size: 15px; color: #64748E; font-weight: 650; } /* 상황 이름입니다. */
+.scenario-description { color: #A09DB2; font-size: 11px; margin-top: 4px; } /* 상황 설명입니다. */
+.scenario-arrow { color: #A99ABC; font-size: 18px; } /* 오른쪽 화살표입니다. */
+.dialogue-card { padding: 21px; border-radius: 23px; background: linear-gradient(145deg,rgba(240,245,255,.88),rgba(255,255,255,.65)); border: 1px solid white; backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); box-shadow: 0 15px 34px rgba(105,128,175,.17),0 5px 13px rgba(105,128,175,.08),inset 0 1px 0 white; } /* 직원 대사 카드입니다. */
+.speaker { color: #D49AA5; font-size: 10px; letter-spacing: 2px; font-weight: 750; margin-bottom: 13px; } /* 화자 표시입니다. */
+.english { color: #668AC5; font-size: 15px; font-weight: 600; line-height: 1.55; margin-bottom: 12px; } /* 영어 문장입니다. */
+.korean { color: #639879; font-size: 22px; font-weight: 700; line-height: 1.55; word-break: keep-all; } /* 한국어 문장입니다. */
+.roman { color: #A18AB9; font-size: 13px; font-style: italic; margin-top: 9px; line-height: 1.5; } /* 로마자 발음입니다. */
+.choice-list { display: flex; flex-direction: column; gap: 11px; margin-top: 18px; } /* 선택지 목록입니다. */
+.choice { width: 100%; padding: 15px 17px; border: 1px solid white; border-radius: 17px; background: rgba(255,255,255,.66); text-align: left; cursor: pointer; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 10px 24px rgba(112,125,160,.15),0 3px 8px rgba(112,125,160,.07),inset 0 1px 0 white; transition: transform .15s,background .15s; } /* 선택지 카드입니다. */
+.choice:active { transform: scale(.985); background: rgba(237,241,250,.9); } /* 선택지 클릭 효과입니다. */
+.choice-en { display: block; font-size: 14px; font-weight: 600; color: #668AC5; margin-bottom: 7px; line-height: 1.45; } /* 선택지 영어입니다. */
+.choice-ko { display: block; font-size: 17px; font-weight: 700; color: #639879; margin-bottom: 5px; line-height: 1.5; } /* 선택지 한국어입니다. */
+.choice-ro { display: block; font-size: 12px; color: #A18AB9; font-style: italic; line-height: 1.5; } /* 선택지 발음입니다. */
+.input-row { display: flex; gap: 8px; margin-top: 13px; } /* 직접 입력 영역입니다. */
+.input-row input { flex: 1; min-width: 0; padding: 12px; border: 1px solid white; border-radius: 13px; background: rgba(255,255,255,.7); color: #5D718E; outline: none; } /* 입력창입니다. */
+.input-row input::placeholder { color: #A5A5B8; } /* 입력 안내 색상입니다. */
+.input-row input:focus { border-color: #B9C9E7; } /* 입력창 포커스 효과입니다. */
+.send-button { border: 1px solid white; border-radius: 13px; padding: 0 16px; background: linear-gradient(135deg,#DCE9F8,#E9E0F5); color: #687A9A; cursor: pointer; box-shadow: 0 6px 15px rgba(112,125,160,.13); } /* 전송 버튼입니다. */
+.tools { display: flex; gap: 9px; margin-top: 18px; } /* 음성 기능 영역입니다. */
+.tool-button { flex: 1; padding: 12px 8px; border: 1px solid white; border-radius: 14px; background: rgba(255,255,255,.62); color: #7D89A8; cursor: pointer; font-size: 12px; box-shadow: 0 7px 17px rgba(112,125,160,.12); } /* 음성 버튼입니다. */
+.status { color: #9997AB; font-size: 11px; margin-top: 11px; min-height: 17px; } /* 상태 안내입니다. */
 .hidden { display: none !important; } /* 요소를 숨깁니다. */
 
-@media (max-width: 420px) { /* 작은 휴대폰 화면 설정입니다. */
-  .main { padding: 16px; } /* 메인 카드 여백을 줄입니다. */
+@media (max-width: 420px) { /* 작은 모바일 화면 설정입니다. */
+  .main { padding: 16px; } /* 메인 여백을 줄입니다. */
   .place-card { height: 125px; } /* 장소 카드 높이를 줄입니다. */
   .heading { font-size: 24px; } /* 제목 크기를 줄입니다. */
-  .korean { font-size: 21px; } /* 한국어 크기를 조정합니다. */
-  .dialogue-card { padding: 18px; } /* 대화 카드 여백을 조정합니다. */
-} /* 모바일 설정을 마칩니다. */
-
+  .korean { font-size: 21px; } /* 한국어 글자 크기입니다. */
+  .dialogue-card { padding: 18px; } /* 대화 카드 여백입니다. */
+} /* 모바일 설정을 종료합니다. */
 </style> <!-- CSS를 종료합니다. -->
 </head> <!-- 페이지 설정을 종료합니다. -->
 
 <body> <!-- 화면 내용을 시작합니다. -->
 <main class="app"> <!-- 앱 전체 영역입니다. -->
-
 <header class="header"> <!-- 상단 브랜드입니다. -->
   <div class="logo">Seoul Moments</div> <!-- 앱 이름입니다. -->
   <div class="header-icon">✦</div> <!-- 장식 아이콘입니다. -->
@@ -356,303 +77,341 @@ button { -webkit-tap-highlight-color: transparent; } /* 모바일 터치 시 기
 
 <section id="places"> <!-- 장소 선택 화면입니다. -->
   <h1 class="heading">Where to?</h1> <!-- 제목입니다. -->
-  <p class="subheading">Choose your destination</p> <!-- 안내 문구입니다. -->
-
+  <p class="subheading">Choose your destination</p> <!-- 안내입니다. -->
   <div class="place-grid"> <!-- 장소 카드 목록입니다. -->
-
-    <button class="place-card" onclick="selectPlace('Cafe')"> <!-- 카페 선택 버튼입니다. -->
-      <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700" alt="Cafe"> <!-- 카페 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
-      <span class="place-name">Cafe</span> <!-- 장소 이름입니다. -->
-    </button> <!-- 카페 버튼을 종료합니다. -->
-
-    <button class="place-card" onclick="selectPlace('Restaurant')"> <!-- 식당 선택 버튼입니다. -->
-      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700" alt="Restaurant"> <!-- 식당 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
-      <span class="place-name">Restaurant</span> <!-- 장소 이름입니다. -->
-    </button> <!-- 식당 버튼을 종료합니다. -->
-
-    <button class="place-card" onclick="selectPlace('Transportation')"> <!-- 교통 선택 버튼입니다. -->
-      <img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700" alt="Transportation"> <!-- 교통 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
-      <span class="place-name">Transport</span> <!-- 장소 이름입니다. -->
-    </button> <!-- 교통 버튼을 종료합니다. -->
-
-    <button class="place-card" onclick="selectPlace('Shopping')"> <!-- 쇼핑 선택 버튼입니다. -->
-      <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700" alt="Shopping"> <!-- 쇼핑 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
-      <span class="place-name">Shopping</span> <!-- 장소 이름입니다. -->
-    </button> <!-- 쇼핑 버튼을 종료합니다. -->
-
-    <button class="place-card" onclick="selectPlace('Accommodation')"> <!-- 숙소 선택 버튼입니다. -->
-      <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700" alt="Accommodation"> <!-- 숙소 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
-      <span class="place-name">Stay</span> <!-- 장소 이름입니다. -->
-    </button> <!-- 숙소 버튼을 종료합니다. -->
-
-  </div> <!-- 장소 카드 목록을 종료합니다. -->
-</section> <!-- 장소 선택 화면을 종료합니다. -->
+    <button class="place-card" onclick="selectPlace('cafe')"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700" alt="Cafe"><span class="place-overlay"></span><span class="place-name">Cafe</span></button> <!-- 카페 카드입니다. -->
+    <button class="place-card" onclick="selectPlace('restaurant')"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700" alt="Restaurant"><span class="place-overlay"></span><span class="place-name">Restaurant</span></button> <!-- 식당 카드입니다. -->
+    <button class="place-card" onclick="selectPlace('transport')"><img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700" alt="Transportation"><span class="place-overlay"></span><span class="place-name">Transport</span></button> <!-- 교통 카드입니다. -->
+    <button class="place-card" onclick="selectPlace('shopping')"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700" alt="Shopping"><span class="place-overlay"></span><span class="place-name">Shopping</span></button> <!-- 쇼핑 카드입니다. -->
+    <button class="place-card" onclick="selectPlace('accommodation')"><img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700" alt="Accommodation"><span class="place-overlay"></span><span class="place-name">Stay</span></button> <!-- 숙소 카드입니다. -->
+  </div> <!-- 장소 목록을 종료합니다. -->
+</section> <!-- 장소 화면을 종료합니다. -->
 
 <section id="scenarios" class="hidden"> <!-- 상황 선택 화면입니다. -->
   <button class="back-button" onclick="goPlaces()">← Back</button> <!-- 장소 화면으로 돌아갑니다. -->
-  <h1 class="heading" id="placeHeading">Cafe</h1> <!-- 선택한 장소 이름입니다. -->
-  <p class="subheading">What would you like to do?</p> <!-- 상황 선택 안내입니다. -->
-
-  <button class="scenario-card" onclick="startCafe()"> <!-- 주문 상황 버튼입니다. -->
-    <span class="scenario-icon">☕</span> <!-- 커피 아이콘입니다. -->
-    <span class="scenario-name">Order a drink</span> <!-- 상황 이름입니다. -->
-  </button> <!-- 주문 버튼을 종료합니다. -->
-
-  <button class="scenario-card" onclick="comingSoon()"> <!-- 결제 상황 버튼입니다. -->
-    <span class="scenario-icon">💳</span> <!-- 결제 아이콘입니다. -->
-    <span class="scenario-name">Payment</span> <!-- 상황 이름입니다. -->
-  </button> <!-- 결제 버튼을 종료합니다. -->
-
-  <button class="scenario-card" onclick="comingSoon()"> <!-- 요청 상황 버튼입니다. -->
-    <span class="scenario-icon">🗣️</span> <!-- 대화 아이콘입니다. -->
-    <span class="scenario-name">Make a request</span> <!-- 상황 이름입니다. -->
-  </button> <!-- 요청 버튼을 종료합니다. -->
-</section> <!-- 상황 선택 화면을 종료합니다. -->
+  <h1 class="heading" id="placeHeading">Cafe</h1> <!-- 장소 이름입니다. -->
+  <p class="subheading">Choose a situation</p> <!-- 안내 문구입니다. -->
+  <div class="scenario-list" id="scenarioList"></div> <!-- 상황 목록입니다. -->
+</section> <!-- 상황 화면을 종료합니다. -->
 
 <section id="conversation" class="hidden"> <!-- 대화 화면입니다. -->
-  <button class="back-button" onclick="goScenarios()">← Back</button> <!-- 상황 선택으로 돌아갑니다. -->
-
-  <div class="dialogue-card"> <!-- 스태프 대사 카드입니다. -->
-    <div class="speaker" id="speaker">STAFF</div> <!-- 화자 표시입니다. -->
+  <button class="back-button" onclick="goScenarios()">← Back</button> <!-- 상황 목록으로 돌아갑니다. -->
+  <div class="dialogue-card"> <!-- 직원 대사 카드입니다. -->
+    <div class="speaker" id="speaker">STAFF</div> <!-- 화자입니다. -->
     <div class="english" id="english"></div> <!-- 영어 문장입니다. -->
     <div class="korean" id="korean"></div> <!-- 한국어 문장입니다. -->
-    <div class="roman" id="roman"></div> <!-- 로마자 발음입니다. -->
+    <div class="roman" id="roman"></div> <!-- 발음입니다. -->
   </div> <!-- 대사 카드를 종료합니다. -->
-
-  <div class="choice-list" id="choices"></div> <!-- 선택지를 표시합니다. -->
-
-  <div class="input-row"> <!-- 직접 입력 영역입니다. -->
-    <input id="userInput" placeholder="Type in Korean..." type="text"> <!-- 한국어 입력창입니다. -->
+  <div class="choice-list" id="choices"></div> <!-- 선택지 목록입니다. -->
+  <div class="input-row"> <!-- 입력 영역입니다. -->
+    <input id="userInput" placeholder="Type in Korean..." type="text"> <!-- 입력창입니다. -->
     <button class="send-button" onclick="submitText()">Send</button> <!-- 전송 버튼입니다. -->
   </div> <!-- 입력 영역을 종료합니다. -->
-
   <div class="tools"> <!-- 음성 기능 영역입니다. -->
-    <button class="tool-button" onclick="listen('user')">🎙 Speak</button> <!-- 사용자 음성 입력 버튼입니다. -->
-    <button class="tool-button" onclick="listen('staff')">🎧 Staff</button> <!-- 직원 음성 인식 버튼입니다. -->
-  </div> <!-- 음성 기능 영역을 종료합니다. -->
-
+    <button class="tool-button" onclick="listen('user')">🎙 Speak</button> <!-- 사용자 음성 입력입니다. -->
+    <button class="tool-button" onclick="listen('staff')">🎧 Staff</button> <!-- 직원 음성 인식입니다. -->
+  </div> <!-- 음성 기능을 종료합니다. -->
   <div class="status" id="status">Choose a response or speak Korean.</div> <!-- 상태 안내입니다. -->
 </section> <!-- 대화 화면을 종료합니다. -->
 
-</section> <!-- 메인 유리 카드를 종료합니다. -->
+</section> <!-- 메인 카드를 종료합니다. -->
 </main> <!-- 앱 영역을 종료합니다. -->
 
 <script> // JavaScript를 시작합니다.
 
-const screens = ["places", "scenarios", "conversation"]; // 화면 이름을 배열에 저장합니다.
-let currentPlace = ""; // 현재 선택한 장소입니다.
+const screens = ["places","scenarios","conversation"]; // 화면 ID 목록입니다.
+let currentPlace = ""; // 현재 장소 ID입니다.
+let currentScenario = ""; // 현재 상황 ID입니다.
 let currentStep = "start"; // 현재 대화 단계입니다.
 
-const cafeSteps = { // 카페 대화 데이터를 저장합니다.
+const placeNames = { // 장소 ID와 이름을 연결합니다.
+  cafe: "Cafe", // 카페입니다.
+  restaurant: "Restaurant", // 식당입니다.
+  transport: "Transportation", // 교통입니다.
+  shopping: "Shopping", // 쇼핑입니다.
+  accommodation: "Accommodation" // 숙소입니다.
+}; // 장소 이름 데이터를 종료합니다.
 
-  start: { // 첫 대화입니다.
-    english: "Hello! What can I get for you?", // 스태프 영어입니다.
-    korean: "안녕하세요! 무엇을 드릴까요?", // 스태프 한국어입니다.
-    roman: "Annyeonghaseyo! Mueoseul deurilkkayo?", // 스태프 발음입니다.
-    choices: [ // 사용자 선택지입니다.
-      { english: "One iced Americano, please.", korean: "아이스 아메리카노 하나 주세요.", roman: "Aiseu Americano hana juseyo.", next: "decaf" }, // 아메리카노 주문입니다.
-      { english: "One latte, please.", korean: "라테 하나 주세요.", roman: "Rate hana juseyo.", next: "decaf" } // 라테 주문입니다.
-    ] // 선택지를 종료합니다.
-  }, // 첫 대화를 종료합니다.
+const scenarioData = { // 장소별 상황 목록입니다.
 
-  decaf: { // 디카페인 질문입니다.
-    english: "Would you like it decaffeinated?", // 스태프 영어입니다.
-    korean: "디카페인으로 드릴까요?", // 스태프 한국어입니다.
-    roman: "Dikapeineuro deurilkkayo?", // 스태프 발음입니다.
-    choices: [ // 사용자 선택지입니다.
-      { english: "Yes, decaf, please.", korean: "네, 디카페인으로 주세요.", roman: "Ne, dikapeineuro juseyo.", next: "shot" }, // 디카페인을 선택합니다.
-      { english: "No, regular is fine.", korean: "아니요, 일반으로 주세요.", roman: "Aniyo, ilbaneuro juseyo.", next: "shot" } // 일반 커피를 선택합니다.
-    ] // 선택지를 종료합니다.
-  }, // 디카페인 단계를 종료합니다.
+  cafe: [ // 카페 상황입니다.
+    {id:"cafe_order",icon:"☕",name:"Order a drink",description:"Order coffee and customize your drink"}, // 음료 주문입니다.
+    {id:"cafe_payment",icon:"💳",name:"Payment",description:"Pay and ask for a receipt"}, // 결제입니다.
+    {id:"cafe_request",icon:"🗣️",name:"Make a request",description:"Ask for changes or extra items"} // 추가 요청입니다.
+  ], // 카페 상황을 종료합니다.
 
-  shot: { // 샷 추가 질문입니다.
-    english: "Would you like an extra shot?", // 스태프 영어입니다.
-    korean: "샷 추가해 드릴까요?", // 스태프 한국어입니다.
-    roman: "Syat chugahae deurilkkayo?", // 스태프 발음입니다.
-    choices: [ // 사용자 선택지입니다.
-      { english: "Yes, please.", korean: "네, 추가해 주세요.", roman: "Ne, chugahae juseyo.", next: "size" }, // 샷 추가입니다.
-      { english: "No, thank you.", korean: "아니요, 괜찮아요.", roman: "Aniyo, gwaenchanayo.", next: "size" } // 샷 추가를 거절합니다.
-    ] // 선택지를 종료합니다.
-  }, // 샷 단계를 종료합니다.
+  restaurant: [ // 식당 상황입니다.
+    {id:"restaurant_order",icon:"🍽️",name:"Order food",description:"Choose dishes and place an order"}, // 음식 주문입니다.
+    {id:"restaurant_extra",icon:"🥢",name:"Order more",description:"Ask for additional dishes"}, // 추가 주문입니다.
+    {id:"restaurant_allergy",icon:"⚠️",name:"Explain an allergy",description:"Tell staff about food allergies"}, // 알레르기 설명입니다.
+    {id:"restaurant_payment",icon:"💳",name:"Pay the bill",description:"Ask for the bill and pay"} // 식당 결제입니다.
+  ], // 식당 상황을 종료합니다.
 
-  size: { // 사이즈 질문입니다.
-    english: "What size would you like?", // 스태프 영어입니다.
-    korean: "어떤 사이즈로 드릴까요?", // 스태프 한국어입니다.
-    roman: "Eotteon saijeuro deurilkkayo?", // 스태프 발음입니다.
-    choices: [ // 사용자 선택지입니다.
-      { english: "A medium, please.", korean: "미디엄으로 주세요.", roman: "Midieomeuro juseyo.", next: "temperature" }, // 미디엄입니다.
-      { english: "A large, please.", korean: "라지로 주세요.", roman: "Rajiro juseyo.", next: "temperature" } // 라지입니다.
-    ] // 선택지를 종료합니다.
-  }, // 사이즈 단계를 종료합니다.
+  transport: [ // 교통 상황입니다.
+    {id:"transport_subway",icon:"🚇",name:"Take the subway",description:"Ask about stations and tickets"}, // 지하철입니다.
+    {id:"transport_bus",icon:"🚌",name:"Take the bus",description:"Find a bus and ask about stops"}, // 버스입니다.
+    {id:"transport_taxi",icon:"🚕",name:"Take a taxi",description:"Tell the driver your destination"} // 택시입니다.
+  ], // 교통 상황을 종료합니다.
 
-  temperature: { // 온도 질문입니다.
-    english: "Would you like it hot or iced?", // 스태프 영어입니다.
-    korean: "따뜻하게 드릴까요, 아이스로 드릴까요?", // 스태프 한국어입니다.
-    roman: "Ttatteuthage deurilkkayo, aiseuro deurilkkayo?", // 스태프 발음입니다.
-    choices: [ // 사용자 선택지입니다.
-      { english: "Iced, please.", korean: "아이스로 주세요.", roman: "Aiseuro juseyo.", next: "takeout" }, // 아이스입니다.
-      { english: "Hot, please.", korean: "따뜻하게 해 주세요.", roman: "Ttatteuthage hae juseyo.", next: "takeout" } // 따뜻한 음료입니다.
-    ] // 선택지를 종료합니다.
-  }, // 온도 단계를 종료합니다.
+  shopping: [ // 쇼핑 상황입니다.
+    {id:"shopping_find",icon:"🛍️",name:"Find a product",description:"Ask where an item is"}, // 상품 찾기입니다.
+    {id:"shopping_price",icon:"🏷️",name:"Ask about the price",description:"Check prices and discounts"}, // 가격 문의입니다.
+    {id:"shopping_exchange",icon:"🔄",name:"Exchange or return",description:"Ask about returns and exchanges"} // 교환 및 환불입니다.
+  ], // 쇼핑 상황을 종료합니다.
 
-  takeout: { // 매장 또는 포장 질문입니다.
-    english: "For here or to go?", // 스태프 영어입니다.
-    korean: "드시고 가시나요, 포장하시나요?", // 스태프 한국어입니다.
-    roman: "Deusigo gasinayo, pojanghasinayo?", // 스태프 발음입니다.
-    choices: [ // 사용자 선택지입니다.
-      { english: "For here, please.", korean: "먹고 갈게요.", roman: "Meokgo galgeyo.", next: "payment" }, // 매장 이용입니다.
-      { english: "To go, please.", korean: "포장해 주세요.", roman: "Pojanghae juseyo.", next: "payment" } // 포장입니다.
-    ] // 선택지를 종료합니다.
-  }, // 매장 이용 단계를 종료합니다.
+  accommodation: [ // 숙소 상황입니다.
+    {id:"stay_checkin",icon:"🛎️",name:"Check in",description:"Check in and confirm your booking"}, // 체크인입니다.
+    {id:"stay_checkout",icon:"🧳",name:"Check out",description:"Check out and settle the bill"}, // 체크아웃입니다.
+    {id:"stay_facility",icon:"🛏️",name:"Ask about facilities",description:"Ask about hotel facilities"} // 시설 문의입니다.
+  ] // 숙소 상황을 종료합니다.
 
-  payment: { // 카드 결제 안내입니다.
-    english: "Please insert your card here.", // 스태프 영어입니다.
-    korean: "카드를 여기에 꽂아 주세요.", // 스태프 한국어입니다.
-    roman: "Kadeureul yeogie kkoja juseyo.", // 스태프 발음입니다.
-    choices: [ // 사용자 선택지입니다.
-      { english: "Here you go.", korean: "여기 있습니다.", roman: "Yeogi itseumnida.", next: "receipt" } // 카드를 건넵니다.
-    ] // 선택지를 종료합니다.
-  }, // 결제 단계를 종료합니다.
+}; // 상황 목록 데이터를 종료합니다.
 
-  receipt: { // 영수증 질문입니다.
-    english: "Would you like a receipt?", // 스태프 영어입니다.
-    korean: "영수증 드릴까요?", // 스태프 한국어입니다.
-    roman: "Yeongsujeung deurilkkayo?", // 스태프 발음입니다.
-    choices: [ // 사용자 선택지입니다.
-      { english: "Yes, please.", korean: "네, 주세요.", roman: "Ne, juseyo.", next: "finish" }, // 영수증을 받습니다.
-      { english: "No, thank you.", korean: "아니요, 괜찮아요.", roman: "Aniyo, gwaenchanayo.", next: "finish" } // 영수증을 거절합니다.
-    ] // 선택지를 종료합니다.
-  }, // 영수증 단계를 종료합니다.
+const conversations = { // 각 상황별 대화 데이터를 저장합니다.
 
-  finish: { // 주문 완료 안내입니다.
-    english: "I'll call your name when it's ready.", // 스태프 영어입니다.
-    korean: "준비되면 불러 드릴게요.", // 스태프 한국어입니다.
-    roman: "Junbidoemyeon bulleo deurilgeyo.", // 스태프 발음입니다.
-    choices: [ // 마지막 선택지입니다.
-      { english: "Thank you!", korean: "감사합니다!", roman: "Gamsahamnida!", next: "complete" } // 감사 인사입니다.
-    ] // 선택지를 종료합니다.
-  }, // 주문 완료 단계를 종료합니다.
+  cafe_order: [ // 카페 음료 주문입니다.
+    {en:"Hello! What can I get for you?",ko:"안녕하세요! 무엇을 드릴까요?",ro:"Annyeonghaseyo! Mueoseul deurilkkayo?",choices:[["One iced Americano, please.","아이스 아메리카노 하나 주세요.","Aiseu Americano hana juseyo."],["One latte, please.","라테 하나 주세요.","Rate hana juseyo."]]}, // 첫 주문입니다.
+    {en:"Would you like it decaffeinated?",ko:"디카페인으로 드릴까요?",ro:"Dikapeineuro deurilkkayo?",choices:[["Yes, decaf, please.","네, 디카페인으로 주세요.","Ne, dikapeineuro juseyo."],["No, regular is fine.","아니요, 일반으로 주세요.","Aniyo, ilbaneuro juseyo."]]}, // 디카페인입니다.
+    {en:"Would you like an extra shot?",ko:"샷 추가해 드릴까요?",ro:"Syat chugahae deurilkkayo?",choices:[["Yes, please.","네, 추가해 주세요.","Ne, chugahae juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 샷 추가입니다.
+    {en:"What size would you like?",ko:"어떤 사이즈로 드릴까요?",ro:"Eotteon saijeuro deurilkkayo?",choices:[["A medium, please.","미디엄으로 주세요.","Midieomeuro juseyo."],["A large, please.","라지로 주세요.","Rajiro juseyo."]]}, // 사이즈입니다.
+    {en:"Would you like it hot or iced?",ko:"따뜻하게 드릴까요, 아이스로 드릴까요?",ro:"Ttatteuthage deurilkkayo, aiseuro deurilkkayo?",choices:[["Iced, please.","아이스로 주세요.","Aiseuro juseyo."],["Hot, please.","따뜻하게 해 주세요.","Ttatteuthage hae juseyo."]]}, // 온도입니다.
+    {en:"For here or to go?",ko:"드시고 가시나요, 포장하시나요?",ro:"Deusigo gasinayo, pojanghasinayo?",choices:[["For here, please.","먹고 갈게요.","Meokgo galgeyo."],["To go, please.","포장해 주세요.","Pojanghae juseyo."]]}, // 매장 또는 포장입니다.
+    {en:"Please insert your card here.",ko:"카드를 여기에 꽂아 주세요.",ro:"Kadeureul yeogie kkoja juseyo.",choices:[["Here you go.","여기 있습니다.","Yeogi itseumnida."]]}, // 결제 안내입니다.
+    {en:"Would you like a receipt?",ko:"영수증 드릴까요?",ro:"Yeongsujeung deurilkkayo?",choices:[["Yes, please.","네, 주세요.","Ne, juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 영수증입니다.
+    {en:"I'll call your name when it's ready.",ko:"준비되면 불러 드릴게요.",ro:"Junbidoemyeon bulleo deurilgeyo.",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]}, // 주문 완료 안내입니다.
+    {en:"Enjoy your drink!",ko:"맛있게 드세요!",ro:"Masitge deuseyo!",choices:[["Start again","다시 시작하기","Dasi sijakhagi."]]} // 마지막 인사입니다.
+  ], // 카페 주문 데이터를 종료합니다.
 
-  complete: { // 대화 종료입니다.
-    english: "Enjoy your drink!", // 스태프 영어입니다.
-    korean: "맛있게 드세요!", // 스태프 한국어입니다.
-    roman: "Masitge deuseyo!", // 스태프 발음입니다.
-    choices: [ // 다시 시작하는 선택지입니다.
-      { english: "Start again", korean: "다시 시작하기", roman: "Dasi sijakhagi.", next: "start" } // 처음으로 돌아갑니다.
-    ] // 선택지를 종료합니다.
-  } // 대화 종료 데이터를 마칩니다.
+  cafe_payment: [ // 카페 결제 상황입니다.
+    {en:"Are you ready to pay?",ko:"결제하시겠어요?",ro:"Gyeoljehasigesseoyo?",choices:[["Yes, please.","네, 결제할게요.","Ne, gyeoljehalgeyo."],["Can I pay by card?","카드로 결제할 수 있나요?","Kadeuro gyeoljehal su innayo?"]]}, // 결제 의사 확인입니다.
+    {en:"Please insert your card.",ko:"카드를 꽂아 주세요.",ro:"Kadeureul kkoja juseyo.",choices:[["Here you go.","여기 있습니다.","Yeogi itseumnida."]]}, // 카드 안내입니다.
+    {en:"Would you like a receipt?",ko:"영수증 드릴까요?",ro:"Yeongsujeung deurilkkayo?",choices:[["Yes, please.","네, 주세요.","Ne, juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 영수증입니다.
+    {en:"Thank you. Have a nice day!",ko:"감사합니다. 좋은 하루 보내세요!",ro:"Gamsahamnida. Joeun haru bonaeseyo!",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 마무리입니다.
+  ], // 카페 결제 데이터를 종료합니다.
 
-}; // 카페 대화 데이터를 종료합니다.
+  cafe_request: [ // 카페 추가 요청 상황입니다.
+    {en:"Is everything okay?",ko:"필요하신 것 있으세요?",ro:"Piryohasin geo isseuseyo?",choices:[["Could I have some water?","물 좀 주시겠어요?","Mul jom jusigesseoyo?"],["Could you make it less sweet?","덜 달게 해 주시겠어요?","Deol dalge hae jusigesseoyo?"]]}, // 추가 요청입니다.
+    {en:"Of course. Anything else?",ko:"물론이죠. 또 필요한 게 있으세요?",ro:"Mullonjyo. Tto piryohan ge isseuseyo?",choices:[["That's all, thank you.","이게 전부예요. 감사합니다.","Ige jeonbuyeyo. Gamsahamnida."],["Could I have a napkin?","냅킨 좀 주시겠어요?","Naepkin jom jusigesseoyo?"]]}, // 추가 질문입니다.
+    {en:"Sure. I'll bring it right away.",ko:"네. 바로 가져다드릴게요.",ro:"Ne. Baro gajyeodadeurilgeyo.",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 마무리입니다.
+  ], // 카페 요청 데이터를 종료합니다.
 
-function showScreen(name) { // 지정한 화면만 보여주는 함수입니다.
+  restaurant_order: [ // 식당 음식 주문입니다.
+    {en:"Welcome! How many people?",ko:"어서 오세요! 몇 분이세요?",ro:"Eoseo oseyo! Myeot buniseyo?",choices:[["One person.","한 명이에요.","Han myeongieyo."],["Two people.","두 명이에요.","Du myeongieyo."],["Three people.","세 명이에요.","Se myeongieyo."]]}, // 인원 확인입니다.
+    {en:"Here is the menu. Are you ready to order?",ko:"메뉴판입니다. 주문하시겠어요?",ro:"Menyupan imnida. Jumunhasigesseoyo?",choices:[["I'd like bibimbap.","비빔밥 주세요.","Bibimbap juseyo."],["I'd like bulgogi.","불고기 주세요.","Bulgogi juseyo."],["I'd like kimchi stew.","김치찌개 주세요.","Kimchijjigae juseyo."]]}, // 메뉴 주문입니다.
+    {en:"Would you like anything to drink?",ko:"음료도 주문하시겠어요?",ro:"Eumryodo jumunhasigesseoyo?",choices:[["Water, please.","물 주세요.","Mul juseyo."],["One cola, please.","콜라 하나 주세요.","Kolla hana juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 음료 주문입니다.
+    {en:"Anything else?",ko:"더 필요한 건 없으세요?",ro:"Deo piryohan geon eopseuseyo?",choices:[["That's all.","이게 전부예요.","Ige jeonbuyeyo."],["Could we have some side dishes?","반찬 좀 더 주시겠어요?","Banchan jom deo jusigesseoyo?"]]}, // 추가 요청입니다.
+    {en:"Your order will be ready soon.",ko:"주문하신 음식 곧 나옵니다.",ro:"Jumunhasin eumsik got naomnida.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]} // 주문 완료 안내입니다.
+  ], // 식당 주문 데이터를 종료합니다.
+
+  restaurant_extra: [ // 식당 추가 주문입니다.
+    {en:"Would you like anything else?",ko:"더 필요한 건 있으세요?",ro:"Deo piryohan geon isseuseyo?",choices:[["One more serving of rice, please.","밥 하나 더 주세요.","Bap hana deo juseyo."],["Can we get more side dishes?","반찬 더 주시겠어요?","Banchan deo jusigesseoyo?"],["One more order of dumplings, please.","만두 하나 더 주세요.","Mandu hana deo juseyo."]]}, // 추가 주문입니다.
+    {en:"Certainly. Anything else?",ko:"네. 또 필요한 건 있으세요?",ro:"Ne. Tto piryohan geon isseuseyo?",choices:[["No, that's all.","아니요, 이게 전부예요.","Aniyo, ige jeonbuyeyo."],["Could we have more water?","물 좀 더 주시겠어요?","Mul jom deo jusigesseoyo?"]]}, // 추가 질문입니다.
+    {en:"I'll bring it shortly.",ko:"곧 가져다드릴게요.",ro:"Got gajyeodadeurilgeyo.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]} // 마무리입니다.
+  ], // 추가 주문 데이터를 종료합니다.
+
+  restaurant_allergy: [ // 식당 알레르기 설명입니다.
+    {en:"Do you have any dietary restrictions?",ko:"못 드시는 음식이 있으세요?",ro:"Mot deusineun eumsigi isseuseyo?",choices:[["I'm allergic to peanuts.","저는 땅콩 알레르기가 있어요.","Jeoneun ttangkong allerugiga isseoyo."],["I'm allergic to shellfish.","저는 갑각류 알레르기가 있어요.","Jeoneun gapgakryu allerugiga isseoyo."],["I don't eat meat.","저는 고기를 먹지 않아요.","Jeoneun gogireul meokji anayo."]]}, // 알레르기 설명입니다.
+    {en:"Thank you for letting us know. Is this a serious allergy?",ko:"말씀해 주셔서 감사합니다. 심한 알레르기인가요?",ro:"Malsseumhae jusyeoseo gamsahamnida. Simhan allerugin-gayo?",choices:[["Yes, even a small amount is dangerous.","네, 조금만 먹어도 위험해요.","Ne, jogeumman meogeodo wiheomhaeyo."],["A small amount may be okay.","조금은 괜찮을 수도 있어요.","Jogeumeun gwaenchanheul sudo isseoyo."]]}, // 위험도 확인입니다.
+    {en:"I'll check with the kitchen.",ko:"주방에 확인해 보겠습니다.",ro:"Jubange hwaginhae bogetseumnida.",choices:[["Thank you. Please check carefully.","감사합니다. 꼭 확인해 주세요.","Gamsahamnida. Kkok hwaginhae juseyo."]]}, // 주방 확인입니다.
+    {en:"We'll let you know what is safe.",ko:"안전한 메뉴를 안내해 드릴게요.",ro:"Anjeonhan menyureul annaehae deurilgeyo.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]} // 마무리입니다.
+  ], // 알레르기 데이터를 종료합니다.
+
+  restaurant_payment: [ // 식당 결제입니다.
+    {en:"Would you like the bill?",ko:"계산하시겠어요?",ro:"Gyesanhasigesseoyo?",choices:[["Yes, please.","네, 계산해 주세요.","Ne, gyesanhae juseyo."],["Can we pay separately?","따로 계산할 수 있나요?","Ttaro gyesanhal su innayo?"]]}, // 계산 요청입니다.
+    {en:"Will you pay by card or cash?",ko:"카드로 하시겠어요, 현금으로 하시겠어요?",ro:"Kadeuro hasigesseoyo, hyeongeumeuro hasigesseoyo?",choices:[["By card, please.","카드로 할게요.","Kadeuro halgeyo."],["In cash, please.","현금으로 할게요.","Hyeongeumeuro halgeyo."]]}, // 결제 수단입니다.
+    {en:"Would you like a receipt?",ko:"영수증 드릴까요?",ro:"Yeongsujeung deurilkkayo?",choices:[["Yes, please.","네, 주세요.","Ne, juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 영수증입니다.
+    {en:"Thank you. Have a good day!",ko:"감사합니다. 좋은 하루 보내세요!",ro:"Gamsahamnida. Joeun haru bonaeseyo!",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 마무리입니다.
+  ], // 식당 결제 데이터를 종료합니다.
+
+  transport_subway: [ // 지하철 이용입니다.
+    {en:"Hello. Where would you like to go?",ko:"안녕하세요. 어디까지 가세요?",ro:"Annyeonghaseyo. Eodikkaji gaseyo?",choices:[["I'd like to go to Seoul Station.","서울역까지 가고 싶어요.","Seoullyeokkkaji gago sipeoyo."],["I'd like to go to Hongdae.","홍대까지 가고 싶어요.","Hongdaekkaji gago sipeoyo."]]}, // 목적지입니다.
+    {en:"Do you need a single-use ticket or a transport card?",ko:"일회용 승차권이 필요하세요, 교통카드가 있으세요?",ro:"Ilhoeyong seungchagwoni piryohaseyo, gyotongkadeuga isseuseyo?",choices:[["I need a single-use ticket.","일회용 승차권이 필요해요.","Ilhoeyong seungchagwoni piryohaeyo."],["I have a transport card.","교통카드가 있어요.","Gyotongkadeuga isseoyo."]]}, // 승차권 확인입니다.
+    {en:"Please follow the signs to the platform.",ko:"표지판을 따라 승강장으로 가세요.",ro:"Pyojipaneul ttara seunggangjangeuro gaseyo.",choices:[["Which platform should I use?","몇 번 승강장으로 가야 하나요?","Myeot beon seunggangjangeuro gaya hanayo?"],["Thank you.","감사합니다.","Gamsahamnida."]]}, // 승강장 안내입니다.
+    {en:"Platform two. Have a nice trip!",ko:"2번 승강장입니다. 좋은 여행 되세요!",ro:"Ibeon seunggangjangimnida. Joeun yeohaeng doeseyo!",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 마무리입니다.
+  ], // 지하철 데이터를 종료합니다.
+
+  transport_bus: [ // 버스 이용입니다.
+    {en:"Excuse me. Does this bus go to Myeongdong?",ko:"실례합니다. 이 버스 명동에 가나요?",ro:"Sillyehamnida. I beoseu Myeongdonge ganayo?",choices:[["Yes, it does.","네, 가요.","Ne, gayo."],["No, it doesn't.","아니요, 안 가요.","Aniyo, an gayo."]]}, // 버스 노선 확인입니다.
+    {en:"Where should I get off?",ko:"어디에서 내려야 하나요?",ro:"Eodieseo naeryeoya hanayo?",choices:[["Please tell me when we arrive.","도착하면 알려 주세요.","Dochakamyeon allyeo juseyo."],["How many stops are left?","몇 정거장 남았나요?","Myeot jeonggeojang namannayo?"]]}, // 하차 위치입니다.
+    {en:"It's about three stops away.",ko:"세 정거장 정도 남았어요.",ro:"Se jeonggeojang jeongdo namasseoyo.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]}, // 정거장 안내입니다.
+    {en:"This is your stop.",ko:"여기서 내리시면 돼요.",ro:"Yeogiseo naeris imyeon dwaeyo.",choices:[["Thank you very much.","정말 감사합니다.","Jeongmal gamsahamnida."]]} // 마무리입니다.
+  ], // 버스 데이터를 종료합니다.
+
+  transport_taxi: [ // 택시 이용입니다.
+    {en:"Where would you like to go?",ko:"어디로 모셔다 드릴까요?",ro:"Eodiro mosyeoda deurilkkayo?",choices:[["Please take me to Seoul Station.","서울역으로 가 주세요.","Seoullyeogeuro ga juseyo."],["Please take me to this address.","이 주소로 가 주세요.","I jusoro ga juseyo."]]}, // 목적지입니다.
+    {en:"Would you like to take the expressway?",ko:"고속도로로 갈까요?",ro:"Gosokdoro-ro galkkayo?",choices:[["Yes, please.","네, 그렇게 해 주세요.","Ne, geureoke hae juseyo."],["No, please take the regular road.","아니요, 일반 도로로 가 주세요.","Aniyo, ilban dororo ga juseyo."]]}, // 경로 선택입니다.
+    {en:"We're almost there.",ko:"거의 다 왔습니다.",ro:"Geoui da watseumnida.",choices:[["Please stop here.","여기 세워 주세요.","Yeogi sewo juseyo."],["Please stop in front of the entrance.","입구 앞에 세워 주세요.","Ipgu ape sewo juseyo."]]}, // 하차 요청입니다.
+    {en:"That will be 15,000 won.",ko:"15,000원입니다.",ro:"Man ocheon wonimnida.",choices:[["I'll pay by card.","카드로 결제할게요.","Kadeuro gyeoljehalgeyo."],["I'll pay in cash.","현금으로 낼게요.","Hyeongeumeuro naelgeyo."]]} // 요금 안내입니다.
+  ], // 택시 데이터를 종료합니다.
+
+  shopping_find: [ // 상품 찾기입니다.
+    {en:"Hello! Can I help you find something?",ko:"안녕하세요! 찾으시는 물건 있으세요?",ro:"Annyeonghaseyo! Chajeusineun mulgeon isseuseyo?",choices:[["I'm looking for a T-shirt.","티셔츠를 찾고 있어요.","Tisyeocheureul chatgo isseoyo."],["I'm looking for a bag.","가방을 찾고 있어요.","Gabangeul chatgo isseoyo."],["I'm looking for a gift.","선물을 찾고 있어요.","Seonmureul chatgo isseoyo."]]}, // 상품 찾기입니다.
+    {en:"What color would you like?",ko:"어떤 색상을 찾으세요?",ro:"Eotteon saegsangeul chajeuseyo?",choices:[["Black, please.","검은색이요.","Geomeunsaegiyo."],["White, please.","흰색이요.","Huinsaegiyo."],["Any color is fine.","어떤 색이든 괜찮아요.","Eotteon saegideun gwaenchanayo."]]}, // 색상 확인입니다.
+    {en:"What size do you need?",ko:"어떤 사이즈가 필요하세요?",ro:"Eotteon saijeuga piryohaseyo?",choices:[["Small, please.","스몰 사이즈요.","Seumol saijeuyo."],["Medium, please.","미디엄 사이즈요.","Midieom saijeuyo."],["Large, please.","라지 사이즈요.","Raji saijeuyo."]]}, // 사이즈 확인입니다.
+    {en:"I'll show you where it is.",ko:"어디 있는지 안내해 드릴게요.",ro:"Eodi inneunji annaehae deurilgeyo.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]} // 마무리입니다.
+  ], // 상품 찾기 데이터를 종료합니다.
+
+  shopping_price: [ // 가격 문의입니다.
+    {en:"Can I help you with anything?",ko:"도와드릴까요?",ro:"Dowadeurilkkayo?",choices:[["How much is this?","이거 얼마예요?","Igeo eolmayeyo?"],["Is this on sale?","이거 할인 중인가요?","Igeo harin jungingayo?"]]}, // 가격 질문입니다.
+    {en:"It's 30,000 won.",ko:"3만 원입니다.",ro:"Samman wonimnida.",choices:[["Is there a discount?","할인되나요?","Harindoenayo?"],["Okay, I'll take it.","네, 이걸로 할게요.","Ne, igeollo halgeyo."]]}, // 가격 안내입니다.
+    {en:"We have a ten percent discount today.",ko:"오늘은 10퍼센트 할인 중이에요.",ro:"Oneureun sip peosenteu harin jungieyo.",choices:[["Great. I'll buy it.","좋아요. 살게요.","Joayo. Salgeyo."],["I'll think about it.","생각해 볼게요.","Saenggakhae bolgeyo."]]}, // 할인 안내입니다.
+    {en:"Thank you. Please come again.",ko:"감사합니다. 또 오세요.",ro:"Gamsahamnida. Tto oseyo.",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 마무리입니다.
+  ], // 가격 문의 데이터를 종료합니다.
+
+  shopping_exchange: [ // 교환 및 환불입니다.
+    {en:"How can I help you?",ko:"무엇을 도와드릴까요?",ro:"Mueoseul dowadeurilkkayo?",choices:[["I'd like to exchange this.","이거 교환하고 싶어요.","Igeo gyohwanhago sipeoyo."],["I'd like to return this.","이거 환불하고 싶어요.","Igeo hwanbulhago sipeoyo."]]}, // 교환 또는 환불 요청입니다.
+    {en:"Do you have the receipt?",ko:"영수증 있으세요?",ro:"Yeongsujeung isseuseyo?",choices:[["Yes, I have it.","네, 있어요.","Ne, isseoyo."],["No, I don't have it.","아니요, 없어요.","Aniyo, eopseoyo."]]}, // 영수증 확인입니다.
+    {en:"Is the product unused?",ko:"상품을 사용하지 않으셨나요?",ro:"Sangpumeul sayonghaji aneusyeonnayo?",choices:[["Yes, it's unused.","네, 사용하지 않았어요.","Ne, sayonghaji anasseoyo."],["I only tried it on.","입어 보기만 했어요.","Ibeo bogiman haesseoyo."]]}, // 상품 상태 확인입니다.
+    {en:"Let me check our return policy.",ko:"교환 및 환불 규정을 확인해 볼게요.",ro:"Gyohwan mit hwanbul gyujeongeul hwaginhae bolgeyo.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]} // 규정 확인입니다.
+  ], // 교환 및 환불 데이터를 종료합니다.
+
+  stay_checkin: [ // 숙소 체크인입니다.
+    {en:"Welcome! Do you have a reservation?",ko:"어서 오세요! 예약하셨나요?",ro:"Eoseo oseyo! Yeyakhasyeonnayo?",choices:[["Yes, I have a reservation.","네, 예약했어요.","Ne, yeyakhaesseoyo."],["No, do you have a room available?","아니요, 빈방이 있나요?","Aniyo, binbangi innayo?"]]}, // 예약 확인입니다.
+    {en:"May I have your name and passport?",ko:"성함과 여권을 보여주시겠어요?",ro:"Seonghamgwa yeogwoneul boyeojusigesseoyo?",choices:[["Here is my passport.","여권 여기 있습니다.","Yeogwon yeogi itseumnida."],["Here is my booking confirmation.","예약 확인서 여기 있습니다.","Yeyak hwaginseo yeogi itseumnida."]]}, // 신원 확인입니다.
+    {en:"Your room is on the fifth floor.",ko:"객실은 5층에 있습니다.",ro:"Gaeksireun ocheung-e itseumnida.",choices:[["What time is breakfast?","아침 식사는 몇 시인가요?","Achim siksaneun myeot siingayo?"],["Where is the elevator?","엘리베이터가 어디 있나요?","Ellibeiteoga eodi innayo?"]]}, // 객실 안내입니다.
+    {en:"Breakfast is served from seven to ten.",ko:"아침 식사는 7시부터 10시까지입니다.",ro:"Achim siksaneun ilgop sibuteo yeol sikkajiimnida.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]} // 마무리입니다.
+  ], // 체크인 데이터를 종료합니다.
+
+  stay_checkout: [ // 숙소 체크아웃입니다.
+    {en:"Good morning. Are you checking out?",ko:"안녕하세요. 체크아웃하시나요?",ro:"Annyeonghaseyo. Chekeuaut hasinayo?",choices:[["Yes, I'm checking out.","네, 체크아웃할게요.","Ne, chekeuaut halgeyo."],["Can I check out later?","늦게 체크아웃할 수 있나요?","Neutge chekeuaut hal su innayo?"]]}, // 체크아웃 확인입니다.
+    {en:"Did you use the minibar?",ko:"미니바를 이용하셨나요?",ro:"Minibareul iyonghasyeonnayo?",choices:[["No, I didn't.","아니요, 이용하지 않았어요.","Aniyo, iyonghaji anasseoyo."],["Yes, I did.","네, 이용했어요.","Ne, iyonghaesseoyo."]]}, // 추가 요금 확인입니다.
+    {en:"Would you like a receipt?",ko:"영수증 드릴까요?",ro:"Yeongsujeung deurilkkayo?",choices:[["Yes, please.","네, 주세요.","Ne, juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 영수증입니다.
+    {en:"Thank you for staying with us.",ko:"저희 숙소를 이용해 주셔서 감사합니다.",ro:"Jeohui sukso-reul iyonghae jusyeoseo gamsahamnida.",choices:[["I had a great stay.","잘 묵고 갑니다.","Jal mukgo gamnida."]]} // 마무리입니다.
+  ], // 체크아웃 데이터를 종료합니다.
+
+  stay_facility: [ // 숙소 시설 문의입니다.
+    {en:"How can I help you?",ko:"무엇을 도와드릴까요?",ro:"Mueoseul dowadeurilkkayo?",choices:[["What is the Wi-Fi password?","와이파이 비밀번호가 뭐예요?","Waipai bimilbeonhoga mwoyeyo?"],["Where is the laundry room?","세탁실이 어디예요?","Setaksiri eodiyeyo?"],["What time is the gym open?","헬스장은 몇 시에 여나요?","Helseujangeun myeot sie yeonayo?"]]}, // 시설 문의입니다.
+    {en:"The Wi-Fi password is on your room card.",ko:"와이파이 비밀번호는 객실 카드에 적혀 있어요.",ro:"Waipai bimilbeoneun gaeksil kadeue jeokhyeo isseoyo.",choices:[["Could you help me connect?","연결하는 걸 도와주시겠어요?","Yeongyeolhaneun geol dowajusigesseoyo?"],["Thank you.","감사합니다.","Gamsahamnida."]]}, // 와이파이 안내입니다.
+    {en:"Of course. I'll help you.",ko:"물론이죠. 도와드릴게요.",ro:"Mullonjyo. Dowadeurilgeyo.",choices:[["Thank you very much.","정말 감사합니다.","Jeongmal gamsahamnida."]]} // 마무리입니다.
+  ] // 시설 문의 데이터를 종료합니다.
+
+}; // 전체 대화 데이터를 종료합니다.
+
+function showScreen(name) { // 화면 전환 함수입니다.
   screens.forEach(id => document.getElementById(id).classList.add("hidden")); // 모든 화면을 숨깁니다.
-  document.getElementById(name).classList.remove("hidden"); // 선택한 화면만 표시합니다.
+  document.getElementById(name).classList.remove("hidden"); // 선택한 화면을 보여줍니다.
 } // 화면 전환 함수를 종료합니다.
 
-function selectPlace(place) { // 장소를 선택했을 때 실행합니다.
-  currentPlace = place; // 선택한 장소를 저장합니다.
-  document.getElementById("placeHeading").textContent = place; // 선택한 장소 이름을 표시합니다.
-  showScreen("scenarios"); // 상황 선택 화면으로 이동합니다.
+function selectPlace(placeId) { // 장소를 선택하는 함수입니다.
+  currentPlace = placeId; // 장소 ID를 저장합니다.
+  document.getElementById("placeHeading").textContent = placeNames[placeId]; // 장소 이름을 표시합니다.
+  renderScenarios(); // 해당 장소의 상황을 표시합니다.
+  showScreen("scenarios"); // 상황 화면으로 이동합니다.
 } // 장소 선택 함수를 종료합니다.
 
-function startCafe() { // 카페 주문 상황을 시작합니다.
-  currentStep = "start"; // 대화를 처음으로 초기화합니다.
+function renderScenarios() { // 장소별 상황을 화면에 만드는 함수입니다.
+  const list = document.getElementById("scenarioList"); // 상황 목록 영역을 가져옵니다.
+  list.innerHTML = ""; // 기존 목록을 지웁니다.
+  scenarioData[currentPlace].forEach(scenario => { // 선택한 장소의 상황만 반복합니다.
+    const button = document.createElement("button"); // 상황 버튼을 만듭니다.
+    button.className = "scenario-card"; // 카드 스타일을 적용합니다.
+    button.innerHTML = `<span class="scenario-icon">${scenario.icon}</span><span class="scenario-text"><span class="scenario-name">${scenario.name}</span><span class="scenario-description">${scenario.description}</span></span><span class="scenario-arrow">›</span>`; // 카드 내용을 구성합니다.
+    button.onclick = () => selectScenario(scenario.id); // 클릭한 상황 ID를 전달합니다.
+    list.appendChild(button); // 화면에 카드를 추가합니다.
+  }); // 상황 반복을 종료합니다.
+} // 상황 목록 함수를 종료합니다.
+
+function selectScenario(scenarioId) { // 상황을 선택하는 함수입니다.
+  currentScenario = scenarioId; // 상황 ID를 저장합니다.
+  if (!conversations[scenarioId]) { // 대화 데이터가 있는지 확인합니다.
+    alert("This situation is being prepared."); // 대화 데이터가 없으면 안내합니다.
+    return; // 함수를 종료합니다.
+  } // 대화 데이터 확인을 종료합니다.
+  currentStep = 0; // 대화의 첫 단계로 이동합니다.
+  document.getElementById("userInput").value = ""; // 입력창을 비웁니다.
+  document.getElementById("status").textContent = "Choose a response or speak Korean."; // 상태 문구를 초기화합니다.
   showScreen("conversation"); // 대화 화면으로 이동합니다.
   renderStep(); // 첫 대사를 표시합니다.
-} // 카페 대화 시작 함수를 종료합니다.
+} // 상황 선택 함수를 종료합니다.
 
-function comingSoon() { // 준비되지 않은 상황을 선택했을 때입니다.
-  alert("This situation will be added soon."); // 준비 중이라는 안내를 표시합니다.
-} // 준비 중 함수를 종료합니다.
-
-function renderStep() { // 현재 대화 단계를 표시합니다.
-  const step = cafeSteps[currentStep]; // 현재 단계 데이터를 가져옵니다.
-  document.getElementById("speaker").textContent = "STAFF"; // 화자를 스태프로 설정합니다.
-  document.getElementById("english").textContent = step.english; // 영어를 표시합니다.
-  document.getElementById("korean").textContent = step.korean; // 한국어를 표시합니다.
-  document.getElementById("roman").textContent = step.roman; // 발음을 표시합니다.
+function renderStep() { // 현재 대화 단계를 표시하는 함수입니다.
+  const steps = conversations[currentScenario]; // 선택한 상황의 대화 데이터를 가져옵니다.
+  const step = steps[currentStep]; // 현재 단계 데이터를 가져옵니다.
+  document.getElementById("speaker").textContent = "STAFF"; // 화자를 직원으로 표시합니다.
+  document.getElementById("english").textContent = step.en; // 영어 문장을 표시합니다.
+  document.getElementById("korean").textContent = step.ko; // 한국어 문장을 표시합니다.
+  document.getElementById("roman").textContent = step.ro; // 발음을 표시합니다.
 
   const list = document.getElementById("choices"); // 선택지 영역을 가져옵니다.
-  list.innerHTML = ""; // 이전 선택지를 지웁니다.
+  list.innerHTML = ""; // 기존 선택지를 지웁니다.
 
-  step.choices.forEach(choice => { // 선택지를 하나씩 처리합니다.
-    const button = document.createElement("button"); // 새 버튼을 만듭니다.
-    button.className = "choice"; // 버튼 디자인을 적용합니다.
-    button.innerHTML = `<span class="choice-en">${choice.english}</span><span class="choice-ko">${choice.korean}</span><span class="choice-ro">${choice.roman}</span>`; // 영어, 한국어, 발음을 표시합니다.
-    button.onclick = () => chooseAnswer(choice); // 클릭하면 응답을 선택합니다.
-    list.appendChild(button); // 선택지 영역에 버튼을 추가합니다.
+  step.choices.forEach(choice => { // 현재 단계의 선택지를 반복합니다.
+    const button = document.createElement("button"); // 선택지 버튼을 만듭니다.
+    button.className = "choice"; // 선택지 디자인을 적용합니다.
+    button.innerHTML = `<span class="choice-en">${choice[0]}</span><span class="choice-ko">${choice[1]}</span><span class="choice-ro">${choice[2]}</span>`; // 영어, 한국어, 발음을 표시합니다.
+    button.onclick = () => chooseAnswer(choice); // 선택하면 다음 단계로 이동합니다.
+    list.appendChild(button); // 버튼을 목록에 추가합니다.
   }); // 선택지 반복을 종료합니다.
 } // 대화 표시 함수를 종료합니다.
 
-function chooseAnswer(choice) { // 사용자가 응답을 선택했을 때입니다.
-  currentStep = choice.next; // 다음 단계로 이동합니다.
-  renderStep(); // 다음 대사를 표시합니다.
-  document.getElementById("status").textContent = "Response selected."; // 선택 완료를 안내합니다.
+function chooseAnswer(choice) { // 선택지를 선택했을 때 실행합니다.
+  const steps = conversations[currentScenario]; // 현재 상황의 대화 데이터를 가져옵니다.
+  if (currentStep < steps.length - 1) { // 마지막 단계인지 확인합니다.
+    currentStep += 1; // 다음 대화 단계로 이동합니다.
+    renderStep(); // 다음 대사를 표시합니다.
+    document.getElementById("status").textContent = "Response selected."; // 선택 완료를 표시합니다.
+  } else { // 마지막 대화 단계라면 실행합니다.
+    currentStep = 0; // 처음 단계로 초기화합니다.
+    document.getElementById("status").textContent = "Conversation complete. You can start again."; // 대화 완료를 안내합니다.
+    renderStep(); // 처음 대사를 다시 표시합니다.
+  } // 마지막 단계 확인을 종료합니다.
 } // 응답 선택 함수를 종료합니다.
 
 function submitText() { // 직접 입력한 문장을 처리합니다.
   const input = document.getElementById("userInput"); // 입력창을 가져옵니다.
-  const text = input.value.trim().replace(/\s/g, ""); // 입력값의 공백을 제거합니다.
+  const text = input.value.trim().replace(/\s/g,""); // 입력 문장의 공백을 제거합니다.
   if (!text) return; // 빈 입력이면 종료합니다.
-  const step = cafeSteps[currentStep]; // 현재 단계 데이터를 가져옵니다.
-  const match = step.choices.find(choice => choice.korean.replace(/\s/g, "").includes(text) || text.includes(choice.korean.replace(/\s/g, ""))); // 입력과 일치하는 선택지를 찾습니다.
-  if (match) chooseAnswer(match); // 일치하면 해당 선택지를 선택합니다.
-  else document.getElementById("status").textContent = "Please choose one of the responses for now."; // 일치하지 않으면 안내합니다.
+  const step = conversations[currentScenario][currentStep]; // 현재 대화 단계를 가져옵니다.
+  const match = step.choices.find(choice => choice[1].replace(/\s/g,"") === text); // 한국어 선택지와 정확히 일치하는지 확인합니다.
+  if (match) { // 일치하는 선택지가 있으면 실행합니다.
+    chooseAnswer(match); // 해당 선택지를 선택합니다.
+  } else { // 일치하는 선택지가 없으면 실행합니다.
+    document.getElementById("status").textContent = "Please choose one of the responses for now."; // 현재는 선택지로 답하도록 안내합니다.
+  } // 입력 확인을 종료합니다.
   input.value = ""; // 입력창을 비웁니다.
-} // 텍스트 입력 함수를 종료합니다.
+} // 입력 함수를 종료합니다.
 
-function listen(mode) { // 음성 인식을 시작합니다.
+function listen(mode) { // 음성 인식을 시작하는 함수입니다.
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; // 브라우저 음성 인식 기능을 확인합니다.
-  if (!SpeechRecognition) { document.getElementById("status").textContent = "Speech recognition is not supported here."; return; } // 지원하지 않으면 안내합니다.
+  if (!SpeechRecognition) { // 음성 인식이 지원되지 않는 경우입니다.
+    document.getElementById("status").textContent = "Speech recognition is not supported here."; // 지원되지 않는다고 표시합니다.
+    return; // 함수를 종료합니다.
+  } // 지원 여부 확인을 종료합니다.
 
-  const recognition = new SpeechRecognition(); // 음성 인식 객체를 생성합니다.
+  const recognition = new SpeechRecognition(); // 음성 인식 객체를 만듭니다.
   recognition.lang = "ko-KR"; // 한국어 인식으로 설정합니다.
   recognition.interimResults = false; // 최종 결과만 받습니다.
   document.getElementById("status").textContent = "Listening..."; // 듣기 상태를 표시합니다.
 
-  recognition.onresult = event => { // 인식 결과가 도착하면 실행합니다.
+  recognition.onresult = event => { // 음성 인식 결과가 도착하면 실행합니다.
     const spoken = event.results[0][0].transcript; // 인식된 문장을 가져옵니다.
     document.getElementById("status").textContent = "Recognized: " + spoken; // 인식 결과를 표시합니다.
-
-    if (mode === "user") { // 사용자 음성 모드인지 확인합니다.
+    if (mode === "user") { // 사용자 음성 입력인지 확인합니다.
       document.getElementById("userInput").value = spoken; // 인식한 문장을 입력창에 넣습니다.
-      submitText(); // 입력한 문장을 처리합니다.
-    } else { // 스태프 음성 모드입니다.
-      const normalized = spoken.replace(/\s/g, ""); // 공백을 제거합니다.
-      if (normalized.includes("디카페인")) currentStep = "decaf"; // 디카페인 질문으로 이동합니다.
-      else if (normalized.includes("샷")) currentStep = "shot"; // 샷 질문으로 이동합니다.
-      else if (normalized.includes("사이즈")) currentStep = "size"; // 사이즈 질문으로 이동합니다.
-      else if (normalized.includes("따뜻하게") || normalized.includes("아이스")) currentStep = "temperature"; // 온도 질문으로 이동합니다.
-      else if (normalized.includes("포장") || normalized.includes("드시고")) currentStep = "takeout"; // 매장 또는 포장 질문으로 이동합니다.
-      else if (normalized.includes("카드")) currentStep = "payment"; // 결제 단계로 이동합니다.
-      else if (normalized.includes("영수증")) currentStep = "receipt"; // 영수증 단계로 이동합니다.
-      else if (normalized.includes("준비되면")) currentStep = "finish"; // 주문 완료 단계로 이동합니다.
-      renderStep(); // 해당 단계의 대사를 표시합니다.
-    } // 음성 모드별 처리를 종료합니다.
+      submitText(); // 선택지와 비교합니다.
+    } else { // 직원 음성 입력인 경우입니다.
+      document.getElementById("status").textContent = "Staff audio recognized: " + spoken + ". Choose the matching response."; // 직원 발화를 인식했다고 안내합니다.
+    } // 음성 모드 확인을 종료합니다.
   }; // 인식 결과 처리를 종료합니다.
 
   recognition.onerror = event => { // 음성 인식 오류가 발생하면 실행합니다.
-    document.getElementById("status").textContent = "Error: " + event.error; // 오류를 표시합니다.
+    document.getElementById("status").textContent = "Error: " + event.error; // 오류 메시지를 표시합니다.
   }; // 오류 처리를 종료합니다.
 
   recognition.start(); // 음성 인식을 시작합니다.
 } // 음성 인식 함수를 종료합니다.
 
 function goPlaces() { // 장소 선택 화면으로 돌아갑니다.
-  showScreen("places"); // 장소 선택 화면을 표시합니다.
+  showScreen("places"); // 장소 화면을 표시합니다.
 } // 장소 이동 함수를 종료합니다.
 
 function goScenarios() { // 상황 선택 화면으로 돌아갑니다.
-  showScreen("scenarios"); // 상황 선택 화면을 표시합니다.
+  renderScenarios(); // 현재 장소의 상황 목록을 다시 표시합니다.
+  showScreen("scenarios"); // 상황 화면을 표시합니다.
 } // 상황 이동 함수를 종료합니다.
 
-document.getElementById("userInput").addEventListener("keydown", event => { // 입력창 키보드를 감지합니다.
-  if (event.key === "Enter") submitText(); // Enter 키를 누르면 전송합니다.
+document.getElementById("userInput").addEventListener("keydown",event => { // 입력창 키보드를 감지합니다.
+  if (event.key === "Enter") submitText(); // Enter를 누르면 전송합니다.
 }); // 키보드 이벤트 설정을 종료합니다.
 
 </script> <!-- JavaScript를 종료합니다. -->
