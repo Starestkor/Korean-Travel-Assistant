@@ -118,56 +118,13 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent} /* 버튼에 마�
 <button class="back-button" onclick="goScenarios()">← Back</button> <!-- 상황 목록으로 돌아갑니다. -->
 <h1 class="heading" id="conversationHeading"></h1> <!-- 선택한 상황 제목입니다. -->
 <div class="dialogue-card"> <!-- 직원의 말을 보여주는 카드입니다. -->
-<div class="speaker" id="speaker">STAFF</div> <!-- 화자를 표시합니다. -->
+
+ <div class="speaker" id="speaker">STAFF</div> <!-- 화자를 표시합니다. -->
 <div class="english" id="english"></div> <!-- 영어 번역을 표시합니다. -->
 <div class="korean" id="korean"></div> <!-- 한국어 문장을 표시합니다. -->
 <div class="roman" id="roman"></div> <!-- 발음을 표시합니다. -->
 </div> <!-- 대화 카드를 종료합니다. -->
 <div class="choice-list" id="choices"></div> <!-- 대화 선택지가 표시됩니다. -->
- <div class="input-row"> <!-- 사용자가 직접 문장을 입력하는 영역입니다. -->
-<input id="freeInput" type="text" placeholder="Type in what you want to ask..." onkeydown="if(event.key==='Enter')submitText()"> <!-- 질문을 입력하고 엔터를 누르면 전송합니다. -->
-<button class="send-button" onclick="submitText()">Send</button> <!-- 입력한 문장을 전송합니다. -->
-</div> <!-- 직접 입력 영역을 종료합니다. -->
-<div class="tools"> <!-- 음성 기능 버튼 영역입니다. -->
-<button class="tool-button" onclick="speakKorean()">🔊 Listen</button> <!-- 한국어 문장을 소리로 읽습니다. -->
-<button class="tool-button" onclick="startListening()">🎙️ Speak</button> <!-- 사용자의 음성을 인식합니다. -->
-</div> <!-- 음성 기능 영역을 종료합니다. -->
-<div class="status" id="status"></div> <!-- 음성 및 입력 상태를 표시합니다. -->
-</section> <!-- 대화 화면을 종료합니다. -->
-
-<section id="library" class="hidden"> <!-- 학습 자료 화면입니다. -->
-<button class="back-button" onclick="goHome()">← Back</button> <!-- 첫 화면으로 돌아갑니다. -->
-<h1 class="heading" id="libraryHeading">Learning Materials</h1> <!-- 학습 자료 제목입니다. -->
-<div class="item-list" id="itemList"></div> <!-- 학습 자료 목록이 표시됩니다. -->
-</section> <!-- 학습 자료 화면을 종료합니다. -->
-
-</section> <!-- 메인 콘텐츠 영역을 종료합니다. -->
-</main> <!-- 앱 전체 영역을 종료합니다. -->
-
-<script> // 자바스크립트 기능을 시작합니다.
-
-const translations = { // 화면에 표시할 언어별 번역을 모아둡니다.
-en:{home:"Where to?",sub:"Choose a place or learn useful Korean",language:"Choose your language",learn:"Learn Korean",expressions:"Essential Expressions",expressionsDesc:"Useful phrases for everyday situations",grammar:"Useful Grammar",grammarDesc:"Practical grammar with travel examples",dietary:"Dietary Needs",dietaryDesc:"Vegetarian, vegan, halal and gluten-free",all:"All Learning Materials",allDesc:"Browse all expressions and grammar",choose:"Choose a situation",send:"Send",back:"← Back",listen:"🔊 Listen",speak:"🎙️ Speak"}, // 영어 번역입니다.
-es:{home:"¿Adónde vamos?",sub:"Elige un lugar o aprende coreano útil",language:"Elige tu idioma",learn:"Aprende coreano",expressions:"Expresiones esenciales",expressionsDesc:"Frases útiles para situaciones cotidianas",grammar:"Gramática útil",grammarDesc:"Gramática práctica para viajar",dietary:"Necesidades alimentarias",dietaryDesc:"Vegetariano, vegano, halal y sin gluten",all:"Todo el material",allDesc:"Explora expresiones y gramática",choose:"Elige una situación",send:"Enviar",back:"← Volver",listen:"🔊 Escuchar",speak:"🎙️ Hablar"}, // 스페인어 번역입니다.
-zh:{home:"去哪里？",sub:"选择地点或学习实用韩语",language:"选择语言",learn:"学习韩语",expressions:"常用表达",expressionsDesc:"日常生活中的实用短语",grammar:"实用语法",grammarDesc:"旅行中使用的实用语法",dietary:"饮食需求",dietaryDesc:"素食、纯素、清真和无麸质",all:"全部学习资料",allDesc:"浏览所有表达和语法",choose:"选择一个情境",send:"发送",back:"← 返回",listen:"🔊 听",speak:"🎙️ 说"}, // 중국어 번역입니다.
-ja:{home:"どこへ行きますか？",sub:"場所を選ぶか、役立つ韓国語を学びましょう",language:"言語を選択",learn:"韓国語を学ぶ",expressions:"基本表現",expressionsDesc:"日常生活で使える便利な表現",grammar:"実用文法",grammarDesc:"旅行で使える実用的な文法",dietary:"食事の希望",dietaryDesc:"ベジタリアン、ビーガン、ハラールなど",all:"すべての教材",allDesc:"表現と文法をすべて見る",choose:"場面を選択",send:"送信",back:"← 戻る",listen:"🔊 聞く",speak:"🎙️ 話す"}, // 일본어 번역입니다.
-fr:{home:"Où aller ?",sub:"Choisissez un lieu ou apprenez le coréen utile",language:"Choisissez votre langue",learn:"Apprendre le coréen",expressions:"Expressions essentielles",expressionsDesc:"Phrases utiles au quotidien",grammar:"Grammaire pratique",grammarDesc:"Grammaire utile en voyage",dietary:"Besoins alimentaires",dietaryDesc:"Végétarien, végétalien, halal et sans gluten",all:"Tous les supports",allDesc:"Voir toutes les expressions et la grammaire",choose:"Choisissez une situation",send:"Envoyer",back:"← Retour",listen:"🔊 Écouter",speak:"🎙️ Parler"}, // 프랑스어 번역입니다.
-de:{home:"Wohin möchten Sie?",sub:"Wählen Sie einen Ort oder lernen Sie nützliches Koreanisch",language:"Sprache auswählen",learn:"Koreanisch lernen",expressions:"Wichtige Ausdrücke",expressionsDesc:"Nützliche Sätze für den Alltag",grammar:"Nützliche Grammatik",grammarDesc:"Praktische Grammatik für Reisen",dietary:"Ernährungsbedürfnisse",dietaryDesc:"Vegetarisch, vegan, halal und glutenfrei",all:"Alle Lernmaterialien",allDesc:"Alle Ausdrücke und Grammatik ansehen",choose:"Situation auswählen",send:"Senden",back:"← Zurück",listen:"🔊 Anhören",speak:"🎙️ Sprechen"}, // 독일어 번역입니다.
-ar:{home:"إلى أين؟",sub:"اختر مكانًا أو تعلم الكورية المفيدة",language:"اختر لغتك",learn:"تعلم الكورية",expressions:"عبارات أساسية",expressionsDesc:"عبارات مفيدة للحياة اليومية",grammar:"قواعد مفيدة",grammarDesc:"قواعد عملية للسفر",dietary:"الاحتياجات الغذائية",dietaryDesc:"نباتي، نباتي صرف، حلال وخالٍ من الغلوتين",all:"جميع المواد التعليمية",allDesc:"تصفح جميع العبارات والقواعد",choose:"اختر موقفًا",send:"إرسال",back:"← رجوع",listen:"🔊 استمع",speak:"🎙️ تحدث"}, // 아랍어 번역입니다.
-pt:{home:"Para onde?",sub:"Escolha um lugar ou aprenda coreano útil",language:"Escolha seu idioma",learn:"Aprender coreano",expressions:"Expressões essenciais",expressionsDesc:"Frases úteis para situações do dia a dia",grammar:"Gramática útil",grammarDesc:"Gramática prática para viagens",dietary:"Necessidades alimentares",dietaryDesc:"Vegetariano, vegano, halal e sem glúten",all:"Todo o material",allDesc:"Veja todas as expressões e gramática",choose:"Escolha uma situação",send:"Enviar",back:"← Voltar",listen:"🔊 Ouvir",speak:"🎙️ Falar"}, // 포르투갈어 번역입니다.
-ru:{home:"Куда пойдём?",sub:"Выберите место или изучайте полезный корейский",language:"Выберите язык",learn:"Учить корейский",expressions:"Основные выражения",expressionsDesc:"Полезные фразы на каждый день",grammar:"Полезная грамматика",grammarDesc:"Практическая грамматика для путешествий",dietary:"Пищевые предпочтения",dietaryDesc:"Вегетарианское, веганское, халяльное и без глютена",all:"Все учебные материалы",allDesc:"Все выражения и грамматика",choose:"Выберите ситуацию",send:"Отправить",back:"← Назад",listen:"🔊 Слушать",speak:"🎙️ Говорить"}, // 러시아어 번역입니다.
-vi:{home:"Đi đâu?",sub:"Chọn địa điểm hoặc học tiếng Hàn hữu ích",language:"Chọn ngôn ngữ",learn:"Học tiếng Hàn",expressions:"Các cách diễn đạt thiết yếu",expressionsDesc:"Cụm từ hữu ích trong cuộc sống hằng ngày",grammar:"Ngữ pháp hữu ích",grammarDesc:"Ngữ pháp thực tế khi đi du lịch",dietary:"Nhu cầu ăn uống",dietaryDesc:"Ăn chay, thuần chay, halal và không gluten",all:"Tất cả tài liệu",allDesc:"Xem tất cả cách diễn đạt và ngữ pháp",choose:"Chọn một tình huống",send:"Gửi",back:"← Quay lại",listen:"🔊 Nghe",speak:"🎙️ Nói"} // 베트남어 번역입니다.
-}; // 언어별 번역 데이터가 끝납니다.
-
-const places = { // 장소별 정보와 상황 목록을 저장합니다.
-cafe:{name:"Cafe",icon:"☕",scenarios:[{id:"cafe_order",name:"Ordering a drink",desc:"Order coffee, tea or other drinks",icon:"🥤"},{id:"cafe_size",name:"Choosing a size",desc:"Ask about sizes and options",icon:"📏"},{id:"cafe_takeout",name:"Takeout or dine in",desc:"Choose how to receive your order",icon:"🛍️"}]}, // 카페의 상황 세 가지입니다.
-restaurant:{name:"Restaurant",icon:"🍽️",scenarios:[{id:"restaurant_order",name:"Ordering food",desc:"Order dishes and ask for recommendations",icon:"🍲"},{id:"restaurant_extra",name:"Asking for extras",desc:"Request water, side dishes or utensils",icon:"🥢"},{id:"restaurant_dietary",name:"Dietary requirements",desc:"Explain your dietary preferences",icon:"🥗"},{id:"restaurant_allergy",name:"Food allergies",desc:"Explain an allergy and check ingredients",icon:"⚠️"},{id:"restaurant_payment",name:"Paying the bill",desc:"Ask for the bill and pay",icon:"💳"}]}, // 식당의 상황 다섯 가지입니다.
-transport:{name:"Transport",icon:"🚆",scenarios:[{id:"transport_ticket",name:"Buying a ticket",desc:"Buy a bus or train ticket",icon:"🎫"},{id:"transport_direction",name:"Asking directions",desc:"Find your way to a destination",icon:"🧭"},{id:"transport_taxi",name:"Taking a taxi",desc:"Tell the driver where to go",icon:"🚕"}]}, // 교통의 상황 세 가지입니다.
-shopping:{name:"Shopping",icon:"🛍️",scenarios:[{id:"shopping_price",name:"Asking the price",desc:"Ask how much something costs",icon:"💰"},{id:"shopping_size",name:"Finding a size",desc:"Ask for a different size or color",icon:"👕"},{id:"shopping_payment",name:"Paying",desc:"Pay by card or cash",icon:"💳"}]}, // 쇼핑의 상황 세 가지입니다.
-stay:{name:"Accommodation",icon:"🏨",scenarios:[{id:"stay_checkin",name:"Checking in",desc:"Check in to your accommodation",icon:"🛎️"},{id:"stay_request",name:"Making a request",desc:"Ask for towels or help",icon:"🧺"},{id:"stay_checkout",name:"Checking out",desc:"Check out and leave your room",icon:"🧳"}]} // 숙소의 상황 세 가지입니다.
-}; // 장소별 데이터가 끝납니다.
-
- <div class="choice-list" id="choices"></div> <!-- 대화 선택지를 표시합니다. -->
 <div class="input-row"><input id="userInput" type="text" placeholder="Type in what you want to ask..."><button class="send-button" onclick="submitText()">Send</button></div> <!-- 사용자가 자신의 언어로 입력할 수 있는 영역입니다. -->
 <div class="tools"><button class="tool-button" onclick="listen()">🎙 Speak</button><button class="tool-button" onclick="speakCurrent()">🔊 Listen</button></div> <!-- 음성 입력과 문장 듣기 버튼입니다. -->
 <div class="status" id="status">Choose a response or type a phrase.</div> <!-- 현재 상태를 안내합니다. -->
@@ -292,8 +249,9 @@ shopping_find:[ // 쇼핑 상품 찾기 대화입니다.
 {en:"What size do you need?",ko:"어떤 사이즈가 필요하세요?",ro:"Eotteon saijeuga piryohaseyo?",choices:[["Small, please.","스몰 사이즈요.","Seumol saijeuyo."],["Medium, please.","미디엄 사이즈요.","Midieom saijeuyo."],["Large, please.","라지 사이즈요.","Raji saijeuyo."]]} // 사이즈를 확인합니다.
 ], // 상품 찾기 대화를 종료합니다.
 shopping_price:[ // 쇼핑 가격 문의 대화입니다.
-{en:"How can I help you?",ko:"도와드릴까요?",ro:"Dowadeurilkkayo?",choices:[["How much is this?","이거 얼마예요?","Igeo eolmayeyo?"],["Is this on sale?","이거 할인 중인가요?","Igeo harin jungingayo?"]]}, // 가격을 묻습니다.
 
+
+{en:"How can I help you?",ko:"도와드릴까요?",ro:"Dowadeurilkkayo?",choices:[["How much is this?","이거 얼마예요?","Igeo eolmayeyo?"],["Is this on sale?","이거 할인 중인가요?","Igeo harin jungingayo?"]]}, // 가격을 묻습니다.
 {en:"It's 30,000 won.",ko:"3만 원입니다.",ro:"Samman wonimnida.",choices:[["Is there a discount?","할인되나요?","Harindoenayo?"],["Okay, I'll take it.","네, 이걸로 할게요.","Ne, igeollo halgeyo."]]} // 가격과 할인을 안내합니다.
 ], // 가격 문의 대화를 종료합니다.
 shopping_exchange:[ // 교환 및 환불 대화입니다.
@@ -339,7 +297,7 @@ const dietary=[ // 식이 제한 및 재료 확인 표현입니다.
 {en:"Does it contain pork broth or pork fat?",ko:"돼지고기 육수나 기름도 들어가요?",ro:"Dwaejigogi yuksuna gireumdo deureogayo?",note:"고기 조각뿐 아니라 육수와 기름도 확인합니다."}, // 육수와 기름입니다.
 {en:"Does this contain wheat or gluten?",ko:"밀가루나 글루텐이 들어가요?",ro:"Milgaruna geulluteni deureogayo?",note:"재료에 밀가루나 글루텐이 포함되어 있는지 묻습니다."}, // 글루텐 포함 여부입니다.
 {en:"Is there a dish without meat?",ko:"고기가 들어가지 않는 음식이 있나요?",ro:"Gogiga deureogaji anneun eumsigi innayo?",note:"고기가 없는 메뉴를 찾을 때 사용합니다."}, // 고기 없는 메뉴입니다.
-{en:"Could you check the ingredients, please?",ko:"재료를 확인해 주시겠어요?",ro:"Jaeryoreul hwaginhae jusigesseoyo",note:"직원에게 재료 확인을 요청합니다."}, // 재료 확인입니다.
+{en:"Could you check the ingredients, please?",ko:"재료를 확인해 주시겠어요?",ro:"Jaeryoreul hwaginhae jusigesseoyo?",note:"직원에게 재료 확인을 요청합니다."}, // 재료 확인입니다.
 {en:"Is there a risk of cross-contact?",ko:"다른 음식과 조리 도구를 함께 사용하나요?",ro:"Dareun eumsikgwa jori dogureul hamkke sayonghanayo?",note:"알레르기나 엄격한 식이 제한이 있다면 교차 접촉 가능성을 확인합니다."} // 교차 접촉 확인입니다.
 ]; // 식이 제한 표현 데이터를 종료합니다.
 
@@ -355,4 +313,196 @@ const grammar=[ // 여행 중 자주 쓸 문법과 대표 예문입니다.
 {pattern:"-(으)ㄴ 적 있어요?",meaning:"Have you ever...?",ko:"한국에 와 본 적 있어요?",en:"Have you ever been to Korea?",ro:"Hanguge wa bon jeok isseoyo?",note:"과거에 해 본 경험이 있는지 물어봅니다."}, // 경험 문법입니다.
 {pattern:"-아/어 주세요",meaning:"Please speak...",ko:"천천히 말해 주세요.",en:"Please speak slowly.",ro:"Cheoncheonhi malhae juseyo.",note:"여행 중 상대방에게 말하는 속도를 부탁할 때 유용합니다."} // 요청 예문입니다.
 ]; // 문법 데이터를 종료합니다.
+
+ const interfaceText={ // 첫 화면과 기본 버튼에 사용할 10개 언어의 번역입니다.
+en:{language:"Choose your language",home:"Where to?",homeSub:"Choose a place or learn useful Korean",learn:"Learn Korean",expressions:"Essential Expressions",expressionsDesc:"Useful phrases for everyday situations",grammar:"Useful Grammar",grammarDesc:"Practical grammar with travel examples",dietary:"Dietary Needs",dietaryDesc:"Vegetarian, vegan, halal and gluten-free",all:"All Learning Materials",allDesc:"Browse all expressions and grammar",situation:"Choose a situation",placeholder:"Type in what you want to ask...",send:"Send",speak:"Speak",listen:"Listen",status:"Choose a response or type a phrase."},
+es:{language:"Elige tu idioma",home:"¿Adónde quieres ir?",homeSub:"Elige un lugar o aprende coreano útil",learn:"Aprende coreano",expressions:"Expresiones esenciales",expressionsDesc:"Frases útiles para situaciones cotidianas",grammar:"Gramática útil",grammarDesc:"Gramática práctica para viajar",dietary:"Necesidades alimentarias",dietaryDesc:"Vegetariano, vegano, halal y sin gluten",all:"Todos los materiales",allDesc:"Explora expresiones y gramática",situation:"Elige una situación",placeholder:"Escribe lo que quieras preguntar...",send:"Enviar",speak:"Hablar",listen:"Escuchar",status:"Elige una respuesta o escribe una frase."},
+zh:{language:"选择你的语言",home:"你想去哪里？",homeSub:"选择地点或学习实用韩语",learn:"学习韩语",expressions:"常用表达",expressionsDesc:"日常情境中实用的表达",grammar:"实用语法",grammarDesc:"旅行中实用的语法",dietary:"饮食需求",dietaryDesc:"素食、纯素、清真和无麸质",all:"全部学习资料",allDesc:"浏览所有表达和语法",situation:"选择一个情境",placeholder:"输入你想问的问题...",send:"发送",speak:"说话",listen:"听",status:"请选择回答或输入句子。"},
+ja:{language:"使用する言語を選択",home:"どこへ行きますか？",homeSub:"場所を選ぶか、役立つ韓国語を学びましょう",learn:"韓国語を学ぶ",expressions:"基本表現",expressionsDesc:"日常で使える便利な表現",grammar:"実用文法",grammarDesc:"旅行で役立つ文法",dietary:"食事の希望",dietaryDesc:"ベジタリアン、ヴィーガン、ハラール、グルテンフリー",all:"すべての教材",allDesc:"表現と文法をすべて見る",situation:"状況を選択",placeholder:"聞きたいことを入力してください...",send:"送信",speak:"話す",listen:"聞く",status:"回答を選ぶか、文章を入力してください。"},
+fr:{language:"Choisissez votre langue",home:"Où voulez-vous aller ?",homeSub:"Choisissez un lieu ou apprenez le coréen utile",learn:"Apprendre le coréen",expressions:"Expressions essentielles",expressionsDesc:"Expressions utiles au quotidien",grammar:"Grammaire pratique",grammarDesc:"Grammaire utile en voyage",dietary:"Régimes alimentaires",dietaryDesc:"Végétarien, végétalien, halal et sans gluten",all:"Tous les supports",allDesc:"Parcourir les expressions et la grammaire",situation:"Choisissez une situation",placeholder:"Écrivez ce que vous souhaitez demander...",send:"Envoyer",speak:"Parler",listen:"Écouter",status:"Choisissez une réponse ou écrivez une phrase."},
+de:{language:"Wähle deine Sprache",home:"Wohin möchtest du?",homeSub:"Wähle einen Ort oder lerne nützliches Koreanisch",learn:"Koreanisch lernen",expressions:"Wichtige Ausdrücke",expressionsDesc:"Nützliche Sätze für den Alltag",grammar:"Nützliche Grammatik",grammarDesc:"Praktische Grammatik für Reisen",dietary:"Ernährungsbedürfnisse",dietaryDesc:"Vegetarisch, vegan, halal und glutenfrei",all:"Alle Lernmaterialien",allDesc:"Alle Ausdrücke und Grammatik ansehen",situation:"Wähle eine Situation",placeholder:"Gib ein, was du fragen möchtest...",send:"Senden",speak:"Sprechen",listen:"Anhören",status:"Wähle eine Antwort oder gib einen Satz ein."},
+ar:{language:"اختر لغتك",home:"إلى أين تريد الذهاب؟",homeSub:"اختر مكانًا أو تعلم الكورية المفيدة",learn:"تعلم الكورية",expressions:"عبارات أساسية",expressionsDesc:"عبارات مفيدة للمواقف اليومية",grammar:"قواعد مفيدة",grammarDesc:"قواعد عملية للسفر",dietary:"الاحتياجات الغذائية",dietaryDesc:"نباتي، نباتي صرف، حلال وخالٍ من الغلوتين",all:"جميع مواد التعلم",allDesc:"تصفح جميع العبارات والقواعد",situation:"اختر موقفًا",placeholder:"اكتب ما تريد أن تسأل عنه...",send:"إرسال",speak:"تحدث",listen:"استمع",status:"اختر إجابة أو اكتب عبارة."},
+pt:{language:"Escolha seu idioma",home:"Para onde você quer ir?",homeSub:"Escolha um lugar ou aprenda coreano útil",learn:"Aprenda coreano",expressions:"Expressões essenciais",expressionsDesc:"Frases úteis para situações do dia a dia",grammar:"Gramática útil",grammarDesc:"Gramática prática para viagens",dietary:"Necessidades alimentares",dietaryDesc:"Vegetariano, vegano, halal e sem glúten",all:"Todos os materiais",allDesc:"Veja todas as expressões e a gramática",situation:"Escolha uma situação",placeholder:"Digite o que você quer perguntar...",send:"Enviar",speak:"Falar",listen:"Ouvir",status:"Escolha uma resposta ou digite uma frase."},
+ru:{language:"Выберите язык",home:"Куда вы хотите пойти?",homeSub:"Выберите место или изучайте полезный корейский",learn:"Изучайте корейский",expressions:"Основные выражения",expressionsDesc:"Полезные фразы на каждый день",grammar:"Полезная грамматика",grammarDesc:"Практическая грамматика для путешествий",dietary:"Пищевые предпочтения",dietaryDesc:"Вегетарианское, веганское, халяльное и без глютена",all:"Все учебные материалы",allDesc:"Все выражения и грамматика",situation:"Выберите ситуацию",placeholder:"Напишите, о чём хотите спросить...",send:"Отправить",speak:"Говорить",listen:"Слушать",status:"Выберите ответ или введите фразу."},
+vi:{language:"Chọn ngôn ngữ của bạn",home:"Bạn muốn đi đâu?",homeSub:"Chọn địa điểm hoặc học tiếng Hàn hữu ích",learn:"Học tiếng Hàn",expressions:"Các câu giao tiếp cơ bản",expressionsDesc:"Câu hữu ích trong các tình huống hằng ngày",grammar:"Ngữ pháp hữu ích",grammarDesc:"Ngữ pháp thực tế khi đi du lịch",dietary:"Nhu cầu ăn uống",dietaryDesc:"Ăn chay, thuần chay, halal và không gluten",all:"Tất cả tài liệu học",allDesc:"Xem tất cả mẫu câu và ngữ pháp",situation:"Chọn tình huống",placeholder:"Nhập điều bạn muốn hỏi...",send:"Gửi",speak:"Nói",listen:"Nghe",status:"Hãy chọn câu trả lời hoặc nhập một câu."}
+}; // 10개 언어의 기본 화면 번역을 종료합니다.
+
+let selectedLanguage="en"; // 처음 선택된 언어는 영어입니다.
+
+function setLanguage(language){ // 사용자가 언어를 바꾸면 실행합니다.
+selectedLanguage=language; // 선택한 언어 코드를 저장합니다.
+const text=interfaceText[language]||interfaceText.en; // 선택한 언어의 번역을 가져옵니다.
+document.documentElement.lang=language; // HTML 문서의 언어 설정을 바꿉니다.
+document.getElementById("languageLabel").textContent=text.language; // 언어 선택 안내를 번역합니다.
+document.getElementById("homeTitle").textContent=text.home; // 첫 화면 제목을 번역합니다.
+document.getElementById("homeSubheading").textContent=text.homeSub; // 첫 화면 설명을 번역합니다.
+document.getElementById("learnTitle").textContent=text.learn; // 학습 영역 제목을 번역합니다.
+document.getElementById("featureExpressions").textContent=text.expressions; // 공통 표현 제목을 번역합니다.
+document.getElementById("featureExpressionsDesc").textContent=text.expressionsDesc; // 공통 표현 설명을 번역합니다.
+document.getElementById("featureGrammar").textContent=text.grammar; // 문법 제목을 번역합니다.
+document.getElementById("featureGrammarDesc").textContent=text.grammarDesc; // 문법 설명을 번역합니다.
+document.getElementById("featureDietary").textContent=text.dietary; // 식이 제한 제목을 번역합니다.
+document.getElementById("featureDietaryDesc").textContent=text.dietaryDesc; // 식이 제한 설명을 번역합니다.
+document.getElementById("featureAll").textContent=text.all; // 전체 자료 제목을 번역합니다.
+document.getElementById("featureAllDesc").textContent=text.allDesc; // 전체 자료 설명을 번역합니다.
+document.getElementById("scenarioSubheading").textContent=text.situation; // 상황 선택 안내를 번역합니다.
+document.getElementById("userInput").placeholder=text.placeholder; // 입력창 안내를 번역합니다.
+document.querySelector(".send-button").textContent=text.send; // 전송 버튼을 번역합니다.
+document.querySelectorAll(".tool-button")[0].textContent="🎙 "+text.speak; // 음성 입력 버튼을 번역합니다.
+document.querySelectorAll(".tool-button")[1].textContent="🔊 "+text.listen; // 문장 듣기 버튼을 번역합니다.
+document.getElementById("status").textContent=text.status; // 상태 안내를 번역합니다.
+} // 언어 변경 함수를 종료합니다.
+
+function showScreen(screenId){ // 지정한 화면만 보이게 하는 함수입니다.
+screens.forEach(id=>document.getElementById(id).classList.add("hidden")); // 모든 화면을 먼저 숨깁니다.
+document.getElementById(screenId).classList.remove("hidden"); // 선택한 화면만 표시합니다.
+} // 화면 전환 함수를 종료합니다.
+
+function selectPlace(placeId){ // 장소 카드를 눌렀을 때 실행합니다.
+currentPlace=placeId; // 선택한 장소 ID를 저장합니다.
+document.getElementById("placeHeading").textContent=placeNames[placeId]; // 선택한 장소 이름을 제목에 표시합니다.
+renderScenarios(); // 선택한 장소의 상황 목록을 새로 만듭니다.
+showScreen("scenarios"); // 상황 선택 화면으로 이동합니다.
+} // 장소 선택 함수를 종료합니다.
+
+function renderScenarios(){ // 현재 장소의 상황 목록을 표시합니다.
+const list=document.getElementById("scenarioList"); // 상황 목록을 표시할 영역을 가져옵니다.
+list.innerHTML=""; // 이전에 표시된 상황을 모두 지웁니다.
+const scenarios=scenarioData[currentPlace]||[]; // 현재 장소에 해당하는 상황만 가져옵니다.
+scenarios.forEach(scenario=>{ // 현재 장소의 상황을 하나씩 반복합니다.
+const button=document.createElement("button"); // 상황을 선택할 버튼을 만듭니다.
+button.className="scenario-card"; // 상황 카드 디자인을 적용합니다.
+button.innerHTML=`<span class="scenario-icon">${scenario.icon}</span><span class="scenario-text"><span class="scenario-name">${scenario.name}</span><span class="scenario-description">${scenario.description}</span></span><span class="arrow">›</span>`; // 아이콘, 이름, 설명을 버튼에 넣습니다.
+button.onclick=()=>selectScenario(scenario.id); // 버튼을 누르면 해당 상황 ID를 전달합니다.
+list.appendChild(button); // 만든 버튼을 화면에 추가합니다.
+}); // 상황 반복을 종료합니다.
+} // 상황 목록 표시 함수를 종료합니다.
+
+function selectScenario(scenarioId){ // 상황을 선택했을 때 실행합니다.
+currentScenario=scenarioId; // 선택한 상황 ID를 저장합니다.
+if(!conversations[scenarioId]){alert("This situation is being prepared.");return;} // 대화 데이터가 없으면 안내하고 종료합니다.
+currentStep=0; // 대화를 첫 단계부터 시작합니다.
+document.getElementById("conversationHeading").textContent=findScenarioName(scenarioId); // 대화 화면 제목을 설정합니다.
+document.getElementById("userInput").value=""; // 입력창을 비웁니다.
+document.getElementById("status").textContent="Choose a response or type a phrase."; // 상태 안내를 초기화합니다.
+showScreen("conversation"); // 대화 화면으로 이동합니다.
+renderStep(); // 첫 번째 대사를 표시합니다.
+} // 상황 선택 함수를 종료합니다.
+
+function findScenarioName(scenarioId){ // 상황 ID에 맞는 화면 이름을 찾습니다.
+for(const group of Object.values(scenarioData)){ // 모든 장소의 상황 목록을 순서대로 확인합니다.
+const found=group.find(item=>item.id===scenarioId); // 현재 목록에서 ID가 일치하는 상황을 찾습니다.
+if(found)return found.name; // 찾으면 상황 이름을 반환합니다.
+} // 모든 장소 검색을 종료합니다.
+return "Conversation"; // 일치하는 이름이 없으면 기본 제목을 반환합니다.
+} // 상황 이름 검색 함수를 종료합니다.
+
+function renderStep(){ // 현재 대화 단계를 화면에 표시합니다.
+const steps=conversations[currentScenario]; // 현재 상황의 전체 대화 데이터를 가져옵니다.
+const step=steps[currentStep]; // 현재 순서의 대화 한 개를 가져옵니다.
+document.getElementById("speaker").textContent="STAFF"; // 현재 문장의 화자를 직원으로 표시합니다.
+document.getElementById("english").textContent=step.en; // 영어 번역을 표시합니다.
+document.getElementById("korean").textContent=step.ko; // 한국어 문장을 표시합니다.
+document.getElementById("roman").textContent=step.ro; // 발음을 표시합니다.
+const list=document.getElementById("choices"); // 선택지 영역을 가져옵니다.
+list.innerHTML=""; // 이전 선택지를 지웁니다.
+step.choices.forEach(choice=>{ // 현재 단계의 선택지를 하나씩 만듭니다.
+const button=document.createElement("button"); // 선택지 버튼을 만듭니다.
+button.className="choice"; // 선택지 디자인을 적용합니다.
+button.innerHTML=`<span class="choice-en">${choice[0]}</span><span class="choice-ko">${choice[1]}</span><span class="choice-ro">${choice[2]}</span>`; // 영어, 한국어, 발음을 표시합니다.
+button.onclick=()=>chooseAnswer(choice); // 선택하면 다음 단계로 이동합니다.
+list.appendChild(button); // 선택지 버튼을 화면에 추가합니다.
+}); // 선택지 반복을 종료합니다.
+} // 대화 단계 표시 함수를 종료합니다.
+
+function chooseAnswer(choice){ // 사용자가 선택지를 눌렀을 때 실행합니다.
+const steps=conversations[currentScenario]; // 현재 상황의 대화 데이터를 가져옵니다.
+if(currentStep<steps.length-1){ // 아직 마지막 단계가 아닌지 확인합니다.
+currentStep+=1; // 다음 대화 단계로 이동합니다.
+renderStep(); // 다음 대사를 표시합니다.
+document.getElementById("status").textContent="Response selected."; // 선택 완료 안내를 표시합니다.
+}else{ // 마지막 대화 단계라면 실행합니다.
+currentStep=0; // 대화를 처음 단계로 되돌립니다.
+renderStep(); // 첫 대사를 다시 표시합니다.
+document.getElementById("status").textContent="Conversation complete. You can start again."; // 대화가 끝났음을 안내합니다.
+} // 마지막 단계인지 확인하는 조건문을 종료합니다.
+} // 선택지 처리 함수를 종료합니다.
+
+function submitText(){ // 사용자가 입력창에 쓴 문장을 처리합니다.
+const input=document.getElementById("userInput"); // 입력창 요소를 가져옵니다.
+const typed=input.value.trim().replace(/\s/g,""); // 입력 문장의 앞뒤와 모든 공백을 제거합니다.
+if(!typed)return; // 아무것도 입력하지 않았다면 종료합니다.
+const step=conversations[currentScenario][currentStep]; // 현재 대화 단계의 선택지를 가져옵니다.
+const matched=step.choices.find(choice=>choice[1].replace(/\s/g,"")===typed); // 입력 문장이 선택지 한국어와 정확히 같은지 확인합니다.
+if(matched){chooseAnswer(matched);}else{document.getElementById("status").textContent="For now, choose one of the Korean responses shown above."; } // 일치하면 다음 단계로 가고 아니면 선택지를 안내합니다.
+input.value=""; // 입력창을 비웁니다.
+} // 직접 입력 함수를 종료합니다.
+
+function listen(){ // 브라우저 음성 인식을 시작합니다.
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition; // 브라우저가 지원하는 음성 인식 기능을 찾습니다.
+if(!SpeechRecognition){document.getElementById("status").textContent="Speech recognition is not supported in this browser.";return;} // 지원하지 않으면 안내하고 종료합니다.
+const recognition=new SpeechRecognition(); // 음성 인식 객체를 생성합니다.
+recognition.lang="ko-KR"; // 현재 버전에서는 한국어 음성을 인식하도록 설정합니다.
+recognition.interimResults=false; // 중간 인식 결과는 받지 않습니다.
+document.getElementById("status").textContent="Listening..."; // 듣기 중임을 표시합니다.
+recognition.onresult=event=>{ // 음성 인식 결과가 도착하면 실행합니다.
+const spoken=event.results[0][0].transcript; // 인식된 문장을 가져옵니다.
+document.getElementById("userInput").value=spoken; // 인식한 문장을 입력창에 넣습니다.
+document.getElementById("status").textContent="Recognized: "+spoken; // 인식 결과를 안내합니다.
+submitText(); // 인식한 문장을 현재 선택지와 비교합니다.
+}; // 음성 인식 결과 처리를 종료합니다.
+recognition.onerror=event=>{document.getElementById("status").textContent="Speech error: "+event.error;}; // 음성 인식 오류를 화면에 표시합니다.
+recognition.start(); // 음성 인식을 시작합니다.
+} // 음성 인식 함수를 종료합니다.
+
+function speakCurrent(){ // 현재 한국어 문장을 브라우저 음성으로 읽습니다.
+if(!("speechSynthesis" in window)){document.getElementById("status").textContent="Text-to-speech is not supported.";return;} // 음성 출력 기능이 없으면 안내합니다.
+const utterance=new SpeechSynthesisUtterance(document.getElementById("korean").textContent); // 현재 한국어 문장으로 음성 객체를 만듭니다.
+utterance.lang="ko-KR"; // 한국어 음성으로 설정합니다.
+utterance.rate=0.88; // 학습하기 좋도록 읽는 속도를 조금 낮춥니다.
+window.speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지합니다.
+window.speechSynthesis.speak(utterance); // 현재 문장을 읽습니다.
+} // 문장 듣기 함수를 종료합니다.
+
+function openLibrary(type){ // 학습 카테고리를 열 때 실행합니다.
+currentLibrary=type; // 선택한 학습 카테고리를 저장합니다.
+const list=document.getElementById("libraryList"); // 학습 항목을 표시할 영역을 가져옵니다.
+list.innerHTML=""; // 이전 항목을 지웁니다.
+const titles={expressions:"Essential Expressions",grammar:"Useful Grammar",dietary:"Dietary Needs",all:"All Learning Materials"}; // 카테고리별 제목을 저장합니다.
+const descriptions={expressions:"Useful phrases for everyday situations",grammar:"Practical grammar with travel examples",dietary:"Food restrictions and ingredient questions",all:"Expressions, dietary needs and grammar"}; // 카테고리별 설명을 저장합니다.
+document.getElementById("libraryHeading").textContent=titles[type]; // 화면 제목을 설정합니다.
+document.getElementById("librarySubheading").textContent=descriptions[type]; // 화면 설명을 설정합니다.
+let items=[]; // 표시할 학습 항목 배열을 준비합니다.
+if(type==="expressions"||type==="all")items=items.concat(expressions.map(item=>({...item,category:"Essential Expression"}))); // 공통 표현을 목록에 추가합니다.
+if(type==="dietary"||type==="all")items=items.concat(dietary.map(item=>({...item,category:"Dietary Needs"}))); // 식이 제한 표현을 목록에 추가합니다.
+if(type==="grammar"||type==="all")items=items.concat(grammar.map(item=>({...item,category:item.pattern}))); // 문법 예문을 목록에 추가합니다.
+items.forEach(item=>{ // 각 학습 항목을 카드로 만듭니다.
+const card=document.createElement("article"); // 학습 카드 요소를 생성합니다.
+card.className="item-card"; // 학습 카드 디자인을 적용합니다.
+card.innerHTML=`<span class="tag">${item.category}</span><div class="item-en">${item.en||item.meaning||""}</div><div class="item-ko">${item.ko}</div><div class="item-ro">${item.ro||""}</div><div class="item-note">${item.note||""}</div>`; // 영어, 한국어, 발음, 설명을 카드에 표시합니다.
+list.appendChild(card); // 학습 카드를 화면에 추가합니다.
+}); // 학습 항목 반복을 종료합니다.
+showScreen("library"); // 학습 화면으로 이동합니다.
+} // 학습 자료 표시 함수를 종료합니다.
+
+function goHome(){ // 첫 화면으로 돌아갑니다.
+showScreen("home"); // 첫 화면을 표시합니다.
+} // 첫 화면 이동 함수를 종료합니다.
+
+function goScenarios(){ // 상황 목록 화면으로 돌아갑니다.
+renderScenarios(); // 현재 선택한 장소의 상황 목록을 다시 표시합니다.
+showScreen("scenarios"); // 상황 선택 화면으로 이동합니다.
+} // 상황 목록 이동 함수를 종료합니다.
+
+setLanguage("en"); // 처음 화면의 안내 문구를 영어로 설정합니다.
+
+document.getElementById("userInput").addEventListener("keydown",event=>{ // 입력창에서 키보드 입력을 감지합니다.
+if(event.key==="Enter")submitText(); // Enter 키를 누르면 입력 문장을 처리합니다.
+}); // 키보드 이벤트 설정을 종료합니다.
+</script> <!-- JavaScript를 종료합니다. -->
+</body> <!-- 화면 내용을 종료합니다. -->
+</html> <!-- HTML 문서를 종료합니다. -->
+
+
+
  
