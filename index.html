@@ -1,23 +1,27 @@
 
 <!DOCTYPE html> <!-- HTML 문서입니다. -->
-<html lang="en"> <!-- 화면 기본 언어는 영어입니다. -->
+<html lang="en"> <!-- 기본 언어를 영어로 설정합니다. -->
 <head> <!-- 페이지 설정을 시작합니다. -->
 <meta charset="UTF-8"> <!-- 한글 표시를 지원합니다. -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 모바일 화면에 맞춥니다. -->
 <title>Seoul Moments</title> <!-- 브라우저 탭 제목입니다. -->
 
 <style> /* 디자인 CSS를 시작합니다. */
+
 * { box-sizing: border-box; } /* 모든 요소의 크기 계산을 통일합니다. */
 
 body { /* 전체 배경 디자인입니다. */
   margin: 0; /* 기본 여백을 제거합니다. */
-  min-height: 100vh; /* 화면 높이 전체를 사용합니다. */
+  min-height: 100vh; /* 화면 전체 높이를 사용합니다. */
   font-family: "Avenir Next", "Segoe UI", sans-serif; /* 글꼴을 설정합니다. */
-  color: #3e4b42; /* 기본 글자색입니다. */
-  background: linear-gradient(145deg, #f6f2e9, #e5ece3 55%, #f0e8e1); /* 차분한 파스텔 배경입니다. */
-} /* 전체 배경 설정을 마칩니다. */
+  color: #465267; /* 기본 글자색을 설정합니다. */
+  background: linear-gradient(135deg, #f1edf9 0%, #eaf2f8 45%, #f9edf1 100%); /* 파스텔 배경입니다. */
+  background-attachment: fixed; /* 스크롤해도 배경을 고정합니다. */
+} /* 배경 설정을 마칩니다. */
 
 button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합니다. */
+
+button { -webkit-tap-highlight-color: transparent; } /* 모바일 터치 시 기본 강조색을 제거합니다. */
 
 .app { /* 앱 전체 영역입니다. */
   width: min(100% - 28px, 760px); /* 화면 크기에 맞는 너비입니다. */
@@ -36,32 +40,34 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
   font-family: Georgia, serif; /* 세리프 글꼴을 사용합니다. */
   font-size: 27px; /* 제목 크기입니다. */
   letter-spacing: -1px; /* 글자 간격을 조정합니다. */
-  color: #435448; /* 제목 색상입니다. */
+  color: #586784; /* 차분한 블루그레이입니다. */
 } /* 로고 설정을 마칩니다. */
 
-.header-icon { /* 상단 작은 원형 아이콘입니다. */
+.header-icon { /* 상단 원형 아이콘입니다. */
   width: 40px; /* 너비입니다. */
   height: 40px; /* 높이입니다. */
   border-radius: 50%; /* 원형으로 만듭니다. */
   display: grid; /* 가운데 정렬을 위한 그리드입니다. */
   place-items: center; /* 아이콘을 가운데 배치합니다. */
-  background: rgba(255,255,255,.55); /* 반투명 배경입니다. */
-  border: 1px solid rgba(255,255,255,.85); /* 밝은 테두리입니다. */
-  box-shadow: 0 5px 15px rgba(60,75,60,.08); /* 부드러운 그림자입니다. */
+  background: rgba(255,255,255,.58); /* 반투명 흰색입니다. */
+  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
+  box-shadow: 0 7px 20px rgba(100,115,150,.13); /* 부드러운 그림자입니다. */
+  color: #A18CB9; /* 라일락 색상입니다. */
 } /* 상단 아이콘 설정을 마칩니다. */
 
-.glass { /* 유리 질감 공통 스타일입니다. */
-  background: rgba(255,255,255,.48); /* 반투명 흰색입니다. */
-  border: 1px solid rgba(255,255,255,.8); /* 유리 테두리입니다. */
-  backdrop-filter: blur(18px); /* 배경 블러 효과입니다. */
-  -webkit-backdrop-filter: blur(18px); /* iOS Safari용 블러입니다. */
-  box-shadow: 0 12px 35px rgba(60,75,60,.09), inset 0 1px 0 white; /* 입체 그림자입니다. */
+.glass { /* 공통 유리 질감입니다. */
+  background: rgba(255,255,255,.53); /* 반투명 흰색 배경입니다. */
+  border: 1px solid rgba(255,255,255,.85); /* 유리 테두리입니다. */
+  backdrop-filter: blur(20px); /* 배경을 흐리게 합니다. */
+  -webkit-backdrop-filter: blur(20px); /* iOS Safari용 블러입니다. */
+  box-shadow: 0 18px 45px rgba(100,112,145,.15), 0 5px 14px rgba(100,112,145,.07), inset 0 1px 0 rgba(255,255,255,.95); /* 입체적인 그림자입니다. */
 } /* 유리 스타일을 마칩니다. */
 
 .main { /* 메인 콘텐츠 카드입니다. */
   border-radius: 28px; /* 둥근 모서리입니다. */
   padding: 22px; /* 내부 여백입니다. */
   min-height: 500px; /* 기본 높이입니다. */
+  box-shadow: 0 20px 55px rgba(104,116,150,.16), 0 7px 20px rgba(104,116,150,.08), inset 0 1px 0 white; /* 메인 박스를 강조합니다. */
 } /* 메인 카드 설정을 마칩니다. */
 
 .heading { /* 화면 제목입니다. */
@@ -69,12 +75,12 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
   font-size: 27px; /* 제목 크기입니다. */
   font-weight: 500; /* 글자 두께입니다. */
   margin: 4px 0 7px; /* 제목 여백입니다. */
-  color: #435448; /* 제목 색상입니다. */
+  color: #596A88; /* 파스텔 블루그레이입니다. */
 } /* 제목 설정을 마칩니다. */
 
-.subheading { /* 짧은 보조 설명입니다. */
+.subheading { /* 보조 설명입니다. */
   margin: 0 0 20px; /* 아래 여백입니다. */
-  color: #929387; /* 보조 글자색입니다. */
+  color: #9997AB; /* 부드러운 라일락 그레이입니다. */
   font-size: 12px; /* 글자 크기입니다. */
 } /* 보조 설명 설정을 마칩니다. */
 
@@ -85,21 +91,21 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
 } /* 장소 그리드 설정을 마칩니다. */
 
 .place-card { /* 장소 선택 카드입니다. */
-  position: relative; /* 카드 안의 글자 위치 기준입니다. */
-  height: 155px; /* 카드 높이입니다. */
-  border: 1px solid rgba(255,255,255,.85); /* 밝은 테두리입니다. */
+  position: relative; /* 내부 요소의 위치 기준입니다. */
+  height: 140px; /* 카드 높이를 적당하게 설정합니다. */
+  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
   border-radius: 19px; /* 둥근 모서리입니다. */
   overflow: hidden; /* 이미지가 카드 밖으로 나가지 않게 합니다. */
   padding: 0; /* 기본 여백을 제거합니다. */
-  background: #dce3d9; /* 이미지가 없을 때의 배경입니다. */
+  background: #E8EAF3; /* 이미지가 없을 때의 배경입니다. */
   cursor: pointer; /* 클릭 가능한 카드입니다. */
-  box-shadow: 0 8px 22px rgba(55,70,55,.12); /* 입체 그림자입니다. */
-  transition: transform .2s, box-shadow .2s; /* 부드러운 움직임입니다. */
+  box-shadow: 0 10px 25px rgba(100,115,150,.17), inset 0 1px 0 white; /* 카드 그림자입니다. */
+  transition: transform .2s, box-shadow .2s; /* 움직임을 부드럽게 합니다. */
 } /* 장소 카드 설정을 마칩니다. */
 
-.place-card:hover { /* 카드에 마우스를 올렸을 때입니다. */
+.place-card:hover { /* 마우스를 올렸을 때입니다. */
   transform: translateY(-3px); /* 살짝 떠오릅니다. */
-  box-shadow: 0 13px 27px rgba(55,70,55,.17); /* 그림자를 강조합니다. */
+  box-shadow: 0 15px 30px rgba(100,115,150,.22); /* 그림자를 강조합니다. */
 } /* 마우스 효과를 마칩니다. */
 
 .place-card img { /* 장소 사진입니다. */
@@ -107,18 +113,19 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
   height: 100%; /* 카드 높이에 맞춥니다. */
   object-fit: cover; /* 사진 비율을 유지하며 채웁니다. */
   display: block; /* 이미지 아래 여백을 제거합니다. */
-  transition: transform .4s; /* 이미지 확대를 부드럽게 합니다. */
+  opacity: .88; /* 사진을 살짝 부드럽게 만듭니다. */
+  transition: transform .4s; /* 확대 효과를 부드럽게 합니다. */
 } /* 장소 이미지 설정을 마칩니다. */
 
-.place-card:hover img { transform: scale(1.04); } /* 마우스를 올리면 사진이 살짝 확대됩니다. */
+.place-card:hover img { transform: scale(1.04); } /* 사진을 살짝 확대합니다. */
 
-.place-overlay { /* 사진 위 어두운 그라데이션입니다. */
-  position: absolute; /* 카드 위에 겹쳐 배치합니다. */
+.place-overlay { /* 사진 위 그라데이션입니다. */
+  position: absolute; /* 사진 위에 배치합니다. */
   inset: 0; /* 카드 전체를 덮습니다. */
-  background: linear-gradient(transparent 35%, rgba(25,35,29,.65)); /* 아래쪽을 어둡게 만듭니다. */
+  background: linear-gradient(transparent 35%, rgba(38,49,65,.55)); /* 아래쪽만 살짝 어둡게 합니다. */
 } /* 사진 오버레이를 마칩니다. */
 
-.place-name { /* 사진 위 장소 이름입니다. */
+.place-name { /* 장소 이름입니다. */
   position: absolute; /* 사진 위에 배치합니다. */
   left: 15px; /* 왼쪽 여백입니다. */
   bottom: 14px; /* 아래 여백입니다. */
@@ -131,7 +138,7 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
 .back-button { /* 뒤로 가기 버튼입니다. */
   border: 0; /* 기본 테두리를 제거합니다. */
   background: transparent; /* 배경을 투명하게 합니다. */
-  color: #8b907f; /* 글자색입니다. */
+  color: #8D91AD; /* 파스텔 블루그레이입니다. */
   padding: 4px 0 17px; /* 여백입니다. */
   cursor: pointer; /* 클릭 가능한 버튼입니다. */
   font-size: 13px; /* 글자 크기입니다. */
@@ -141,164 +148,186 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
   display: flex; /* 아이콘과 글자를 가로로 배치합니다. */
   align-items: center; /* 세로 가운데 정렬합니다. */
   gap: 15px; /* 아이콘과 글자 간격입니다. */
-  width: 100%; /* 가로 전체를 사용합니다. */
-  padding: 17px; /* 내부 여백입니다. */
-  margin-bottom: 12px; /* 카드 아래 간격입니다. */
+  width: 100%; /* 전체 너비입니다. */
+  padding: 16px; /* 내부 여백입니다. */
+  margin-bottom: 13px; /* 아래 간격입니다. */
   border-radius: 18px; /* 둥근 모서리입니다. */
-  border: 1px solid rgba(255,255,255,.85); /* 밝은 테두리입니다. */
-  background: rgba(255,255,255,.55); /* 반투명 배경입니다. */
-  box-shadow: 0 6px 17px rgba(60,75,60,.07); /* 은은한 그림자입니다. */
-  text-align: left; /* 글자를 왼쪽 정렬합니다. */
+  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
+  background: rgba(255,255,255,.58); /* 반투명 배경입니다. */
+  box-shadow: 0 9px 23px rgba(105,118,150,.13), inset 0 1px 0 white; /* 입체 그림자입니다. */
+  text-align: left; /* 왼쪽 정렬합니다. */
   cursor: pointer; /* 클릭 가능한 버튼입니다. */
+  transition: transform .2s, box-shadow .2s; /* 부드러운 효과입니다. */
 } /* 상황 카드 설정을 마칩니다. */
 
+.scenario-card:active { transform: scale(.985); } /* 누르면 살짝 작아집니다. */
+
 .scenario-icon { /* 상황 아이콘 영역입니다. */
-  width: 48px; /* 너비입니다. */
-  height: 48px; /* 높이입니다. */
+  width: 46px; /* 너비입니다. */
+  height: 46px; /* 높이입니다. */
   border-radius: 15px; /* 둥근 사각형입니다. */
   display: grid; /* 가운데 정렬을 위한 그리드입니다. */
   place-items: center; /* 아이콘을 가운데 놓습니다. */
-  background: linear-gradient(145deg, #f5eee1, #e2e9df); /* 파스텔 배경입니다. */
-  font-size: 23px; /* 아이콘 크기입니다. */
+  background: linear-gradient(145deg, #F1ECFA, #E5F0F5); /* 라벤더와 블루 파스텔입니다. */
+  font-size: 22px; /* 아이콘 크기입니다. */
+  box-shadow: 0 5px 13px rgba(125,130,170,.10); /* 아이콘 그림자입니다. */
 } /* 상황 아이콘 설정을 마칩니다. */
 
 .scenario-name { /* 상황 이름입니다. */
   font-size: 15px; /* 글자 크기입니다. */
-  color: #49584c; /* 글자색입니다. */
+  color: #64748E; /* 블루그레이입니다. */
   font-weight: 600; /* 글자 두께입니다. */
 } /* 상황 이름 설정을 마칩니다. */
 
 .dialogue-card { /* 스태프 대사 카드입니다. */
-  padding: 22px; /* 내부 여백입니다. */
+  padding: 21px; /* 내부 여백입니다. */
   border-radius: 23px; /* 둥근 모서리입니다. */
-  background: linear-gradient(145deg, rgba(255,255,255,.8), rgba(255,255,255,.42)); /* 유리 그라데이션입니다. */
-  border: 1px solid white; /* 밝은 테두리입니다. */
-  box-shadow: 0 10px 27px rgba(60,75,60,.08); /* 부드러운 그림자입니다. */
+  background: linear-gradient(145deg, rgba(240,245,255,.88), rgba(255,255,255,.65)); /* 파스텔 블루 글래스입니다. */
+  border: 1px solid rgba(255,255,255,.95); /* 밝은 테두리입니다. */
+  backdrop-filter: blur(22px); /* 유리 블러 효과입니다. */
+  -webkit-backdrop-filter: blur(22px); /* iOS Safari용 블러입니다. */
+  box-shadow: 0 15px 34px rgba(105,128,175,.17), 0 5px 13px rgba(105,128,175,.08), inset 0 1px 0 white; /* 대화 카드 그림자입니다. */
 } /* 대화 카드 설정을 마칩니다. */
 
 .speaker { /* 말하는 사람 표시입니다. */
-  color: #aa9674; /* 샴페인 골드 색상입니다. */
+  color: #D49AA5; /* 소프트 코랄입니다. */
   font-size: 10px; /* 작은 글씨입니다. */
   letter-spacing: 2px; /* 자간입니다. */
-  font-weight: 700; /* 글자 두께입니다. */
+  font-weight: 750; /* 글자 두께입니다. */
   margin-bottom: 13px; /* 아래 여백입니다. */
 } /* 화자 표시 설정을 마칩니다. */
 
 .english { /* 영어 문장입니다. */
-  color: #758074; /* 보조 색상입니다. */
-  font-size: 14px; /* 글자 크기입니다. */
-  line-height: 1.5; /* 줄 간격입니다. */
+  color: #668AC5; /* 파스텔 블루입니다. */
+  font-size: 15px; /* 글자 크기입니다. */
+  font-weight: 600; /* 글자를 선명하게 합니다. */
+  line-height: 1.55; /* 줄 간격입니다. */
   margin-bottom: 12px; /* 아래 여백입니다. */
 } /* 영어 문장 설정을 마칩니다. */
 
 .korean { /* 한국어 문장입니다. */
-  color: #39483f; /* 진한 글자색입니다. */
-  font-size: 23px; /* 한국어를 크게 표시합니다. */
-  font-weight: 650; /* 글자를 강조합니다. */
-  line-height: 1.5; /* 줄 간격입니다. */
+  color: #639879; /* 세이지 그린입니다. */
+  font-size: 22px; /* 한국어 글자 크기입니다. */
+  font-weight: 700; /* 글자를 강조합니다. */
+  line-height: 1.55; /* 줄 간격입니다. */
   word-break: keep-all; /* 한글 단어가 어색하게 끊기지 않게 합니다. */
 } /* 한국어 문장 설정을 마칩니다. */
 
 .roman { /* 로마자 발음입니다. */
-  color: #99998d; /* 은은한 회색입니다. */
-  font-size: 12px; /* 작은 글자입니다. */
+  color: #A18AB9; /* 파스텔 라일락입니다. */
+  font-size: 13px; /* 글자 크기입니다. */
   font-style: italic; /* 기울임꼴입니다. */
-  margin-top: 8px; /* 위쪽 간격입니다. */
+  margin-top: 9px; /* 위쪽 간격입니다. */
   line-height: 1.5; /* 줄 간격입니다. */
 } /* 로마자 발음 설정을 마칩니다. */
 
 .choice-list { /* 응답 선택지 목록입니다. */
-  display: flex; /* 세로 배치입니다. */
-  flex-direction: column; /* 세로 방향으로 놓습니다. */
-  gap: 10px; /* 선택지 사이 간격입니다. */
-  margin-top: 17px; /* 위쪽 간격입니다. */
+  display: flex; /* 세로로 배치합니다. */
+  flex-direction: column; /* 세로 방향입니다. */
+  gap: 11px; /* 선택지 사이 간격입니다. */
+  margin-top: 18px; /* 위쪽 간격입니다. */
 } /* 선택지 목록 설정을 마칩니다. */
 
 .choice { /* 개별 응답 버튼입니다. */
   width: 100%; /* 전체 너비입니다. */
-  padding: 16px 18px; /* 내부 여백입니다. */
-  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
+  padding: 15px 17px; /* 내부 여백입니다. */
+  border: 1px solid rgba(255,255,255,.95); /* 밝은 테두리입니다. */
   border-radius: 17px; /* 둥근 모서리입니다. */
-  background: rgba(255,255,255,.52); /* 반투명 배경입니다. */
-  color: #465448; /* 글자색입니다. */
-  text-align: left; /* 왼쪽 정렬입니다. */
+  background: rgba(255,255,255,.66); /* 반투명 흰색입니다. */
+  text-align: left; /* 왼쪽 정렬합니다. */
   cursor: pointer; /* 클릭 가능한 버튼입니다. */
-  box-shadow: 0 6px 16px rgba(60,75,60,.07); /* 부드러운 그림자입니다. */
-  transition: transform .15s, background .15s; /* 반응을 부드럽게 합니다. */
+  backdrop-filter: blur(16px); /* 유리 블러 효과입니다. */
+  -webkit-backdrop-filter: blur(16px); /* iOS Safari용 블러입니다. */
+  box-shadow: 0 10px 24px rgba(112,125,160,.15), 0 3px 8px rgba(112,125,160,.07), inset 0 1px 0 white; /* 입체적인 그림자입니다. */
+  transition: transform .15s, background .15s, box-shadow .15s; /* 반응을 부드럽게 합니다. */
 } /* 선택지 버튼 설정을 마칩니다. */
 
 .choice:active { /* 버튼을 누르는 순간입니다. */
   transform: scale(.985); /* 살짝 눌리는 효과입니다. */
-  background: rgba(222,233,218,.8); /* 세이지 색상으로 바뀝니다. */
+  background: rgba(237,241,250,.9); /* 연한 블루로 바뀝니다. */
+  box-shadow: 0 4px 12px rgba(112,125,160,.12); /* 그림자를 줄입니다. */
 } /* 버튼 클릭 효과를 마칩니다. */
 
 .choice-en { /* 선택지 영어입니다. */
   display: block; /* 별도 줄에 표시합니다. */
-  font-size: 13px; /* 글자 크기입니다. */
-  color: #798477; /* 보조 색상입니다. */
-  margin-bottom: 5px; /* 아래 간격입니다. */
+  font-size: 14px; /* 글자 크기입니다. */
+  font-weight: 600; /* 글자 두께입니다. */
+  color: #668AC5; /* 파스텔 블루입니다. */
+  margin-bottom: 7px; /* 아래 간격입니다. */
+  line-height: 1.45; /* 줄 간격입니다. */
 } /* 선택지 영어 설정을 마칩니다. */
 
 .choice-ko { /* 선택지 한국어입니다. */
   display: block; /* 별도 줄에 표시합니다. */
-  font-size: 16px; /* 글자 크기입니다. */
-  font-weight: 600; /* 글자를 강조합니다. */
-  margin-bottom: 4px; /* 아래 간격입니다. */
+  font-size: 17px; /* 글자 크기입니다. */
+  font-weight: 700; /* 글자를 강조합니다. */
+  color: #639879; /* 세이지 그린입니다. */
+  margin-bottom: 5px; /* 아래 간격입니다. */
+  line-height: 1.5; /* 줄 간격입니다. */
 } /* 선택지 한국어 설정을 마칩니다. */
 
 .choice-ro { /* 선택지 로마자 발음입니다. */
   display: block; /* 별도 줄에 표시합니다. */
-  font-size: 11px; /* 작은 글자입니다. */
-  color: #99998d; /* 은은한 회색입니다. */
+  font-size: 12px; /* 작은 글자입니다. */
+  color: #A18AB9; /* 라일락입니다. */
   font-style: italic; /* 기울임꼴입니다. */
+  line-height: 1.5; /* 줄 간격입니다. */
 } /* 선택지 로마자 설정을 마칩니다. */
 
-.tools { /* 입력 및 음성 버튼 영역입니다. */
+.tools { /* 음성 버튼 영역입니다. */
   display: flex; /* 가로로 배치합니다. */
-  gap: 8px; /* 버튼 사이 간격입니다. */
+  gap: 9px; /* 버튼 사이 간격입니다. */
   margin-top: 18px; /* 위쪽 간격입니다. */
 } /* 도구 영역 설정을 마칩니다. */
 
 .tool-button { /* 작은 기능 버튼입니다. */
   flex: 1; /* 같은 너비를 사용합니다. */
   padding: 12px 8px; /* 내부 여백입니다. */
-  border: 1px solid rgba(255,255,255,.85); /* 밝은 테두리입니다. */
+  border: 1px solid rgba(255,255,255,.95); /* 밝은 테두리입니다. */
   border-radius: 14px; /* 둥근 모서리입니다. */
-  background: rgba(255,255,255,.45); /* 반투명 배경입니다. */
-  color: #667466; /* 글자색입니다. */
+  background: rgba(255,255,255,.62); /* 반투명 배경입니다. */
+  color: #7D89A8; /* 블루그레이입니다. */
   cursor: pointer; /* 클릭 가능한 버튼입니다. */
   font-size: 12px; /* 작은 글씨입니다. */
+  box-shadow: 0 7px 17px rgba(112,125,160,.12); /* 은은한 그림자입니다. */
 } /* 기능 버튼 설정을 마칩니다. */
 
 .input-row { /* 직접 입력 영역입니다. */
   display: flex; /* 입력창과 버튼을 가로로 배치합니다. */
   gap: 8px; /* 간격입니다. */
-  margin-top: 12px; /* 위쪽 여백입니다. */
+  margin-top: 13px; /* 위쪽 여백입니다. */
 } /* 입력 행 설정을 마칩니다. */
 
 .input-row input { /* 텍스트 입력창입니다. */
   flex: 1; /* 남은 공간을 사용합니다. */
   min-width: 0; /* 모바일에서 넘치지 않도록 합니다. */
   padding: 12px; /* 내부 여백입니다. */
-  border: 1px solid rgba(255,255,255,.9); /* 테두리입니다. */
+  border: 1px solid rgba(255,255,255,.95); /* 밝은 테두리입니다. */
   border-radius: 13px; /* 둥근 모서리입니다. */
-  background: rgba(255,255,255,.65); /* 반투명 배경입니다. */
+  background: rgba(255,255,255,.7); /* 반투명 흰색입니다. */
+  color: #5D718E; /* 입력 글자색입니다. */
   outline: none; /* 기본 외곽선을 제거합니다. */
+  box-shadow: 0 5px 14px rgba(112,125,160,.08); /* 은은한 그림자입니다. */
 } /* 입력창 설정을 마칩니다. */
 
+.input-row input::placeholder { color: #A5A5B8; } /* 입력 안내 문구 색상입니다. */
+
+.input-row input:focus { border-color: #B9C9E7; } /* 입력창을 선택하면 테두리가 바뀝니다. */
+
 .send-button { /* 전송 버튼입니다. */
-  border: 0; /* 기본 테두리를 제거합니다. */
+  border: 1px solid rgba(255,255,255,.9); /* 밝은 테두리입니다. */
   border-radius: 13px; /* 둥근 모서리입니다. */
   padding: 0 16px; /* 좌우 여백입니다. */
-  background: #cbd9c7; /* 세이지 배경입니다. */
-  color: #435448; /* 글자색입니다. */
+  background: linear-gradient(135deg, #DCE9F8, #E9E0F5); /* 블루와 라일락입니다. */
+  color: #687A9A; /* 글자색입니다. */
   cursor: pointer; /* 클릭 가능한 버튼입니다. */
+  box-shadow: 0 6px 15px rgba(112,125,160,.13); /* 그림자입니다. */
 } /* 전송 버튼 설정을 마칩니다. */
 
 .status { /* 음성 인식 상태입니다. */
-  color: #929387; /* 은은한 글자색입니다. */
+  color: #9997AB; /* 라일락 그레이입니다. */
   font-size: 11px; /* 작은 글자입니다. */
-  margin-top: 10px; /* 위쪽 간격입니다. */
+  margin-top: 11px; /* 위쪽 간격입니다. */
   min-height: 17px; /* 공간을 유지합니다. */
 } /* 상태 안내 설정을 마칩니다. */
 
@@ -306,60 +335,62 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
 
 @media (max-width: 420px) { /* 작은 휴대폰 화면 설정입니다. */
   .main { padding: 16px; } /* 메인 카드 여백을 줄입니다. */
-  .place-card { height: 135px; } /* 장소 카드 높이를 줄입니다. */
+  .place-card { height: 125px; } /* 장소 카드 높이를 줄입니다. */
   .heading { font-size: 24px; } /* 제목 크기를 줄입니다. */
   .korean { font-size: 21px; } /* 한국어 크기를 조정합니다. */
+  .dialogue-card { padding: 18px; } /* 대화 카드 여백을 조정합니다. */
 } /* 모바일 설정을 마칩니다. */
+
 </style> <!-- CSS를 종료합니다. -->
 </head> <!-- 페이지 설정을 종료합니다. -->
 
-<body> <!-- 실제 화면 내용을 시작합니다. -->
+<body> <!-- 화면 내용을 시작합니다. -->
 <main class="app"> <!-- 앱 전체 영역입니다. -->
 
 <header class="header"> <!-- 상단 브랜드입니다. -->
   <div class="logo">Seoul Moments</div> <!-- 앱 이름입니다. -->
-  <div class="header-icon">✦</div> <!-- 간단한 장식 아이콘입니다. -->
-</header> <!-- 상단 브랜드를 종료합니다. -->
+  <div class="header-icon">✦</div> <!-- 장식 아이콘입니다. -->
+</header> <!-- 헤더를 종료합니다. -->
 
 <section class="main glass"> <!-- 메인 유리 카드입니다. -->
 
 <section id="places"> <!-- 장소 선택 화면입니다. -->
-  <h1 class="heading">Where to?</h1> <!-- 간결한 제목입니다. -->
-  <p class="subheading">Choose your destination</p> <!-- 짧은 안내입니다. -->
+  <h1 class="heading">Where to?</h1> <!-- 제목입니다. -->
+  <p class="subheading">Choose your destination</p> <!-- 안내 문구입니다. -->
 
-  <div class="place-grid"> <!-- 장소 사진 목록입니다. -->
+  <div class="place-grid"> <!-- 장소 카드 목록입니다. -->
 
     <button class="place-card" onclick="selectPlace('Cafe')"> <!-- 카페 선택 버튼입니다. -->
       <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700" alt="Cafe"> <!-- 카페 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
       <span class="place-name">Cafe</span> <!-- 장소 이름입니다. -->
     </button> <!-- 카페 버튼을 종료합니다. -->
 
     <button class="place-card" onclick="selectPlace('Restaurant')"> <!-- 식당 선택 버튼입니다. -->
       <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700" alt="Restaurant"> <!-- 식당 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
       <span class="place-name">Restaurant</span> <!-- 장소 이름입니다. -->
     </button> <!-- 식당 버튼을 종료합니다. -->
 
     <button class="place-card" onclick="selectPlace('Transportation')"> <!-- 교통 선택 버튼입니다. -->
       <img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700" alt="Transportation"> <!-- 교통 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
       <span class="place-name">Transport</span> <!-- 장소 이름입니다. -->
     </button> <!-- 교통 버튼을 종료합니다. -->
 
     <button class="place-card" onclick="selectPlace('Shopping')"> <!-- 쇼핑 선택 버튼입니다. -->
       <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700" alt="Shopping"> <!-- 쇼핑 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
       <span class="place-name">Shopping</span> <!-- 장소 이름입니다. -->
     </button> <!-- 쇼핑 버튼을 종료합니다. -->
 
     <button class="place-card" onclick="selectPlace('Accommodation')"> <!-- 숙소 선택 버튼입니다. -->
       <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700" alt="Accommodation"> <!-- 숙소 사진입니다. -->
-      <span class="place-overlay"></span> <!-- 사진 위 어두운 레이어입니다. -->
+      <span class="place-overlay"></span> <!-- 사진 위 그라데이션입니다. -->
       <span class="place-name">Stay</span> <!-- 장소 이름입니다. -->
     </button> <!-- 숙소 버튼을 종료합니다. -->
 
-  </div> <!-- 장소 사진 목록을 종료합니다. -->
+  </div> <!-- 장소 카드 목록을 종료합니다. -->
 </section> <!-- 장소 선택 화면을 종료합니다. -->
 
 <section id="scenarios" class="hidden"> <!-- 상황 선택 화면입니다. -->
@@ -367,24 +398,25 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
   <h1 class="heading" id="placeHeading">Cafe</h1> <!-- 선택한 장소 이름입니다. -->
   <p class="subheading">What would you like to do?</p> <!-- 상황 선택 안내입니다. -->
 
-  <button class="scenario-card" onclick="startCafe()"> <!-- 주문 상황 선택 버튼입니다. -->
+  <button class="scenario-card" onclick="startCafe()"> <!-- 주문 상황 버튼입니다. -->
     <span class="scenario-icon">☕</span> <!-- 커피 아이콘입니다. -->
     <span class="scenario-name">Order a drink</span> <!-- 상황 이름입니다. -->
-  </button> <!-- 주문 상황 버튼을 종료합니다. -->
+  </button> <!-- 주문 버튼을 종료합니다. -->
 
-  <button class="scenario-card" onclick="comingSoon()"> <!-- 결제 상황 선택 버튼입니다. -->
+  <button class="scenario-card" onclick="comingSoon()"> <!-- 결제 상황 버튼입니다. -->
     <span class="scenario-icon">💳</span> <!-- 결제 아이콘입니다. -->
     <span class="scenario-name">Payment</span> <!-- 상황 이름입니다. -->
-  </button> <!-- 결제 상황 버튼을 종료합니다. -->
+  </button> <!-- 결제 버튼을 종료합니다. -->
 
-  <button class="scenario-card" onclick="comingSoon()"> <!-- 요청 상황 선택 버튼입니다. -->
+  <button class="scenario-card" onclick="comingSoon()"> <!-- 요청 상황 버튼입니다. -->
     <span class="scenario-icon">🗣️</span> <!-- 대화 아이콘입니다. -->
     <span class="scenario-name">Make a request</span> <!-- 상황 이름입니다. -->
-  </button> <!-- 요청 상황 버튼을 종료합니다. -->
+  </button> <!-- 요청 버튼을 종료합니다. -->
 </section> <!-- 상황 선택 화면을 종료합니다. -->
 
-<section id="conversation" class="hidden"> <!-- 실제 대화 화면입니다. -->
+<section id="conversation" class="hidden"> <!-- 대화 화면입니다. -->
   <button class="back-button" onclick="goScenarios()">← Back</button> <!-- 상황 선택으로 돌아갑니다. -->
+
   <div class="dialogue-card"> <!-- 스태프 대사 카드입니다. -->
     <div class="speaker" id="speaker">STAFF</div> <!-- 화자 표시입니다. -->
     <div class="english" id="english"></div> <!-- 영어 문장입니다. -->
@@ -392,17 +424,17 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
     <div class="roman" id="roman"></div> <!-- 로마자 발음입니다. -->
   </div> <!-- 대사 카드를 종료합니다. -->
 
-  <div class="choice-list" id="choices"></div> <!-- 사용자 선택지를 표시합니다. -->
+  <div class="choice-list" id="choices"></div> <!-- 선택지를 표시합니다. -->
 
   <div class="input-row"> <!-- 직접 입력 영역입니다. -->
-    <input id="userInput" placeholder="Type in Korean..." type="text"> <!-- 한국어 문장 입력창입니다. -->
-    <button class="send-button" onclick="submitText()">Send</button> <!-- 입력 전송 버튼입니다. -->
+    <input id="userInput" placeholder="Type in Korean..." type="text"> <!-- 한국어 입력창입니다. -->
+    <button class="send-button" onclick="submitText()">Send</button> <!-- 전송 버튼입니다. -->
   </div> <!-- 입력 영역을 종료합니다. -->
 
-  <div class="tools"> <!-- 음성 및 이동 버튼 영역입니다. -->
+  <div class="tools"> <!-- 음성 기능 영역입니다. -->
     <button class="tool-button" onclick="listen('user')">🎙 Speak</button> <!-- 사용자 음성 입력 버튼입니다. -->
-    <button class="tool-button" onclick="listen('staff')">🎧 Staff</button> <!-- 스태프 음성 인식 버튼입니다. -->
-  </div> <!-- 기능 버튼 영역을 종료합니다. -->
+    <button class="tool-button" onclick="listen('staff')">🎧 Staff</button> <!-- 직원 음성 인식 버튼입니다. -->
+  </div> <!-- 음성 기능 영역을 종료합니다. -->
 
   <div class="status" id="status">Choose a response or speak Korean.</div> <!-- 상태 안내입니다. -->
 </section> <!-- 대화 화면을 종료합니다. -->
@@ -412,7 +444,7 @@ button, input { font: inherit; } /* 버튼과 입력창의 글꼴을 통일합�
 
 <script> // JavaScript를 시작합니다.
 
-const screens = ["places", "scenarios", "conversation"]; // 화면 이름을 배열로 저장합니다.
+const screens = ["places", "scenarios", "conversation"]; // 화면 이름을 배열에 저장합니다.
 let currentPlace = ""; // 현재 선택한 장소입니다.
 let currentStep = "start"; // 현재 대화 단계입니다.
 
@@ -444,7 +476,7 @@ const cafeSteps = { // 카페 대화 데이터를 저장합니다.
     roman: "Syat chugahae deurilkkayo?", // 스태프 발음입니다.
     choices: [ // 사용자 선택지입니다.
       { english: "Yes, please.", korean: "네, 추가해 주세요.", roman: "Ne, chugahae juseyo.", next: "size" }, // 샷 추가입니다.
-      { english: "No, thank you.", korean: "아니요, 괜찮아요.", roman: "Aniyo, gwaenchanayo.", next: "size" } // 샷 추가 거절입니다.
+      { english: "No, thank you.", korean: "아니요, 괜찮아요.", roman: "Aniyo, gwaenchanayo.", next: "size" } // 샷 추가를 거절합니다.
     ] // 선택지를 종료합니다.
   }, // 샷 단계를 종료합니다.
 
@@ -514,26 +546,27 @@ const cafeSteps = { // 카페 대화 데이터를 저장합니다.
       { english: "Start again", korean: "다시 시작하기", roman: "Dasi sijakhagi.", next: "start" } // 처음으로 돌아갑니다.
     ] // 선택지를 종료합니다.
   } // 대화 종료 데이터를 마칩니다.
+
 }; // 카페 대화 데이터를 종료합니다.
 
 function showScreen(name) { // 지정한 화면만 보여주는 함수입니다.
-  screens.forEach(id => document.getElementById(id).classList.add("hidden")); // 모든 화면을 먼저 숨깁니다.
+  screens.forEach(id => document.getElementById(id).classList.add("hidden")); // 모든 화면을 숨깁니다.
   document.getElementById(name).classList.remove("hidden"); // 선택한 화면만 표시합니다.
 } // 화면 전환 함수를 종료합니다.
 
 function selectPlace(place) { // 장소를 선택했을 때 실행합니다.
   currentPlace = place; // 선택한 장소를 저장합니다.
-  document.getElementById("placeHeading").textContent = place; // 상황 화면에 장소 이름을 표시합니다.
+  document.getElementById("placeHeading").textContent = place; // 선택한 장소 이름을 표시합니다.
   showScreen("scenarios"); // 상황 선택 화면으로 이동합니다.
 } // 장소 선택 함수를 종료합니다.
 
 function startCafe() { // 카페 주문 상황을 시작합니다.
-  currentStep = "start"; // 대화를 첫 단계로 초기화합니다.
+  currentStep = "start"; // 대화를 처음으로 초기화합니다.
   showScreen("conversation"); // 대화 화면으로 이동합니다.
   renderStep(); // 첫 대사를 표시합니다.
 } // 카페 대화 시작 함수를 종료합니다.
 
-function comingSoon() { // 아직 준비되지 않은 상황을 선택했을 때입니다.
+function comingSoon() { // 준비되지 않은 상황을 선택했을 때입니다.
   alert("This situation will be added soon."); // 준비 중이라는 안내를 표시합니다.
 } // 준비 중 함수를 종료합니다.
 
@@ -542,15 +575,15 @@ function renderStep() { // 현재 대화 단계를 표시합니다.
   document.getElementById("speaker").textContent = "STAFF"; // 화자를 스태프로 설정합니다.
   document.getElementById("english").textContent = step.english; // 영어를 표시합니다.
   document.getElementById("korean").textContent = step.korean; // 한국어를 표시합니다.
-  document.getElementById("roman").textContent = step.roman; // 로마자 발음을 표시합니다.
+  document.getElementById("roman").textContent = step.roman; // 발음을 표시합니다.
 
   const list = document.getElementById("choices"); // 선택지 영역을 가져옵니다.
   list.innerHTML = ""; // 이전 선택지를 지웁니다.
 
-  step.choices.forEach(choice => { // 모든 선택지를 하나씩 처리합니다.
+  step.choices.forEach(choice => { // 선택지를 하나씩 처리합니다.
     const button = document.createElement("button"); // 새 버튼을 만듭니다.
     button.className = "choice"; // 버튼 디자인을 적용합니다.
-    button.innerHTML = `<span class="choice-en">${choice.english}</span><span class="choice-ko">${choice.korean}</span><span class="choice-ro">${choice.roman}</span>`; // 세 가지 언어 정보를 표시합니다.
+    button.innerHTML = `<span class="choice-en">${choice.english}</span><span class="choice-ko">${choice.korean}</span><span class="choice-ro">${choice.roman}</span>`; // 영어, 한국어, 발음을 표시합니다.
     button.onclick = () => chooseAnswer(choice); // 클릭하면 응답을 선택합니다.
     list.appendChild(button); // 선택지 영역에 버튼을 추가합니다.
   }); // 선택지 반복을 종료합니다.
@@ -567,9 +600,9 @@ function submitText() { // 직접 입력한 문장을 처리합니다.
   const text = input.value.trim().replace(/\s/g, ""); // 입력값의 공백을 제거합니다.
   if (!text) return; // 빈 입력이면 종료합니다.
   const step = cafeSteps[currentStep]; // 현재 단계 데이터를 가져옵니다.
-  const match = step.choices.find(choice => choice.korean.replace(/\s/g, "").includes(text) || text.includes(choice.korean.replace(/\s/g, ""))); // 입력과 비슷한 선택지를 찾습니다.
-  if (match) chooseAnswer(match); // 일치하는 선택지가 있으면 선택합니다.
-  else document.getElementById("status").textContent = "Please choose one of the responses for now."; // 일치하는 선택지가 없으면 안내합니다.
+  const match = step.choices.find(choice => choice.korean.replace(/\s/g, "").includes(text) || text.includes(choice.korean.replace(/\s/g, ""))); // 입력과 일치하는 선택지를 찾습니다.
+  if (match) chooseAnswer(match); // 일치하면 해당 선택지를 선택합니다.
+  else document.getElementById("status").textContent = "Please choose one of the responses for now."; // 일치하지 않으면 안내합니다.
   input.value = ""; // 입력창을 비웁니다.
 } // 텍스트 입력 함수를 종료합니다.
 
@@ -585,20 +618,21 @@ function listen(mode) { // 음성 인식을 시작합니다.
   recognition.onresult = event => { // 인식 결과가 도착하면 실행합니다.
     const spoken = event.results[0][0].transcript; // 인식된 문장을 가져옵니다.
     document.getElementById("status").textContent = "Recognized: " + spoken; // 인식 결과를 표시합니다.
+
     if (mode === "user") { // 사용자 음성 모드인지 확인합니다.
       document.getElementById("userInput").value = spoken; // 인식한 문장을 입력창에 넣습니다.
       submitText(); // 입력한 문장을 처리합니다.
     } else { // 스태프 음성 모드입니다.
       const normalized = spoken.replace(/\s/g, ""); // 공백을 제거합니다.
-      if (normalized.includes("디카페인")) currentStep = "decaf"; // 디카페인 질문 단계로 이동합니다.
-      else if (normalized.includes("샷")) currentStep = "shot"; // 샷 질문 단계로 이동합니다.
-      else if (normalized.includes("사이즈")) currentStep = "size"; // 사이즈 질문 단계로 이동합니다.
-      else if (normalized.includes("따뜻하게") || normalized.includes("아이스")) currentStep = "temperature"; // 온도 질문 단계로 이동합니다.
-      else if (normalized.includes("포장") || normalized.includes("드시고")) currentStep = "takeout"; // 매장 또는 포장 질문 단계로 이동합니다.
+      if (normalized.includes("디카페인")) currentStep = "decaf"; // 디카페인 질문으로 이동합니다.
+      else if (normalized.includes("샷")) currentStep = "shot"; // 샷 질문으로 이동합니다.
+      else if (normalized.includes("사이즈")) currentStep = "size"; // 사이즈 질문으로 이동합니다.
+      else if (normalized.includes("따뜻하게") || normalized.includes("아이스")) currentStep = "temperature"; // 온도 질문으로 이동합니다.
+      else if (normalized.includes("포장") || normalized.includes("드시고")) currentStep = "takeout"; // 매장 또는 포장 질문으로 이동합니다.
       else if (normalized.includes("카드")) currentStep = "payment"; // 결제 단계로 이동합니다.
       else if (normalized.includes("영수증")) currentStep = "receipt"; // 영수증 단계로 이동합니다.
       else if (normalized.includes("준비되면")) currentStep = "finish"; // 주문 완료 단계로 이동합니다.
-      renderStep(); // 인식한 단계의 대사를 표시합니다.
+      renderStep(); // 해당 단계의 대사를 표시합니다.
     } // 음성 모드별 처리를 종료합니다.
   }; // 인식 결과 처리를 종료합니다.
 
@@ -617,8 +651,8 @@ function goScenarios() { // 상황 선택 화면으로 돌아갑니다.
   showScreen("scenarios"); // 상황 선택 화면을 표시합니다.
 } // 상황 이동 함수를 종료합니다.
 
-document.getElementById("userInput").addEventListener("keydown", event => { // 입력창의 키보드 입력을 감지합니다.
-  if (event.key === "Enter") submitText(); // Enter 키를 누르면 입력을 전송합니다.
+document.getElementById("userInput").addEventListener("keydown", event => { // 입력창 키보드를 감지합니다.
+  if (event.key === "Enter") submitText(); // Enter 키를 누르면 전송합니다.
 }); // 키보드 이벤트 설정을 종료합니다.
 
 </script> <!-- JavaScript를 종료합니다. -->
