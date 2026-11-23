@@ -730,25 +730,59 @@ function toggleInterpreter(open){
 }
 async function toggleRecording(){
  if(interpreterRecording){finishInterpreterRecording(true);return;}
- if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){
-  setInterpreterStatus(interpreterText("unsupported"));return;
+ if(!window.isSecureContext){setInterpreterStatus("마이크는 HTTPS 주소에서만 사용할 수 있습니다.");return;}
+ if(!navigator.mediaDevices||typeof navigator.mediaDevices.getUserMedia!=="function"){
+  setInterpreterStatus("이 브라우저에서 마이크 녹음을 사용할 수 없습니다. 브라우저를 업데이트해 주세요.");return;
+ }
+ if(typeof window.MediaRecorder!=="function"){
+  setInterpreterStatus("이 브라우저는 MediaRecorder 녹음을 지원하지 않습니다.");return;
  }
  try{
-  interpreterStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
-  const mimeCandidates=["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg;codecs=opus"];
-  const mime=mimeCandidates.find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t));
+  setInterpreterStatus("마이크 연결 중…",true);
+  // Request a plain audio stream first; some mobile browsers reject advanced constraints.
+  try{
+   interpreterStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+  }catch(constraintError){
+   if(constraintError&&["OverconstrainedError","ConstraintNotSatisfiedError"].includes(constraintError.name)){
+    interpreterStream=await navigator.mediaDevices.getUserMedia({audio:true});
+   }else{throw constraintError;}
+  }
+  const mimeCandidates=["audio/mp4;codecs=mp4a.40.2","audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg;codecs=opus"];
+  let mime="";
+  if(typeof MediaRecorder.isTypeSupported==="function") mime=mimeCandidates.find(t=>MediaRecorder.isTypeSupported(t))||"";
   interpreterRecorder=mime?new MediaRecorder(interpreterStream,{mimeType:mime}):new MediaRecorder(interpreterStream);
-  interpreterChunks=[];interpreterRecording=true;
-  interpreterRecorder.ondataavailable=e=>{if(e.data&&e.data.size)interpreterChunks.push(e.data);};
-  interpreterRecorder.onstop=()=>{if(interpreterShouldTranslate)processInterpreterAudio();};
-  interpreterRecorder.start();
+  interpreterChunks=[];
+  interpreterShouldTranslate=false;
+  interpreterRecorder.ondataavailable=e=>{if(e.data&&e.data.size>0)interpreterChunks.push(e.data);};
+  interpreterRecorder.onerror=e=>{
+   const detail=e.error&&e.error.message?e.error.message:"녹음 중 브라우저 오류";
+   setInterpreterStatus("녹음 오류: "+detail);
+   interpreterRecording=false;
+   if(interpreterStream){interpreterStream.getTracks().forEach(t=>t.stop());interpreterStream=null;}
+  };
+  interpreterRecorder.onstop=()=>{
+   // Wait until the final dataavailable event has been collected before releasing the mic.
+   if(interpreterStream){interpreterStream.getTracks().forEach(t=>t.stop());interpreterStream=null;}
+   if(interpreterShouldTranslate)processInterpreterAudio();
+   else interpreterChunks=[];
+  };
+  interpreterRecorder.start(250);
+  interpreterRecording=true;
   document.getElementById("recordButton").classList.add("recording");
   document.getElementById("recordButtonText").textContent=interpreterText("stop");
-  setInterpreterStatus(interpreterText("ready"));
- }catch(err){setInterpreterStatus(interpreterText("mic"));}
+  setInterpreterStatus("녹음 중입니다. 말을 마치면 버튼을 다시 누르세요.");
+ }catch(err){
+  console.error("Microphone/recorder start failed:",err);
+  if(interpreterStream){interpreterStream.getTracks().forEach(t=>t.stop());interpreterStream=null;}
+  interpreterRecording=false;
+  const name=err&&err.name?err.name:"Error";
+  const message=err&&err.message?err.message:"알 수 없는 오류";
+  const friendly={NotAllowedError:"마이크 권한이 거부되었습니다. 사이트 설정에서 마이크를 허용해 주세요.",PermissionDeniedError:"마이크 권한이 거부되었습니다. 사이트 설정에서 마이크를 허용해 주세요.",NotFoundError:"사용 가능한 마이크를 찾지 못했습니다.",NotReadableError:"마이크가 다른 앱에서 사용 중이거나 장치에 접근할 수 없습니다.",AbortError:"마이크 연결이 중단되었습니다. 다시 시도해 주세요.",SecurityError:"보안 설정 때문에 마이크에 접근할 수 없습니다. HTTPS 주소인지 확인해 주세요.",InvalidStateError:"녹음기가 올바른 상태가 아닙니다. 페이지를 새로고침해 주세요."};
+  setInterpreterStatus((friendly[name]||"마이크 시작 실패")+" ("+name+": "+message+")");
+ }
 }
 function setInterpreterStatus(message,busy=false){
- const el=document.getElementById("interpreterStatus");el.textContent=message;el.dataset.busy=busy?"1":"0";
+ const el=document.getElementById("interpreterStatus");if(el){el.textContent=message;el.dataset.busy=busy?"1":"0";}
 }
 function finishInterpreterRecording(translate){
  if(!interpreterRecorder||!interpreterRecording)return;
@@ -756,16 +790,23 @@ function finishInterpreterRecording(translate){
  document.getElementById("recordButton").classList.remove("recording");
  document.getElementById("recordButtonText").textContent=interpreterText("start");
  interpreterShouldTranslate=!!translate;
- if(interpreterRecorder.state!=="inactive")interpreterRecorder.stop();
- if(interpreterStream){interpreterStream.getTracks().forEach(t=>t.stop());interpreterStream=null;}
- if(!translate){interpreterChunks=[];setInterpreterStatus(interpreterText("ready"));return;}
- setInterpreterStatus(interpreterText("working"),true);
+ if(translate)setInterpreterStatus(interpreterText("working"),true);
+ try{
+  if(interpreterRecorder.state!=="inactive")interpreterRecorder.stop();
+  else if(interpreterStream){interpreterStream.getTracks().forEach(t=>t.stop());interpreterStream=null;}
+ }catch(err){
+  console.error("Recorder stop failed:",err);
+  if(interpreterStream){interpreterStream.getTracks().forEach(t=>t.stop());interpreterStream=null;}
+  setInterpreterStatus("녹음 종료 오류: "+(err.message||err));
+ }
+ if(!translate){interpreterChunks=[];setInterpreterStatus(interpreterText("ready"));}
 }
 async function processInterpreterAudio(){
- const blob=new Blob(interpreterChunks,{type:interpreterRecorder&&interpreterRecorder.mimeType||"audio/webm"});
+ const actualType=interpreterChunks[0]&&interpreterChunks[0].type || (interpreterRecorder&&interpreterRecorder.mimeType) || "application/octet-stream";
+ const blob=new Blob(interpreterChunks,{type:actualType});
  interpreterChunks=[];
- if(!blob.size){setInterpreterStatus(interpreterText("empty"));return;}
- const ext=blob.type.includes("mp4")?"m4a":blob.type.includes("ogg")?"ogg":"webm";
+ if(!blob.size){setInterpreterStatus("녹음 데이터가 비어 있습니다. 다시 녹음해 주세요.");return;}
+ const ext=blob.type.includes("mp4")?"m4a":blob.type.includes("ogg")?"ogg":blob.type.includes("webm")?"webm":"bin";
  const form=new FormData();form.append("audio",blob,(interpreterMode==="staffToUser"?"staff-speech.":"traveler-speech.")+ext);form.append("language",selectedLanguage);form.append("direction",interpreterMode);
  try{
   const response=await fetch("/api/interpret",{method:"POST",body:form});
@@ -780,7 +821,7 @@ async function processInterpreterAudio(){
   // Keep the Listen button available for replay if the browser blocks autoplay.
   const spoken = speakInterpreterTranslation();
   setInterpreterStatus(spoken ? interpreterText("ready") : interpreterText("ready") + " · " + interpreterText("listen"));
- }catch(err){console.error(err);setInterpreterStatus(interpreterText("error"));}
+ }catch(err){console.error("Interpreter request failed:",err);setInterpreterStatus("통역 요청 실패: "+(err&&err.message?err.message:String(err)));}
 }
 document.getElementById("languageSelect")?.addEventListener("change",refreshInterpreterLabels);
 refreshInterpreterLabels();
