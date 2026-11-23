@@ -776,16 +776,23 @@ async function processInterpreterAudio(){
   document.getElementById("translatedText").textContent=data.translation;
   interpreterLastTranslation=data.translation;
   document.getElementById("interpreterResult").classList.add("show");
-  setInterpreterStatus(interpreterText("ready"));
+  // Automatically read the translated reply aloud as soon as it appears.
+  // Keep the Listen button available for replay if the browser blocks autoplay.
+  const spoken = speakInterpreterTranslation();
+  setInterpreterStatus(spoken ? interpreterText("ready") : interpreterText("ready") + " · " + interpreterText("listen"));
  }catch(err){console.error(err);setInterpreterStatus(interpreterText("error"));}
 }
 document.getElementById("languageSelect")?.addEventListener("change",refreshInterpreterLabels);
 refreshInterpreterLabels();
 function speakInterpreterTranslation(){
- if(!interpreterLastTranslation||!window.speechSynthesis)return;
+ if(!interpreterLastTranslation||!window.speechSynthesis||typeof SpeechSynthesisUtterance==="undefined")return false;
  const utterance=new SpeechSynthesisUtterance(interpreterLastTranslation);
  const voiceLang={en:"en-US",es:"es-ES",zh:"zh-CN",ja:"ja-JP",fr:"fr-FR",de:"de-DE",ar:"ar",pt:"pt-PT",ru:"ru-RU",vi:"vi-VN",id:"id-ID",ne:"ne-NP",th:"th-TH",si:"si-LK"};
- utterance.lang=voiceLang[selectedLanguage]||"en-US";speechSynthesis.cancel();speechSynthesis.speak(utterance);
+ utterance.lang=interpreterMode==="userToStaff"?"ko-KR":(voiceLang[selectedLanguage]||"en-US");
+ utterance.rate=0.95;
+ speechSynthesis.cancel();
+ speechSynthesis.speak(utterance);
+ return true;
 }
 async function copyInterpreterTranslation(){
  if(!interpreterLastTranslation)return;
