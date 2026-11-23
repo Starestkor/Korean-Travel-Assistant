@@ -20,11 +20,14 @@ export async function onRequestPost({ request, env }) {
     };
     const audioForm = new FormData();
     audioForm.append("file", audio, audio.name || "staff-speech.webm");
-    audioForm.append("model", "gpt-transcribe");
+    audioForm.append("model", "gpt-4o-transcribe");
     const speechLanguage = direction === "staffToUser" ? "Korean" : (languageNamesForTranscription[language] || "the selected language");
+    // Explicit language hint helps recognition when the speaker is using one language at a time.
+    const speechLanguageCode = direction === "staffToUser" ? "ko" : language;
+    audioForm.append("language", speechLanguageCode);
     audioForm.append("prompt", direction === "staffToUser"
-      ? "The speaker is a Korean shop, restaurant, hotel, or transportation employee speaking naturally to a traveler. Transcribe the Korean speech accurately. Preserve prices, place names, and polite endings."
-      : `The speaker is a traveler speaking ${speechLanguage}. Transcribe the speech accurately in its original language. Preserve names, numbers, and details.`);
+      ? "Korean speech from a shop, restaurant, hotel, or transportation employee in South Korea. Common phrases include: ì¼ë§ìì, ì´ê±° ì¼ë§ìì, ì¹´ë ë¼ì, í¬ì¥í´ ì£¼ì¸ì, ì´ëìì, ì¬ê¸°ì ë´ë ¤ ì£¼ì¸ì. Preserve Korean particles, honorific endings, prices, dates, times, numbers, and place names. Do not translate; transcribe exactly what was said."
+      : `Speech in ${speechLanguage} from a traveler in South Korea. Transcribe in ${speechLanguage}, not Korean or English unless those words were actually spoken. Preserve names, numbers, prices, places, and short travel phrases. Do not translate; transcribe exactly what was said.`);
 
     const transcriptionResponse = await fetch("https://api.openai.com/v1/audio/transcriptions", {
       method: "POST",
