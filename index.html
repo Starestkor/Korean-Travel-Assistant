@@ -398,24 +398,50 @@ if(found)return found.name; // 찾으면 상황 이름을 반환합니다.
 return "Conversation"; // 일치하는 이름이 없으면 기본 제목을 반환합니다.
 } // 상황 이름 검색 함수를 종료합니다.
 
-// 아래 표기는 해당 언어의 문자를 이용한 한국어 발음 근사치입니다. 정확한 현지어 번역이나 표준 표기법은 아닙니다.
+// 등록된 발음은 우선 사용하고, 나머지는 로마자 발음을 각 언어 문자로 근사 변환합니다.
 const nativePronunciation={
 "안녕하세요! 무엇을 드릴까요?":{zh:"安宁哈塞哟！木奥瑟尔 德里尔嘎哟？",ja:"アンニョンハセヨ！ムオスル トゥリルカヨ？",ar:"أنيونغ هاسيو! مووسُل دُريلّكايو؟",ru:"Аннёнхасэё! Муосыль тырильккаё?",ne:"अन्योङ हासेयो! मुओसुल दुरिल्क्कायो?",si:"අන්යොං හසෙයෝ! මුවොසුල් දුරිල්ක්කායෝ?",th:"อัน-นยอง-ฮา-เซ-โย! มู-ออ-ซึล ทือ-ริล-กา-โย?"},
 "감사합니다!":{zh:"康撒哈姆尼达",ja:"カムサハムニダ",ar:"كامسا هام니다",ru:"Камсахамнида",ne:"काम्साहाम्निदा",si:"කාම්සාහම්නිදා",th:"คัมซาฮัมนีดา"},
-"감사합니다.":{zh:"康撒哈姆尼达",ja:"カムサハムニダ",ar:"كامسا هام니다",ru:"Камсахамнида",ne:"काम्साहाम्निदा",si:"කාම්සාහම්නිදා",th:"คัมซาฮัมนีดา"},
+"감사합니다.":{zh:"康撒哈姆尼达",ja:"カムサハムニダ",ar:"كام사 함니다",ru:"Камсахамнида",ne:"काम्साहाम्निदा",si:"කාම්සාහම්නිදා",th:"คัมซาฮัมนีดा"},
 "이거 주세요.":{zh:"伊戈 朱塞哟",ja:"イゴ ジュセヨ",ar:"إيغو جوسيو",ru:"Иго чусэё",ne:"इगो जुसेयो",si:"ඉගෝ ජුසෙයෝ",th:"อี-กอ จู-เซ-โย"},
-"이거 주세요":{zh:"伊戈 朱塞哟",ja:"イゴ ジュセヨ",ar:"إيغو جوسيو",ru:"Иго чусэё",ne:"इगो जुसेयो",si:"ඉගෝ ජුසෙයෝ",th:"อี-กอ จู-เซ-โย"},
 "물 주세요.":{zh:"木尔 朱塞哟",ja:"ムル ジュセヨ",ar:"مول جوسيو",ru:"Муль чусэё",ne:"मुल जुसेयो",si:"මුල් ජුසෙයෝ",th:"มุล จู-เซ-โย"},
-"물 주세요":{zh:"木尔 朱塞哟",ja:"ムル ジュセヨ",ar:"مول جوسيو",ru:"Муль чусэё",ne:"मुल जुसेयो",si:"මුල් ජුසෙයෝ",th:"มุล จู-เซ-โย"},
-"얼마예요?":{zh:"奥尔马耶哟？",ja:"オルマエヨ？",ar:"أولماييو؟",ru:"Ольмаеё?",ne:"ओल्मायेयो?",si:"ඕල්මායෙයෝ?",th:"ออล-มา-เย-โย?"},
-"화장실이 어디예요?":{zh:"花张西里 奥迪耶哟？",ja:"ファジャンシリ オディエヨ？",ar:"هواجانشيري أوديييو؟",ru:"Хваджаншири одиэё?",ne:"ह्वाजाङशिरि ओडियेयो?",si:"හ්වාජංශිරි ඔඩියෙයෝ?",th:"ฮวา-จัง-ชิ-รี ออ-ดี-เย-โย?"},
-"죄송합니다":{zh:"催松哈姆尼达",ja:"チェソンハムニダ",ar:"تشويسونغهامنيدا",ru:"Чвесонхамнида",ne:"छ्वेसोङहाम्निदा",si:"ච්වෙසොංහම්නිදා",th:"ชเว-ซง-ฮัมนี-ดา"},
-"괜찮아요":{zh:"宽恰纳哟",ja:"ケンチャナヨ",ar:"كوينتشان아요",ru:"Квэнчанаё",ne:"क्वेन्चानायो",si:"ක්වෙන්චානයෝ",th:"ควェน-ชา-นา-โย"},
 "얼마예요?":{zh:"奥尔马耶哟？",ja:"オルマエヨ？",ar:"أولماييو؟",ru:"Ольмаеё?",ne:"ओल्मायेयो?",si:"ඕල්මායෙයෝ?",th:"ออล-มา-เย-โย?"}
 };
-function getNativePronunciation(korean){
-const entry=nativePronunciation[(korean||"").trim()];
-return entry ? (entry[selectedLanguage]||"") : "";
+// 로마자 표기의 음절을 학습자 문자로 옮기는 간이 변환기입니다. 한국어 발음의 정확한 음성 전사는 아닙니다.
+function romanToNative(roman,lang){
+ let t=(roman||"").toLowerCase().replace(/[^a-z]/g,""); if(!t)return "";
+ const onset=["kk","tt","pp","jj","ch","kh","th","ph","ng","g","n","d","r","m","b","s","j","k","t","p","h"];
+ const vowels=["yae","yeo","ye","wae","wo","we","wi","yu","wa","oe","yo","ya","eo","ae","eu","ui","a","e","o","u","i"];
+ const codas=["ng","k","n","t","l","m","p","s","h","r"];
+ const chunks=[]; let i=0;
+ while(i<t.length){
+  let o=onset.find(x=>t.startsWith(x,i))||""; if(o)i+=o.length;
+  let v=vowels.find(x=>t.startsWith(x,i));
+  if(!v){chunks.push(t.slice(i,i+1));i++;continue;} i+=v.length;
+  let c=codas.find(x=>t.startsWith(x,i)&&(!vowels.some(y=>t.startsWith(y,i+x.length))||x==="ng"));
+  if(c)i+=c.length;
+  chunks.push(o+v+(c||""));
+ }
+ const kana={g:"g",kk:"kk",n:"n",d:"d",tt:"tt",r:"r",m:"m",b:"b",pp:"pp",s:"s",ss:"ss",j:"j",jj:"jj",ch:"ch",k:"k",t:"t",p:"p",h:"h", "":""};
+ const vKana={a:"ア",ae:"エ",ya:"ヤ",yae:"イェ",eo:"オ",e:"エ",yeo:"ヨ",ye:"イェ",o:"オ",wa:"ワ",wae:"ウェ",oe:"ウェ",yo:"ヨ",u:"ウ",wo:"ウォ",we:"ウェ",wi:"ウィ",yu:"ユ",eu:"ウ",ui:"ウィ",i:"イ"};
+ const rows={"":"",g:"ガ",kk:"ッカ",n:"ナ",d:"ダ",tt:"ッタ",r:"ラ",m:"マ",b:"バ",pp:"ッパ",s:"サ",ss:"ッサ",j:"ジャ",jj:"ッチャ",ch:"チャ",k:"カ",t:"タ",p:"パ",h:"ハ",ng:"ン"};
+ const kanaMap={};
+ const base={g:["ガ","ギ","グ","ゲ","ゴ"],kk:["ッカ","ッキ","ック","ッケ","ッコ"],n:["ナ","ニ","ヌ","ネ","ノ"],d:["ダ","ディ","ドゥ","デ","ド"],tt:["ッタ","ッティ","ットゥ","ッテ","ット"],r:["ラ","リ","ル","レ","ロ"],m:["マ","ミ","ム","メ","モ"],b:["バ","ビ","ブ","ベ","ボ"],pp:["ッパ","ッピ","ップ","ッペ","ッポ"],s:["サ","シ","ス","セ","ソ"],ss:["ッサ","ッシ","ッス","ッセ","ッソ"],j:["ジャ","ジ","ジュ","ジェ","ジョ"],jj:["ッチャ","ッチ","ッチュ","ッチェ","ッチョ"],ch:["チャ","チ","チュ","チェ","チョ"],k:["カ","キ","ク","ケ","コ"],t:["タ","ティ","トゥ","テ","ト"],p:["パ","ピ","プ","ペ","ポ"],h:["ハ","ヒ","フ","ヘ","ホ"],"": ["ア","イ","ウ","エ","オ"]};
+ const vowelIndex={a:0,ae:3,ya:0,yae:3,eo:4,e:3,yeo:4,ye:3,o:4,wa:0,wae:3,oe:3,yo:4,u:2,wo:4,we:3,wi:1,yu:2,eu:2,ui:1,i:1};
+ function kanaSyllable(x){let c=onset.find(z=>x.startsWith(z))||"";let v=vowels.find(z=>x.slice(c.length).startsWith(z))||"a";let ix=vowelIndex[v]??0;let ar=base[c]||base[""];let out=ar[ix]||"";if(/ng|n|m|l|k|p|t|s$/.test(x.slice(c.length+v.length)))out+="ン";return out;}
+ const cyr={a:"а",ae:"э",ya:"я",yae:"я",eo:"о",e:"э",yeo:"ё",ye:"е",o:"о",wa:"ва",wae:"вэ",oe:"ве",yo:"ё",u:"у",wo:"во",we:"ве",wi:"ви",yu:"ю",eu:"ы",ui:"ый",i:"и",g:"г",kk:"к",n:"н",d:"д",tt:"т",r:"р",m:"м",b:"б",pp:"п",s:"с",ss:"с",j:"дж",jj:"ч",ch:"ч",k:"к",t:"т",p:"п",h:"х",ng:"нг"};
+ const arab={a:"ا",ae:"ي",ya:"يا",yae:"ي",eo:"و",e:"ي",yeo:"يو",ye:"ي",o:"و",wa:"وا",wae:"وي",oe:"وي",yo:"يو",u:"و",wo:"وو",we:"وي",wi:"وي",yu:"يو",eu:"उ",ui:"وي",i:"ي",g:"غ",kk:"ك",n:"ن",d:"د",tt:"ت",r:"ر",m:"م",b:"ب",pp:"پ",s:"س",ss:"س",j:"ج",jj:"تش",ch:"تش",k:"ك",t:"ت",p:"پ",h:"ه",ng:"نغ"};
+ const devan={a:"अ",ae:"ऐ",ya:"या",yae:"यै",eo:"ऑ",e:"ए",yeo:"यॉ",ye:"ये",o:"ओ",wa:"वा",wae:"वै",oe:"वे",yo:"यो",u:"उ",wo:"वॉ",we:"वे",wi:"वि",yu:"यु",eu:"उ",ui:"ई",i:"इ",g:"ग",kk:"क्क",n:"न",d:"द",tt:"त्त",r:"र",m:"म",b:"ब",pp:"प्प",s:"स",ss:"स्स",j:"ज",jj:"च्च",ch:"छ",k:"क",t:"त",p:"प",h:"ह",ng:"ङ"};
+ const si={a:"අ",ae:"ඇ",ya:"යා",yae:"යැ",eo:"ඔ",e:"එ",yeo:"යො",ye:"යෙ",o:"ඔ",wa:"වා",wae:"වැ",oe:"වෙ",yo:"යෝ",u:"උ",wo:"වො",we:"වෙ",wi:"වි",yu:"යු",eu:"උ",ui:"වි",i:"ඉ",g:"ග",kk:"ක්ක",n:"න",d:"ද",tt:"ත්ත",r:"ර",m:"ම",b:"බ",pp:"ප්ප",s:"ස",ss:"ස්ස",j:"ජ",jj:"ච්ච",ch:"ච",k:"ක",t:"ත",p:"ප",h:"හ",ng:"ං"};
+ const thai={a:"อะ",ae:"แอ",ya:"ยา",yae:"แย",eo:"ออ",e:"เอ",yeo:"ยอ",ye:"เย",o:"โอ",wa:"วา",wae:"แว",oe:"เว",yo:"โย",u:"อู",wo:"วอ",we:"เว",wi:"วิ",yu:"ยู",eu:"อือ",ui:"อุย",i:"อี",g:"ก",kk:"ก",n:"น",d:"ด",tt:"ต",r:"ร",m:"ม",b:"บ",pp:"ป",s:"ซ",ss:"ซ",j:"จ",jj:"จ",ch:"ช",k:"ค",t:"ท",p:"พ",h:"ฮ",ng:"ง"};
+ const han={a:"아",ae:"애",ya:"呀",yae:"耶",eo:"哦",e:"诶",yeo:"哟",ye:"耶",o:"哦",wa:"哇",wae:"歪",oe:"威",yo:"哟",u:"乌",wo:"窝",we:"威",wi:"威",yu:"优",eu:"呃",ui:"威",i:"伊",g:"格",kk:"卡",n:"恩",d:"德",tt:"特",r:"尔",m:"姆",b:"布",pp:"普",s:"斯",ss:"丝",j:"吉",jj:"齐",ch:"吃",k:"克",t:"特",p:"普",h:"赫",ng:"恩"};
+ return chunks.map(x=>{let c=onset.find(z=>x.startsWith(z))||"";let rest=x.slice(c.length);let v=vowels.find(z=>rest.startsWith(z))||"a";let tail=rest.slice(v.length);if(lang==="ja")return kanaSyllable(x)+(tail?"ン":"");let m=lang==="ru"?cyr:lang==="ar"?arab:lang==="ne"?devan:lang==="si"?si:lang==="th"?thai:han;return (m[c]||"")+(m[v]||"")+(tail?(m[tail]||""):"");}).join("");
+}
+function getNativePronunciation(korean,roman){
+ const entry=nativePronunciation[(korean||"").trim()];
+ if(entry&&entry[selectedLanguage])return entry[selectedLanguage];
+ if(["zh","ja","ar","ru","ne","si","th"].includes(selectedLanguage))return romanToNative(roman,selectedLanguage);
+ return "";
 }
 
 function renderStep(){ // 현재 대화 단계를 화면에 표시합니다.
@@ -424,14 +450,14 @@ const step=steps[currentStep]; // 현재 순서의 대화 한 개를 가져옵�
 document.getElementById("speaker").textContent="STAFF"; // 현재 문장의 화자를 직원으로 표시합니다.
 document.getElementById("english").textContent=step.en; // 영어 번역을 표시합니다.
 document.getElementById("korean").textContent=step.ko; // 한국어 문장을 표시합니다.
-document.getElementById("nativePronunciation").textContent=getNativePronunciation(step.ko); // 선택 언어의 문자로 발음을 표시합니다.
+document.getElementById("nativePronunciation").textContent=getNativePronunciation(step.ko,step.ro); // 선택 언어의 문자로 발음을 표시합니다.
 document.getElementById("roman").textContent=step.ro; // 로마자 발음을 보조로 표시합니다.
 const list=document.getElementById("choices"); // 선택지 영역을 가져옵니다.
 list.innerHTML=""; // 이전 선택지를 지웁니다.
 step.choices.forEach(choice=>{ // 현재 단계의 선택지를 하나씩 만듭니다.
 const button=document.createElement("button"); // 선택지 버튼을 만듭니다.
 button.className="choice"; // 선택지 디자인을 적용합니다.
-const native=getNativePronunciation(choice[1]);
+const native=getNativePronunciation(choice[1],choice[2]);
 button.innerHTML=`<span class="choice-en">${choice[0]}</span><span class="choice-ko">${choice[1]}</span>${native?`<span class="choice-native">${native}</span>`:""}<span class="choice-ro">${choice[2]}</span>`; // 영어, 한국어, 발음을 표시합니다.
 button.onclick=()=>chooseAnswer(choice); // 선택하면 다음 단계로 이동합니다.
 list.appendChild(button); // 선택지 버튼을 화면에 추가합니다.
@@ -502,7 +528,7 @@ if(type==="grammar"||type==="all")items=items.concat(grammar.map(item=>({...item
 items.forEach(item=>{ // 각 학습 항목을 카드로 만듭니다.
 const card=document.createElement("article"); // 학습 카드 요소를 생성합니다.
 card.className="item-card"; // 학습 카드 디자인을 적용합니다.
-const native=getNativePronunciation(item.ko);
+const native=getNativePronunciation(item.ko,item.ro);
 card.innerHTML=`<span class="tag">${item.category}</span><div class="item-en">${item.en||item.meaning||""}</div><div class="item-ko">${item.ko}</div>${native?`<div class="item-native">${native}</div>`:""}<div class="item-ro">${item.ro||""}</div><div class="item-note">${item.note||""}</div>`; // 영어, 한국어, 발음, 설명을 카드에 표시합니다.
 list.appendChild(card); // 학습 카드를 화면에 추가합니다.
 }); // 학습 항목 반복을 종료합니다.
