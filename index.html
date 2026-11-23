@@ -1,4345 +1,528 @@
-
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KTrep — Korean Travel Expressions</title>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: "Avenir Next", "Segoe UI", sans-serif;
-  color: #58647b;
-  background: linear-gradient(135deg, #f1edf9, #eaf2f8 48%, #f9edf1);
-  background-attachment: fixed;
-}
-
-button, input, select {
-  font: inherit;
-}
-
-button {
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-.app {
-  width: min(100% - 28px, 760px);
-  margin: auto;
-  padding: 25px 0 40px;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 4px 22px;
-}
-
-.logo {
-  font-family: Georgia, serif;
-  font-size: 27px;
-  letter-spacing: -1px;
-  color: #586784;
-}
-
-.header-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: #ffffff99;
-  border: 1px solid white;
-  box-shadow: 0 7px 20px #64739622;
-  color: #a18cb9;
-}
-
-.main {
-  border-radius: 28px;
-  padding: 22px;
-  min-height: 540px;
-  background: #ffffff88;
-  border: 1px solid #ffffffd9;
-  backdrop-filter: blur(20px);
-  box-shadow: 0 20px 55px #68749629, inset 0 1px 0 white;
-}
-
-.heading {
-  font-family: Georgia, serif;
-  font-size: 27px;
-  font-weight: 500;
-  margin: 4px 0 7px;
-  color: #596a88;
-}
-
-.subheading {
-  margin: 0 0 20px;
-  color: #9997ab;
-  font-size: 12px;
-}
-
-.section-title {
-  font-size: 15px;
-  color: #71809d;
-  margin: 22px 0 10px;
-  font-weight: 700;
-}
-
-.language-wrap {
-  margin: 0 0 18px;
-}
-
-.language-label {
-  display: block;
-  font-size: 12px;
-  color: #8992aa;
-  margin-bottom: 7px;
-  font-weight: 650;
-}
-
-.language-select {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid white;
-  border-radius: 14px;
-  background: #ffffffb8;
-  color: #64748e;
-  box-shadow: 0 7px 18px #6473961c;
-  outline: none;
-}
-
-.place-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 13px;
-}
-
-.place-card {
-  position: relative;
-  height: 140px;
-  border: 1px solid white;
-  border-radius: 19px;
-  overflow: hidden;
-  padding: 0;
-  background: #e8eaf3;
-  box-shadow: 0 10px 25px #6473962b;
-  display: block;
-  width: 100%;
-  isolation: isolate;
-}
-
-.place-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  opacity: .88;
-  pointer-events: none;
-}
-
-.place-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(transparent 35%, #2631418c);
-  pointer-events: none;
-}
-
-.place-name {
-  position: absolute;
-  left: 15px;
-  bottom: 14px;
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
-  text-shadow: 0 2px 8px #0004;
-  pointer-events: none;
-}
-
-.feature-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 11px;
-  margin-top: 15px;
-}
-
-.feature-card {
-  border: 1px solid white;
-  border-radius: 17px;
-  padding: 15px;
-  background: #ffffffa6;
-  text-align: left;
-  box-shadow: 0 8px 20px #6473961c;
-  color: #657590;
-  width: 100%;
-  display: block;
-}
-
-.feature-icon {
-  font-size: 24px;
-  display: block;
-  margin-bottom: 8px;
-  pointer-events: none;
-}
-
-.feature-name {
-  font-size: 14px;
-  font-weight: 700;
-  display: block;
-  pointer-events: none;
-}
-
-.feature-desc {
-  font-size: 11px;
-  color: #9997ab;
-  display: block;
-  margin-top: 5px;
-  line-height: 1.4;
-  pointer-events: none;
-}
-
-.back-button {
-  border: 0;
-  background: transparent;
-  color: #8d91ad;
-  padding: 4px 0 17px;
-  font-size: 13px;
-}
-
-.scenario-list, .item-list {
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-}
-
-.scenario-card, .item-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: 100%;
-  padding: 15px;
-  border-radius: 17px;
-  border: 1px solid white;
-  background: #ffffffa6;
-  box-shadow: 0 9px 23px #69769620;
-  text-align: left;
-  color: #64748e;
-}
-
-.scenario-icon {
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(145deg, #f1ecfa, #e5f0f5);
-  font-size: 22px;
-}
-
-.scenario-text {
-  flex: 1;
-}
-
-.scenario-name {
-  font-size: 14px;
-  font-weight: 700;
-  display: block;
-}
-
-.scenario-description {
-  font-size: 11px;
-  color: #a09db2;
-  margin-top: 4px;
-  display: block;
-}
-
-.arrow {
-  color: #a99abc;
-  font-size: 20px;
-}
-
-.dialogue-card {
-  padding: 21px;
-  border-radius: 23px;
-  background: linear-gradient(145deg, #f0f5ffe0, #ffffffa6);
-  border: 1px solid white;
-  box-shadow: 0 15px 34px #6980af2b, inset 0 1px 0 white;
-}
-
-.speaker {
-  color: #d49aa5;
-  font-size: 10px;
-  letter-spacing: 2px;
-  font-weight: 750;
-  margin-bottom: 13px;
-}
-
-.foreign-label, .korean-label, .pronunciation-label {
-  color: #9296aa;
-  font-size: 10px;
-  letter-spacing: 1px;
-  font-weight: 700;
-  margin: 12px 0 7px;
-}
-
-.foreign {
-  color: #668ac5;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
-
-.korean {
-  color: #639879;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.55;
-  word-break: keep-all;
-}
-
-.pronunciation {
-  color: #a18ab9;
-  font-size: 15px;
-  font-style: italic;
-  margin-top: 8px;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-}
-
-.choice-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 17px;
-}
-
-.choice {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid white;
-  border-radius: 16px;
-  background: #ffffffb0;
-  text-align: left;
-  box-shadow: 0 8px 20px #7080a026;
-  color: #64748e;
-}
-
-.choice:disabled {
-  opacity: .65;
-  cursor: default;
-}
-
-.choice-foreign, .choice-ko, .choice-pronunciation {
-  display: block;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-.choice-foreign {
-  font-size: 13px;
-  font-weight: 600;
-  color: #668ac5;
-  margin-bottom: 6px;
-}
-
-.choice-ko {
-  font-size: 16px;
-  font-weight: 700;
-  color: #639879;
-  margin-bottom: 5px;
-}
-
-.choice-pronunciation {
-  font-size: 12px;
-  color: #a18ab9;
-  font-style: italic;
-}
-
-.input-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 13px;
-}
-
-.input-row input {
-  flex: 1;
-  min-width: 0;
-  padding: 12px;
-  border: 1px solid white;
-  border-radius: 13px;
-  background: #ffffffb3;
-  color: #5d718e;
-  outline: none;
-}
-
-.send-button {
-  border: 1px solid white;
-  border-radius: 13px;
-  padding: 0 16px;
-  background: linear-gradient(135deg, #dce9f8, #e9e0f5);
-  color: #687a9a;
-  box-shadow: 0 6px 15px #7080a022;
-}
-
-.tools {
-  display: flex;
-  gap: 9px;
-  margin-top: 15px;
-}
-
-.tool-button {
-  flex: 1;
-  padding: 12px 8px;
-  border: 1px solid white;
-  border-radius: 14px;
-  background: #ffffff9e;
-  color: #7d89a8;
-  font-size: 12px;
-}
-
-.status {
-  color: #9997ab;
-  font-size: 11px;
-  margin-top: 11px;
-  min-height: 17px;
-  line-height: 1.5;
-}
-
-.item-card {
-  display: block;
-  padding: 16px;
-}
-
-.item-en {
-  color: #668ac5;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.item-ko {
-  color: #639879;
-  font-size: 19px;
-  font-weight: 700;
-  line-height: 1.5;
-}
-
-.item-ro {
-  color: #a18ab9;
-  font-size: 12px;
-  font-style: italic;
-  margin-top: 5px;
-}
-
-.item-note {
-  color: #8d91a7;
-  font-size: 11px;
-  margin-top: 8px;
-  line-height: 1.5;
-}
-
-.hidden {
-  display: none !important;
-}
-
-[dir="rtl"] .place-name {
-  left: auto;
-  right: 15px;
-}
-
-[dir="rtl"] .scenario-card,
-[dir="rtl"] .choice,
-[dir="rtl"] .feature-card {
-  text-align: right;
-}
-
-[dir="rtl"] .arrow {
-  transform: scaleX(-1);
-}
-
-[dir="rtl"] .back-button {
-  text-align: right;
-}
-
-@media(max-width:420px) {
-  .main {
-    padding: 16px;
-  }
-
-  .place-card {
-    height: 125px;
-  }
-
-  .heading {
-    font-size: 24px;
-  }
-
-  .korean {
-    font-size: 21px;
-  }
-
-  .dialogue-card {
-    padding: 18px;
-  }
-}
-</style>
-</head>
-
-<body>
-<main class="app">
-
-<header class="header">
-  <div class="logo">KTrep</div>
-  <div class="header-icon">✦</div>
-</header>
-
-<section class="main">
-
-  <!-- 홈 화면 -->
-  <section id="home">
-
-    <h1 class="heading" id="homeTitle">Where to?</h1>
-
-    <p class="subheading" id="homeSubheading">
-      Explore Korea and learn useful Korean
-    </p>
-
-    <div class="language-wrap">
-      <label class="language-label" id="languageLabel" for="languageSelect">
-        Choose your language
-      </label>
-
-      <select class="language-select" id="languageSelect" onchange="setLanguage(this.value)">
-        <option value="en">English</option>
-        <option value="es">Español</option>
-        <option value="zh">中文（简体）</option>
-        <option value="ja">日本語</option>
-        <option value="fr">Français</option>
-        <option value="de">Deutsch</option>
-        <option value="ar">العربية</option>
-        <option value="pt">Português</option>
-        <option value="ru">Русский</option>
-        <option value="vi">Tiếng Việt</option>
-        <option value="si">සිංහල</option>
-        <option value="ne">नेपाली</option>
-        <option value="th">ไทย</option>
-      </select>
-    </div>
-
-    <div class="place-grid">
-
-      <button class="place-card" onclick="selectPlace('cafe')">
-        <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700" alt="Cafe">
-        <span class="place-overlay"></span>
-        <span class="place-name" data-place="cafe">Cafe</span>
-      </button>
-
-      <button class="place-card" onclick="selectPlace('restaurant')">
-        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700" alt="Restaurant">
-        <span class="place-overlay"></span>
-        <span class="place-name" data-place="restaurant">Restaurant</span>
-      </button>
-
-      <button class="place-card" onclick="selectPlace('transport')">
-        <img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700" alt="Transport">
-        <span class="place-overlay"></span>
-        <span class="place-name" data-place="transport">Transport</span>
-      </button>
-
-      <button class="place-card" onclick="selectPlace('shopping')">
-        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700" alt="Shopping">
-        <span class="place-overlay"></span>
-        <span class="place-name" data-place="shopping">Shopping</span>
-      </button>
-
-      <button class="place-card" onclick="selectPlace('stay')">
-        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700" alt="Accommodation">
-        <span class="place-overlay"></span>
-        <span class="place-name" data-place="stay">Stay</span>
-      </button>
-
-    </div>
-
-    <h2 class="section-title" id="learnTitle">Learn Korean</h2>
-
-    <div class="feature-grid">
-
-      <button class="feature-card" onclick="openLibrary('expressions')">
-        <span class="feature-icon">🗣️</span>
-        <span class="feature-name" id="featureExpressions">Essential Expressions</span>
-        <span class="feature-desc" id="featureExpressionsDesc">Useful phrases for everyday situations</span>
-      </button>
-
-      <button class="feature-card" onclick="openLibrary('grammar')">
-        <span class="feature-icon">📖</span>
-        <span class="feature-name" id="featureGrammar">Useful Grammar</span>
-        <span class="feature-desc" id="featureGrammarDesc">Practical grammar with travel examples</span>
-      </button>
-
-      <button class="feature-card" onclick="openLibrary('dietary')">
-        <span class="feature-icon">🥗</span>
-        <span class="feature-name" id="featureDietary">Dietary Needs</span>
-        <span class="feature-desc" id="featureDietaryDesc">Vegetarian, vegan, halal and gluten-free</span>
-      </button>
-
-      <button class="feature-card" onclick="openLibrary('all')">
-        <span class="feature-icon">✨</span>
-        <span class="feature-name" id="featureAll">All Learning Materials</span>
-        <span class="feature-desc" id="featureAllDesc">Browse all expressions and grammar</span>
-      </button>
-
-    </div>
-  </section>
-
-  <!-- 상황 선택 화면 -->
-  <section id="scenarios" class="hidden">
-
-    <button class="back-button" onclick="goHome()">← Back</button>
-
-    <h1 class="heading" id="placeHeading"></h1>
-
-    <p class="subheading" id="scenarioSubheading">
-      Choose a situation
-    </p>
-
-    <div class="scenario-list" id="scenarioList"></div>
-
-  </section>
-
-  <!-- 대화 화면 -->
-  <section id="conversation" class="hidden">
-
-    <button class="back-button" onclick="goScenarios()">← Back</button>
-
-    <h1 class="heading" id="conversationHeading"></h1>
-
-    <div class="dialogue-card">
-
-      <div class="speaker" id="speaker">STAFF</div>
-
-      <div class="foreign-label" id="foreignLabel">YOUR LANGUAGE</div>
-      <div class="foreign" id="foreign"></div>
-
-      <div class="korean-label" id="koreanLabel">KOREAN</div>
-      <div class="korean" id="korean"></div>
-
-      <div class="pronunciation-label" id="pronunciationLabel">
-        KOREAN PRONUNCIATION
-      </div>
-
-      <div class="pronunciation" id="pronunciation"></div>
-
-    </div>
-
-    <div class="choice-list" id="choices"></div>
-
-    <div class="input-row">
-      <input id="userInput" type="text" placeholder="Type in what you want to ask...">
-      <button class="send-button" id="sendButton" onclick="submitText()">Send</button>
-    </div>
-
-    <div class="tools">
-      <button class="tool-button" id="speakButton" onclick="listen()">🎙 Speak Korean</button>
-      <button class="tool-button" id="listenButton" onclick="speakCurrent()">🔊 Listen</button>
-    </div>
-
-    <div class="status" id="status">
-      Choose a response or type a phrase.
-    </div>
-
-  </section>
-
-  <!-- 학습 자료 화면 -->
-  <section id="library" class="hidden">
-
-    <button class="back-button" onclick="goHome()">← Back</button>
-
-    <h1 class="heading" id="libraryHeading">Learning Materials</h1>
-
-    <p class="subheading" id="librarySubheading">
-      Useful Korean for your trip
-    </p>
-
-    <div class="item-list" id="libraryList"></div>
-
-  </section>
-
-</section>
-</main>
-
-<script>
-
-// ==========================================
-// 2부: 장소별 상황 및 대화 데이터
-// ==========================================
-
-const appData = [
-
-  // --------------------------
-  // 카페
-  // --------------------------
-  {
-    id: "cafe",
-    name: "Cafe",
-    icon: "☕",
-    scenarios: [
-
-      {
-        id: "cafe_order",
-        title: "Ordering a Drink",
-        description: "Order coffee and other drinks",
-        icon: "☕",
-        dialogues: [
-          {
-            speaker: "BARISTA",
-            en: "What would you like to order?",
-            ko: "무엇을 주문하시겠어요?",
-            roman: "Mueoseul jumunhasigesseoyo?",
-            choices: [
-              {
-                en: "An iced Americano, please.",
-                ko: "아이스 아메리카노 하나 주세요.",
-                roman: "Aiseu amerikano hana juseyo."
-              },
-              {
-                en: "A hot latte, please.",
-                ko: "따뜻한 라테 하나 주세요.",
-                roman: "Ttatteuthan rate hana juseyo."
-              },
-              {
-                en: "Can I see the menu?",
-                ko: "메뉴를 볼 수 있을까요?",
-                roman: "Menyureul bol su isseulkkayo?"
-              }
-            ]
-          },
-          {
-            speaker: "BARISTA",
-            en: "Would you like it hot or iced?",
-            ko: "따뜻하게 드릴까요, 차갑게 드릴까요?",
-            roman: "Ttatteuthage deurilkkayo, chagapge deurilkkayo?",
-            choices: [
-              {
-                en: "Iced, please.",
-                ko: "차갑게 해 주세요.",
-                roman: "Chagapge hae juseyo."
-              },
-              {
-                en: "Hot, please.",
-                ko: "따뜻하게 해 주세요.",
-                roman: "Ttatteuthage hae juseyo."
-              }
-            ]
-          },
-          {
-            speaker: "BARISTA",
-            en: "Anything else?",
-            ko: "더 필요한 건 없으세요?",
-            roman: "Deo piryohan geon eopseuseyo?",
-            choices: [
-              {
-                en: "That's all, thank you.",
-                ko: "이게 전부예요. 감사합니다.",
-                roman: "Ige jeonbuyeyo. Gamsahamnida."
-              },
-              {
-                en: "Could I have some water?",
-                ko: "물 좀 주세요.",
-                roman: "Mul jom juseyo."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "cafe_size",
-        title: "Choosing a Size",
-        description: "Ask about drink sizes",
-        icon: "🥤",
-        dialogues: [
-          {
-            speaker: "BARISTA",
-            en: "What size would you like?",
-            ko: "어떤 사이즈로 드릴까요?",
-            roman: "Eotteon saijeuro deurilkkayo?",
-            choices: [
-              {
-                en: "Small, please.",
-                ko: "작은 사이즈로 주세요.",
-                roman: "Jageun saijeuro juseyo."
-              },
-              {
-                en: "Medium, please.",
-                ko: "중간 사이즈로 주세요.",
-                roman: "Junggan saijeuro juseyo."
-              },
-              {
-                en: "Large, please.",
-                ko: "큰 사이즈로 주세요.",
-                roman: "Keun saijeuro juseyo."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "cafe_payment",
-        title: "Paying at a Cafe",
-        description: "Pay and ask for a receipt",
-        icon: "💳",
-        dialogues: [
-          {
-            speaker: "BARISTA",
-            en: "How would you like to pay?",
-            ko: "어떻게 결제하시겠어요?",
-            roman: "Eotteoke gyeoljehasigesseoyo?",
-            choices: [
-              {
-                en: "I'll pay by card.",
-                ko: "카드로 결제할게요.",
-                roman: "Kadeuro gyeoljehalgeyo."
-              },
-              {
-                en: "I'll pay in cash.",
-                ko: "현금으로 낼게요.",
-                roman: "Hyeongeumeuro naelgeyo."
-              }
-            ]
-          },
-          {
-            speaker: "BARISTA",
-            en: "Would you like a receipt?",
-            ko: "영수증 필요하세요?",
-            roman: "Yeongsujeung piryohaseyo?",
-            choices: [
-              {
-                en: "Yes, please.",
-                ko: "네, 주세요.",
-                roman: "Ne, juseyo."
-              },
-              {
-                en: "No, thank you.",
-                ko: "아니요, 괜찮아요.",
-                roman: "Aniyo, gwaenchanayo."
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-
-  // --------------------------
-  // 식당
-  // --------------------------
-  {
-    id: "restaurant",
-    name: "Restaurant",
-    icon: "🍽️",
-    scenarios: [
-
-      {
-        id: "restaurant_order",
-        title: "Ordering Food",
-        description: "Order food at a restaurant",
-        icon: "🍜",
-        dialogues: [
-          {
-            speaker: "SERVER",
-            en: "Are you ready to order?",
-            ko: "주문하시겠어요?",
-            roman: "Jumunhasigesseoyo?",
-            choices: [
-              {
-                en: "I'd like this, please.",
-                ko: "이걸로 주세요.",
-                roman: "Igeollo juseyo."
-              },
-              {
-                en: "Can I see the menu?",
-                ko: "메뉴판 좀 볼 수 있을까요?",
-                roman: "Menyupan jom bol su isseulkkayo?"
-              },
-              {
-                en: "What do you recommend?",
-                ko: "뭐가 맛있어요?",
-                roman: "Mwoga masisseoyo?"
-              }
-            ]
-          },
-          {
-            speaker: "SERVER",
-            en: "Would you like anything to drink?",
-            ko: "음료는 뭐로 드릴까요?",
-            roman: "Eumnyoneun mworo deurilkkayo?",
-            choices: [
-              {
-                en: "Water, please.",
-                ko: "물 주세요.",
-                roman: "Mul juseyo."
-              },
-              {
-                en: "One cola, please.",
-                ko: "콜라 하나 주세요.",
-                roman: "Kolla hana juseyo."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "restaurant_spicy",
-        title: "Asking About Spicy Food",
-        description: "Ask how spicy a dish is",
-        icon: "🌶️",
-        dialogues: [
-          {
-            speaker: "SERVER",
-            en: "Is there anything else you'd like to know?",
-            ko: "더 궁금한 점 있으세요?",
-            roman: "Deo gunggeumhan jeom isseuseyo?",
-            choices: [
-              {
-                en: "Is this spicy?",
-                ko: "이거 매워요?",
-                roman: "Igeo maewoyo?"
-              },
-              {
-                en: "Could you make it less spicy?",
-                ko: "덜 맵게 해 주실 수 있나요?",
-                roman: "Deol maepge hae jusil su innayo?"
-              }
-            ]
-          },
-          {
-            speaker: "SERVER",
-            en: "Yes, it's spicy.",
-            ko: "네, 매워요.",
-            roman: "Ne, maewoyo.",
-            choices: [
-              {
-                en: "That's okay.",
-                ko: "괜찮아요.",
-                roman: "Gwaenchanayo."
-              },
-              {
-                en: "Then, I'll order something else.",
-                ko: "그럼 다른 걸로 주문할게요.",
-                roman: "Geureom dareun geollo jumunhalgeyo."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "restaurant_allergy",
-        title: "Food Allergies",
-        description: "Explain your food allergy",
-        icon: "🥜",
-        dialogues: [
-          {
-            speaker: "SERVER",
-            en: "Do you have any food allergies?",
-            ko: "음식 알레르기가 있으세요?",
-            roman: "Eumsik allereugiga isseuseyo?",
-            choices: [
-              {
-                en: "I'm allergic to peanuts.",
-                ko: "저는 땅콩 알레르기가 있어요.",
-                roman: "Jeoneun ttangkong allereugiga isseoyo."
-              },
-              {
-                en: "I'm allergic to seafood.",
-                ko: "저는 해산물 알레르기가 있어요.",
-                roman: "Jeoneun haesanmul allereugiga isseoyo."
-              },
-              {
-                en: "I'm allergic to milk.",
-                ko: "저는 우유 알레르기가 있어요.",
-                roman: "Jeoneun uyu allereugiga isseoyo."
-              }
-            ]
-          },
-          {
-            speaker: "SERVER",
-            en: "I'll check with the kitchen.",
-            ko: "주방에 확인해 볼게요.",
-            roman: "Jubange hwaginhae bolgeyo.",
-            choices: [
-              {
-                en: "Thank you.",
-                ko: "감사합니다.",
-                roman: "Gamsahamnida."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "restaurant_payment",
-        title: "Paying the Bill",
-        description: "Ask for the bill and a receipt",
-        icon: "🧾",
-        dialogues: [
-          {
-            speaker: "SERVER",
-            en: "Would you like anything else?",
-            ko: "더 필요한 건 없으세요?",
-            roman: "Deo piryohan geon eopseuseyo?",
-            choices: [
-              {
-                en: "No, thank you. Could I have the bill?",
-                ko: "아니요, 괜찮아요. 계산해 주세요.",
-                roman: "Aniyo, gwaenchanayo. Gyesanhae juseyo."
-              }
-            ]
-          },
-          {
-            speaker: "SERVER",
-            en: "Would you like a receipt?",
-            ko: "영수증 필요하세요?",
-            roman: "Yeongsujeung piryohaseyo?",
-            choices: [
-              {
-                en: "Yes, please. Could I have a receipt?",
-                ko: "네, 영수증 주세요.",
-                roman: "Ne, yeongsujeung juseyo."
-              },
-              {
-                en: "No, thank you.",
-                ko: "아니요, 괜찮아요.",
-                roman: "Aniyo, gwaenchanayo."
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-
-  // --------------------------
-  // 교통
-  // --------------------------
-  {
-    id: "transport",
-    name: "Transport",
-    icon: "🚇",
-    scenarios: [
-
-      {
-        id: "transport_direction",
-        title: "Asking for Directions",
-        description: "Find your way around Korea",
-        icon: "🧭",
-        dialogues: [
-          {
-            speaker: "PASSERBY",
-            en: "Can I help you?",
-            ko: "무엇을 도와드릴까요?",
-            roman: "Mueoseul dowadeurilkkayo?",
-            choices: [
-              {
-                en: "Where is the subway station?",
-                ko: "지하철역이 어디예요?",
-                roman: "Jihacheollyeogi eodiyeyo?"
-              },
-              {
-                en: "How can I get there?",
-                ko: "거기 어떻게 가요?",
-                roman: "Geogi eotteoke gayo?"
-              }
-            ]
-          },
-          {
-            speaker: "PASSERBY",
-            en: "Go straight.",
-            ko: "쭉 직진하세요.",
-            roman: "Jjuk jikjinhaseyo.",
-            choices: [
-              {
-                en: "Thank you.",
-                ko: "감사합니다.",
-                roman: "Gamsahamnida."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "transport_taxi",
-        title: "Taking a Taxi",
-        description: "Tell the driver where to go",
-        icon: "🚕",
-        dialogues: [
-          {
-            speaker: "DRIVER",
-            en: "Where would you like to go?",
-            ko: "어디로 가세요?",
-            roman: "Eodiro gaseyo?",
-            choices: [
-              {
-                en: "Please take me to this address.",
-                ko: "여기로 가 주세요.",
-                roman: "Yeogiro ga juseyo."
-              },
-              {
-                en: "Please go to Seoul Station.",
-                ko: "서울역으로 가 주세요.",
-                roman: "Seoullyeogeuro ga juseyo."
-              }
-            ]
-          },
-          {
-            speaker: "DRIVER",
-            en: "Is this the right place?",
-            ko: "여기가 맞나요?",
-            roman: "Yeogiga mannayo?",
-            choices: [
-              {
-                en: "Yes, this is right.",
-                ko: "네, 맞아요.",
-                roman: "Ne, majayo."
-              },
-              {
-                en: "A little further, please.",
-                ko: "조금 더 가 주세요.",
-                roman: "Jogeum deo ga juseyo."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "transport_subway",
-        title: "Using the Subway",
-        description: "Ask about subway tickets",
-        icon: "🚉",
-        dialogues: [
-          {
-            speaker: "STAFF",
-            en: "Where are you going?",
-            ko: "어디까지 가세요?",
-            roman: "Eodikkaji gaseyo?",
-            choices: [
-              {
-                en: "I'd like to go to Hongdae.",
-                ko: "홍대까지 가려고요.",
-                roman: "Hongdaekkaji garyeogoyo."
-              },
-              {
-                en: "How much is a ticket?",
-                ko: "표가 얼마예요?",
-                roman: "Pyoga eolmayeyo?"
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-
-  // --------------------------
-  // 쇼핑
-  // --------------------------
-  {
-    id: "shopping",
-    name: "Shopping",
-    icon: "🛍️",
-    scenarios: [
-
-      {
-        id: "shopping_price",
-        title: "Asking the Price",
-        description: "Ask how much something costs",
-        icon: "🏷️",
-        dialogues: [
-          {
-            speaker: "SHOP ASSISTANT",
-            en: "Can I help you?",
-            ko: "찾으시는 거 있으세요?",
-            roman: "Chajeusineun geo isseuseyo?",
-            choices: [
-              {
-                en: "How much is this?",
-                ko: "이거 얼마예요?",
-                roman: "Igeo eolmayeyo?"
-              },
-              {
-                en: "I'm just looking, thank you.",
-                ko: "그냥 구경하고 있어요.",
-                roman: "Geunyang gugyeonghago isseoyo."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "shopping_tryon",
-        title: "Trying on Clothes",
-        description: "Ask to try on clothes",
-        icon: "👕",
-        dialogues: [
-          {
-            speaker: "SHOP ASSISTANT",
-            en: "Can I help you?",
-            ko: "도와드릴까요?",
-            roman: "Dowadeurilkkayo?",
-            choices: [
-              {
-                en: "Can I try this on?",
-                ko: "이거 입어 봐도 돼요?",
-                roman: "Igeo ibeo bwado dwaeyo?"
-              }
-            ]
-          },
-          {
-            speaker: "SHOP ASSISTANT",
-            en: "Of course. The fitting room is over there.",
-            ko: "그럼요. 탈의실은 저쪽에 있어요.",
-            roman: "Geureomyo. Taruisireun jeojjoge isseoyo.",
-            choices: [
-              {
-                en: "Where is the fitting room?",
-                ko: "탈의실이 어디예요?",
-                roman: "Taruisiri eodiyeyo?"
-              },
-              {
-                en: "Do you have this in another size?",
-                ko: "이거 다른 사이즈도 있나요?",
-                roman: "Igeo dareun saijeudo innayo?"
-              }
-            ]
-          },
-          {
-            speaker: "SHOP ASSISTANT",
-            en: "How does it fit?",
-            ko: "사이즈가 잘 맞으세요?",
-            roman: "Saijeuga jal majeuseyo?",
-            choices: [
-              {
-                en: "It fits well.",
-                ko: "잘 맞아요.",
-                roman: "Jal majayo."
-              },
-              {
-                en: "It's a little small.",
-                ko: "조금 작아요.",
-                roman: "Jogeum jagayo."
-              },
-              {
-                en: "It's a little big.",
-                ko: "조금 커요.",
-                roman: "Jogeum keoyo."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "shopping_payment",
-        title: "Paying for Shopping",
-        description: "Pay by card or cash",
-        icon: "💳",
-        dialogues: [
-          {
-            speaker: "CASHIER",
-            en: "Would you like a bag?",
-            ko: "봉투 필요하세요?",
-            roman: "Bongtu piryohaseyo?",
-            choices: [
-              {
-                en: "Yes, please.",
-                ko: "네, 주세요.",
-                roman: "Ne, juseyo."
-              },
-              {
-                en: "No, thank you.",
-                ko: "아니요, 괜찮아요.",
-                roman: "Aniyo, gwaenchanayo."
-              }
-            ]
-          },
-          {
-            speaker: "CASHIER",
-            en: "How would you like to pay?",
-            ko: "어떻게 결제하시겠어요?",
-            roman: "Eotteoke gyeoljehasigesseoyo?",
-            choices: [
-              {
-                en: "By card, please.",
-                ko: "카드로 할게요.",
-                roman: "Kadeuro halgeyo."
-              },
-              {
-                en: "In cash, please.",
-                ko: "현금으로 할게요.",
-                roman: "Hyeongeumeuro halgeyo."
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-
-  // --------------------------
-  // 숙소
-  // --------------------------
-  {
-    id: "stay",
-    name: "Accommodation",
-    icon: "🏨",
-    scenarios: [
-
-      {
-        id: "stay_checkin",
-        title: "Checking In",
-        description: "Check in at your accommodation",
-        icon: "🛎️",
-        dialogues: [
-          {
-            speaker: "RECEPTIONIST",
-            en: "Welcome. Do you have a reservation?",
-            ko: "안녕하세요. 예약하셨나요?",
-            roman: "Annyeonghaseyo. Yeyakhasyeonnayo?",
-            choices: [
-              {
-                en: "Yes, I have a reservation.",
-                ko: "네, 예약했어요.",
-                roman: "Ne, yeyakaesseoyo."
-              },
-              {
-                en: "No, I don't have a reservation.",
-                ko: "아니요, 예약하지 않았어요.",
-                roman: "Aniyo, yeyakhaji anasseoyo."
-              }
-            ]
-          },
-          {
-            speaker: "RECEPTIONIST",
-            en: "May I have your name, please?",
-            ko: "성함이 어떻게 되세요?",
-            roman: "Seonghami eotteoke doeseyo?",
-            choices: [
-              {
-                en: "My name is [name].",
-                ko: "제 이름은 [이름]이에요.",
-                roman: "Je ireumeun [ireum]ieyo."
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "stay_facilities",
-        title: "Asking About Facilities",
-        description: "Ask about hotel facilities",
-        icon: "🧺",
-        dialogues: [
-          {
-            speaker: "RECEPTIONIST",
-            en: "Is there anything I can help you with?",
-            ko: "무엇을 도와드릴까요?",
-            roman: "Mueoseul dowadeurilkkayo?",
-            choices: [
-              {
-                en: "Where is the elevator?",
-                ko: "엘리베이터가 어디예요?",
-                roman: "Ellibeiteoga eodiyeyo?"
-              },
-              {
-                en: "Is there a laundry room?",
-                ko: "세탁실이 있나요?",
-                roman: "Setaksiri innayo?"
-              },
-              {
-                en: "What time is breakfast?",
-                ko: "아침 식사는 몇 시예요?",
-                roman: "Achim siksaneun myeot siyeyo?"
-              }
-            ]
-          }
-        ]
-      },
-
-      {
-        id: "stay_problem",
-        title: "Reporting a Problem",
-        description: "Explain a problem in your room",
-        icon: "🔧",
-        dialogues: [
-          {
-            speaker: "RECEPTIONIST",
-            en: "Is everything okay?",
-            ko: "불편한 점 있으세요?",
-            roman: "Bulpyeonhan jeom isseuseyo?",
-            choices: [
-              {
-                en: "The air conditioner isn't working.",
-                ko: "에어컨이 작동하지 않아요.",
-                roman: "Eeokeoni jakdonghaji anayo."
-              },
-              {
-                en: "There is no hot water.",
-                ko: "뜨거운 물이 안 나와요.",
-                roman: "Tteugeoun muri an nawayo."
-              },
-              {
-                en: "The room is too cold.",
-                ko: "방이 너무 추워요.",
-                roman: "Bangi neomu chuwoyo."
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-
-];
-
-// ==========================================
-// 3부: 학습 자료 데이터
-// ==========================================
-
-const learningMaterials = {
-
-  expressions: [
-    {
-      en: "Hello.",
-      ko: "안녕하세요.",
-      roman: "Annyeonghaseyo.",
-      note: "A polite greeting used in most situations."
-    },
-    {
-      en: "Thank you.",
-      ko: "감사합니다.",
-      roman: "Gamsahamnida.",
-      note: "A polite way to express gratitude."
-    },
-    {
-      en: "Excuse me.",
-      ko: "실례합니다.",
-      roman: "Sillyehamnida.",
-      note: "Use this to get someone's attention."
-    },
-    {
-      en: "I'm sorry.",
-      ko: "죄송합니다.",
-      roman: "Joesonghamnida.",
-      note: "A polite apology."
-    },
-    {
-      en: "Yes.",
-      ko: "네.",
-      roman: "Ne.",
-      note: "A polite affirmative response."
-    },
-    {
-      en: "No.",
-      ko: "아니요.",
-      roman: "Aniyo.",
-      note: "A polite negative response."
-    },
-    {
-      en: "Please give me this.",
-      ko: "이거 주세요.",
-      roman: "Igeo juseyo.",
-      note: "A very useful expression when ordering or shopping."
-    },
-    {
-      en: "Where is the bathroom?",
-      ko: "화장실이 어디예요?",
-      roman: "Hwajangsiri eodiyeyo?",
-      note: "Useful in restaurants, stations and public places."
-    },
-    {
-      en: "How much is it?",
-      ko: "얼마예요?",
-      roman: "Eolmayeyo?",
-      note: "Use when asking about prices."
-    },
-    {
-      en: "I don't understand.",
-      ko: "이해가 안 돼요.",
-      roman: "Ihaega an dwaeyo.",
-      note: "Use when you do not understand something."
-    },
-    {
-      en: "Please speak slowly.",
-      ko: "천천히 말씀해 주세요.",
-      roman: "Cheoncheonhi malsseumhae juseyo.",
-      note: "A useful expression for language learners."
-    },
-    {
-      en: "Could you help me?",
-      ko: "도와주실 수 있나요?",
-      roman: "Dowajusil su innayo?",
-      note: "A polite way to ask for help."
-    },
-    {
-      en: "It's okay.",
-      ko: "괜찮아요.",
-      roman: "Gwaenchanayo.",
-      note: "Can mean 'It's okay', 'No problem' or 'I'm fine'."
-    },
-    {
-      en: "I don't know.",
-      ko: "잘 모르겠어요.",
-      roman: "Jal moreugesseoyo.",
-      note: "A polite way to say you are not sure."
-    },
-    {
-      en: "Could I have a receipt, please?",
-      ko: "영수증 주세요.",
-      roman: "Yeongsujeung juseyo.",
-      note: "Use after paying at a restaurant or shop."
-    }
-  ],
-
-  grammar: [
-    {
-      en: "주세요",
-      ko: "~주세요",
-      roman: "Juseyo",
-      note: "A polite way to ask for something. Example: 물 주세요. (Water, please.)"
-    },
-    {
-      en: "있어요",
-      ko: "~있어요",
-      roman: "Isseoyo",
-      note: "Means 'there is', 'there are' or 'I have'. Example: 화장실이 있어요. (There is a bathroom.)"
-    },
-    {
-      en: "없어요",
-      ko: "~없어요",
-      roman: "Eopseoyo",
-      note: "Means 'there isn't' or 'I don't have'. Example: 시간이 없어요. (I don't have time.)"
-    },
-    {
-      en: "어디예요?",
-      ko: "~어디예요?",
-      roman: "Eodiyeyo?",
-      note: "Ask where something is. Example: 지하철역이 어디예요? (Where is the subway station?)"
-    },
-    {
-      en: "얼마예요?",
-      ko: "~얼마예요?",
-      roman: "Eolmayeyo?",
-      note: "Ask how much something costs. Example: 이거 얼마예요? (How much is this?)"
-    },
-    {
-      en: "하고 싶어요",
-      ko: "~하고 싶어요",
-      roman: "Hago sipeoyo",
-      note: "Express what you want to do. Example: 먹고 싶어요. (I want to eat.)"
-    },
-    {
-      en: "아/어 주세요",
-      ko: "~아/어 주세요",
-      roman: "A/eo juseyo",
-      note: "Ask someone to do something. Example: 천천히 말해 주세요. (Please speak slowly.)"
-    },
-    {
-      en: "아/어도 돼요?",
-      ko: "~아/어도 돼요?",
-      roman: "A/eodo dwaeyo?",
-      note: "Ask for permission. Example: 입어 봐도 돼요? (May I try it on?)"
-    },
-    {
-      en: "고 싶어요",
-      ko: "~고 싶어요",
-      roman: "Go sipeoyo",
-      note: "Express a desire. Example: 가고 싶어요. (I want to go.)"
-    },
-    {
-      en: "지 않아요",
-      ko: "~지 않아요",
-      roman: "Ji anayo",
-      note: "Make a negative sentence. Example: 맵지 않아요. (It's not spicy.)"
-    }
-  ],
-
-  dietary: [
-    {
-      en: "I'm vegetarian.",
-      ko: "저는 채식주의자예요.",
-      roman: "Jeoneun chaesikjuuijayeyo.",
-      note: "Use when explaining that you do not eat meat."
-    },
-    {
-      en: "I don't eat meat.",
-      ko: "저는 고기를 먹지 않아요.",
-      roman: "Jeoneun gogireul meokji anayo.",
-      note: "A simple way to explain your dietary preference."
-    },
-    {
-      en: "I don't eat pork.",
-      ko: "저는 돼지고기를 먹지 않아요.",
-      roman: "Jeoneun dwaejigogireul meokji anayo.",
-      note: "Useful when avoiding pork."
-    },
-    {
-      en: "Does this contain pork?",
-      ko: "돼지고기가 들어가나요?",
-      roman: "Dwaejigogiga deureoganayo?",
-      note: "Ask about ingredients before ordering."
-    },
-    {
-      en: "I'm allergic to peanuts.",
-      ko: "저는 땅콩 알레르기가 있어요.",
-      roman: "Jeoneun ttangkong allereugiga isseoyo.",
-      note: "Explain a peanut allergy."
-    },
-    {
-      en: "I'm allergic to seafood.",
-      ko: "저는 해산물 알레르기가 있어요.",
-      roman: "Jeoneun haesanmul allereugiga isseoyo.",
-      note: "Explain a seafood allergy."
-    },
-    {
-      en: "I'm allergic to milk.",
-      ko: "저는 우유 알레르기가 있어요.",
-      roman: "Jeoneun uyu allereugiga isseoyo.",
-      note: "Explain a milk allergy."
-    },
-    {
-      en: "Is this spicy?",
-      ko: "이거 매워요?",
-      roman: "Igeo maewoyo?",
-      note: "Ask whether a dish is spicy."
-    },
-    {
-      en: "Please make it less spicy.",
-      ko: "덜 맵게 해 주세요.",
-      roman: "Deol maepge hae juseyo.",
-      note: "Ask for a milder version."
-    },
-    {
-      en: "I don't eat eggs.",
-      ko: "저는 달걀을 먹지 않아요.",
-      roman: "Jeoneun dalgyareul meokji anayo.",
-      note: "Explain that you avoid eggs."
-    }
-  ]
-
+<!DOCTYPE html> <!-- HTML 문서의 시작입니다. -->
+<html lang="en"> <!-- 기본 화면 언어를 영어로 설정합니다. -->
+<head> <!-- 문서 설정을 시작합니다. -->
+<meta charset="UTF-8"> <!-- 한글과 다국어 문자를 표시합니다. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 모바일 화면에 맞춥니다. -->
+<title>Seoul Moments</title> <!-- 브라우저 탭에 표시할 제목입니다. -->
+<style> /* 화면 디자인을 설정하는 CSS입니다. */
+*{box-sizing:border-box} /* 모든 요소의 크기 계산 방식을 통일합니다. */
+body{margin:0;min-height:100vh;font-family:"Avenir Next","Segoe UI",sans-serif;color:#58647b;background:linear-gradient(135deg,#f1edf9,#eaf2f8 48%,#f9edf1);background-attachment:fixed} /* 파스텔 배경과 기본 글꼴을 설정합니다. */
+button,input{font:inherit} /* 버튼과 입력창의 글꼴을 통일합니다. */
+button{cursor:pointer;-webkit-tap-highlight-color:transparent} /* 버튼에 마우스 커서와 모바일 터치 효과를 설정합니다. */
+.app{width:min(100% - 28px,760px);margin:auto;padding:25px 0 40px} /* 앱의 전체 너비와 바깥 여백을 설정합니다. */
+.header{display:flex;justify-content:space-between;align-items:center;padding:5px 4px 22px} /* 상단 제목과 아이콘을 양쪽에 배치합니다. */
+.logo{font-family:Georgia,serif;font-size:27px;letter-spacing:-1px;color:#586784} /* 앱 로고의 글꼴과 색상을 설정합니다. */
+.header-icon{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#ffffff99;border:1px solid white;box-shadow:0 7px 20px #64739622;color:#a18cb9} /* 상단 장식 아이콘을 둥글게 만듭니다. */
+.main{border-radius:28px;padding:22px;min-height:540px;background:#ffffff88;border:1px solid #ffffffd9;backdrop-filter:blur(20px);box-shadow:0 20px 55px #68749629, inset 0 1px 0 white} /* 메인 유리 카드의 모양을 설정합니다. */
+.heading{font-family:Georgia,serif;font-size:27px;font-weight:500;margin:4px 0 7px;color:#596a88} /* 화면 제목의 디자인을 설정합니다. */
+.subheading{margin:0 0 20px;color:#9997ab;font-size:12px} /* 제목 아래 안내 문구를 설정합니다. */
+.section-title{font-size:15px;color:#71809d;margin:22px 0 10px;font-weight:700} /* 작은 섹션 제목을 설정합니다. */
+.language-wrap{margin:0 0 18px} /* 언어 선택 영역의 여백을 설정합니다. */
+.language-label{display:block;font-size:12px;color:#8992aa;margin-bottom:7px;font-weight:650} /* 언어 선택 안내 문구를 설정합니다. */
+.language-select{width:100%;padding:12px 14px;border:1px solid white;border-radius:14px;background:#ffffffb8;color:#64748e;box-shadow:0 7px 18px #6473961c;outline:none} /* 언어 선택 메뉴를 꾸밉니다. */
+.place-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px} /* 장소 카드를 두 열로 배치합니다. */
+.place-card{position:relative;height:140px;border:1px solid white;border-radius:19px;overflow:hidden;padding:0;background:#e8eaf3;box-shadow:0 10px 25px #6473962b} /* 장소 카드의 크기와 모양을 설정합니다. */
+.place-card img{width:100%;height:100%;object-fit:cover;display:block;opacity:.88} /* 장소 사진이 카드에 꽉 차도록 합니다. */
+.place-overlay{position:absolute;inset:0;background:linear-gradient(transparent 35%,#2631418c)} /* 사진 아래쪽에 어두운 그라데이션을 넣습니다. */
+.place-name{position:absolute;left:15px;bottom:14px;color:white;font-size:16px;font-weight:700;text-shadow:0 2px 8px #0004} /* 사진 위에 장소 이름을 표시합니다. */
+.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:15px} /* 공통 표현과 문법 등의 카드를 두 열로 배치합니다. */
+.feature-card{border:1px solid white;border-radius:17px;padding:15px;background:#ffffffa6;text-align:left;box-shadow:0 8px 20px #6473961c;color:#657590} /* 학습 카테고리 카드의 디자인을 설정합니다. */
+.feature-icon{font-size:24px;display:block;margin-bottom:8px} /* 학습 카테고리 아이콘을 표시합니다. */
+.feature-name{font-size:14px;font-weight:700;display:block} /* 학습 카테고리 이름을 표시합니다. */
+.feature-desc{font-size:11px;color:#9997ab;display:block;margin-top:5px;line-height:1.4} /* 학습 카테고리 설명을 표시합니다. */
+.back-button{border:0;background:transparent;color:#8d91ad;padding:4px 0 17px;font-size:13px} /* 뒤로 가기 버튼을 꾸밉니다. */
+.scenario-list,.item-list{display:flex;flex-direction:column;gap:11px} /* 상황과 학습 항목을 세로로 배치합니다. */
+.scenario-card,.item-card{display:flex;align-items:center;gap:14px;width:100%;padding:15px;border-radius:17px;border:1px solid white;background:#ffffffa6;box-shadow:0 9px 23px #69769620;text-align:left;color:#64748e} /* 상황과 학습 항목 카드를 꾸밉니다. */
+.scenario-icon{width:44px;height:44px;flex-shrink:0;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#f1ecfa,#e5f0f5);font-size:22px} /* 상황 아이콘의 크기와 배경을 설정합니다. */
+.scenario-text{flex:1} /* 상황 카드의 글 영역이 남은 공간을 차지하게 합니다. */
+.scenario-name{font-size:14px;font-weight:700;display:block} /* 상황 이름을 강조합니다. */
+.scenario-description{font-size:11px;color:#a09db2;margin-top:4px;display:block} /* 상황 설명을 작게 표시합니다. */
+.arrow{color:#a99abc;font-size:20px} /* 오른쪽 화살표를 꾸밉니다. */
+.dialogue-card{padding:21px;border-radius:23px;background:linear-gradient(145deg,#f0f5ffe0,#ffffffa6);border:1px solid white;box-shadow:0 15px 34px #6980af2b,inset 0 1px 0 white} /* 대화 문장을 담는 카드를 꾸밉니다. */
+.speaker{color:#d49aa5;font-size:10px;letter-spacing:2px;font-weight:750;margin-bottom:13px} /* 말하는 사람 표시를 꾸밉니다. */
+.english{color:#668ac5;font-size:15px;font-weight:600;line-height:1.55;margin-bottom:10px} /* 영어 문장을 표시합니다. */
+.korean{color:#639879;font-size:22px;font-weight:700;line-height:1.55;word-break:keep-all} /* 한국어 문장을 크게 표시합니다. */
+.native-pronunciation{color:#7c83a5;font-size:17px;font-weight:650;margin-top:9px;line-height:1.5;letter-spacing:.2px}.roman{color:#a18ab9;font-size:12px;font-style:italic;margin-top:5px;line-height:1.5} /* 한국어 발음을 표시합니다. */
+.choice-list{display:flex;flex-direction:column;gap:10px;margin-top:17px} /* 대화 선택지를 세로로 배치합니다. */
+.choice{width:100%;padding:14px 16px;border:1px solid white;border-radius:16px;background:#ffffffb0;text-align:left;box-shadow:0 8px 20px #7080a026} /* 대화 선택지의 모양을 설정합니다. */
+.choice-en,.choice-ko,.choice-ro{display:block;line-height:1.45} /* 선택지의 각 언어를 줄 단위로 표시합니다. */
+.choice-en{font-size:13px;font-weight:600;color:#668ac5;margin-bottom:5px} /* 선택지 영어를 표시합니다. */
+.choice-ko{font-size:16px;font-weight:700;color:#639879;margin-bottom:4px} /* 선택지 한국어를 표시합니다. */
+.choice-native{font-size:14px;color:#7c83a5;font-weight:650;margin-top:5px}.choice-ro{font-size:10px;color:#a18ab9;font-style:italic;margin-top:3px} /* 선택지 발음을 표시합니다. */
+.input-row{display:flex;gap:8px;margin-top:13px} /* 직접 입력창과 전송 버튼을 나란히 둡니다. */
+.input-row input{flex:1;min-width:0;padding:12px;border:1px solid white;border-radius:13px;background:#ffffffb3;color:#5d718e;outline:none} /* 직접 입력창의 모양을 설정합니다. */
+.send-button{border:1px solid white;border-radius:13px;padding:0 16px;background:linear-gradient(135deg,#dce9f8,#e9e0f5);color:#687a9a;box-shadow:0 6px 15px #7080a022} /* 전송 버튼의 모양을 설정합니다. */
+.tools{display:flex;gap:9px;margin-top:15px} /* 음성 버튼을 나란히 배치합니다. */
+.tool-button{flex:1;padding:12px 8px;border:1px solid white;border-radius:14px;background:#ffffff9e;color:#7d89a8;font-size:12px} /* 음성 버튼을 꾸밉니다. */
+.status{color:#9997ab;font-size:11px;margin-top:11px;min-height:17px} /* 입력 및 음성 상태를 표시합니다. */
+.item-card{display:block;padding:16px} /* 표현과 문법 카드를 세로형으로 표시합니다. */
+.item-en{color:#668ac5;font-size:13px;font-weight:600;margin-bottom:6px} /* 표현의 영어 번역을 표시합니다. */
+.item-ko{color:#639879;font-size:19px;font-weight:700;line-height:1.5} /* 표현의 한국어 문장을 표시합니다. */
+.item-native{color:#7c83a5;font-size:15px;font-weight:650;margin-top:7px}.item-ro{color:#a18ab9;font-size:11px;font-style:italic;margin-top:4px} /* 표현의 로마자 발음을 표시합니다. */
+.item-note{color:#8d91a7;font-size:11px;margin-top:8px;line-height:1.5} /* 문법 설명을 표시합니다. */
+.tag{display:inline-block;padding:4px 8px;border-radius:20px;background:#eeeaf7;color:#8d80a8;font-size:10px;margin-bottom:8px} /* 분류 태그를 표시합니다. */
+.hidden{display:none!important} /* hidden 클래스가 붙은 화면을 숨깁니다. */
+@media(max-width:420px){.main{padding:16px}.place-card{height:125px}.heading{font-size:24px}.korean{font-size:21px}.dialogue-card{padding:18px}} /* 작은 모바일 화면에서 여백과 글자 크기를 조절합니다. */
+</style> <!-- CSS 디자인을 종료합니다. -->
+</head> <!-- 문서 설정을 종료합니다. -->
+<body> <!-- 화면 내용을 시작합니다. -->
+<main class="app"> <!-- 앱 전체 영역입니다. -->
+<header class="header"> <!-- 앱 상단 영역입니다. -->
+<div class="logo">Seoul Moments</div> <!-- 앱 이름입니다. -->
+<div class="header-icon">✦</div> <!-- 장식 아이콘입니다. -->
+</header> <!-- 앱 상단 영역을 종료합니다. -->
+<section class="main"> <!-- 메인 콘텐츠 영역입니다. -->
+
+<section id="home"> <!-- 첫 화면을 시작합니다. -->
+<h1 class="heading" id="homeTitle">Where to?</h1> <!-- 장소 선택 제목입니다. -->
+<p class="subheading" id="homeSubheading">Choose a place or learn useful Korean</p> <!-- 첫 화면 안내입니다. -->
+<div class="language-wrap"> <!-- 사용할 언어를 선택하는 영역입니다. -->
+<label class="language-label" id="languageLabel" for="languageSelect">Choose your language</label> <!-- 언어 선택 안내입니다. -->
+<select class="language-select" id="languageSelect" onchange="setLanguage(this.value)"> <!-- 사용자의 언어를 선택합니다. -->
+<option value="en">English</option> <!-- 영어를 선택합니다. -->
+<option value="es">Español</option> <!-- 스페인어를 선택합니다. -->
+<option value="zh">中文（简体）</option> <!-- 중국어 간체를 선택합니다. -->
+<option value="ja">日本語</option> <!-- 일본어를 선택합니다. -->
+<option value="fr">Français</option> <!-- 프랑스어를 선택합니다. -->
+<option value="de">Deutsch</option> <!-- 독일어를 선택합니다. -->
+<option value="ar">العربية</option> <!-- 아랍어를 선택합니다. -->
+<option value="pt">Português</option> <!-- 포르투갈어를 선택합니다. -->
+<option value="ru">Русский</option> <!-- 러시아어를 선택합니다. -->
+<option value="vi">Tiếng Việt</option> <!-- 베트남어를 선택합니다. -->
+<option value="ne">नेपाली</option> <!-- 네팔어 사용자를 위한 발음 표기입니다. -->
+<option value="si">සිංහල</option> <!-- 싱할라어 사용자를 위한 발음 표기입니다. -->
+<option value="th">ไทย</option> <!-- 태국어 사용자를 위한 발음 표기입니다. -->
+</select> <!-- 언어 선택 메뉴를 종료합니다. -->
+</div> <!-- 언어 선택 영역을 종료합니다. -->
+<div class="place-grid"> <!-- 장소 선택 카드들을 배치합니다. -->
+<button class="place-card" onclick="selectPlace('cafe')"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700" alt="Cafe"><span class="place-overlay"></span><span class="place-name">Cafe</span></button> <!-- 카페를 선택합니다. -->
+<button class="place-card" onclick="selectPlace('restaurant')"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700" alt="Restaurant"><span class="place-overlay"></span><span class="place-name">Restaurant</span></button> <!-- 식당을 선택합니다. -->
+<button class="place-card" onclick="selectPlace('transport')"><img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700" alt="Transport"><span class="place-overlay"></span><span class="place-name">Transport</span></button> <!-- 교통을 선택합니다. -->
+<button class="place-card" onclick="selectPlace('shopping')"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700" alt="Shopping"><span class="place-overlay"></span><span class="place-name">Shopping</span></button> <!-- 쇼핑을 선택합니다. -->
+<button class="place-card" onclick="selectPlace('stay')"><img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700" alt="Accommodation"><span class="place-overlay"></span><span class="place-name">Stay</span></button> <!-- 숙소를 선택합니다. -->
+</div> <!-- 장소 카드 영역을 종료합니다. -->
+<h2 class="section-title" id="learnTitle">Learn Korean</h2> <!-- 학습 카테고리 제목입니다. -->
+<div class="feature-grid"> <!-- 학습 카테고리 카드를 배치합니다. -->
+<button class="feature-card" onclick="openLibrary('expressions')"><span class="feature-icon">🗣️</span><span class="feature-name" id="featureExpressions">Essential Expressions</span><span class="feature-desc" id="featureExpressionsDesc">Useful phrases for everyday situations</span></button> <!-- 공통 표현으로 이동합니다. -->
+<button class="feature-card" onclick="openLibrary('grammar')"><span class="feature-icon">📖</span><span class="feature-name" id="featureGrammar">Useful Grammar</span><span class="feature-desc" id="featureGrammarDesc">Practical grammar with travel examples</span></button> <!-- 실전 문법으로 이동합니다. -->
+<button class="feature-card" onclick="openLibrary('dietary')"><span class="feature-icon">🥗</span><span class="feature-name" id="featureDietary">Dietary Needs</span><span class="feature-desc" id="featureDietaryDesc">Vegetarian, vegan, halal and gluten-free</span></button> <!-- 식이 제한 표현으로 이동합니다. -->
+<button class="feature-card" onclick="openLibrary('all')"><span class="feature-icon">✨</span><span class="feature-name" id="featureAll">All Learning Materials</span><span class="feature-desc" id="featureAllDesc">Browse all expressions and grammar</span></button> <!-- 모든 학습 자료로 이동합니다. -->
+</div> <!-- 학습 카테고리 영역을 종료합니다. -->
+</section> <!-- 첫 화면을 종료합니다. -->
+
+<section id="scenarios" class="hidden"> <!-- 장소별 상황 선택 화면입니다. -->
+<button class="back-button" onclick="goHome()">← Back</button> <!-- 첫 화면으로 돌아갑니다. -->
+<h1 class="heading" id="placeHeading"></h1> <!-- 선택한 장소 이름을 표시합니다. -->
+<p class="subheading" id="scenarioSubheading">Choose a situation</p> <!-- 상황 선택 안내입니다. -->
+<div class="scenario-list" id="scenarioList"></div> <!-- 장소별 상황 목록이 표시됩니다. -->
+</section> <!-- 상황 선택 화면을 종료합니다. -->
+
+<section id="conversation" class="hidden"> <!-- 대화 학습 화면입니다. -->
+<button class="back-button" onclick="goScenarios()">← Back</button> <!-- 상황 목록으로 돌아갑니다. -->
+<h1 class="heading" id="conversationHeading"></h1> <!-- 선택한 상황 제목입니다. -->
+<div class="dialogue-card"> <!-- 직원의 말을 보여주는 카드입니다. -->
+<div class="speaker" id="speaker">STAFF</div> <!-- 화자를 표시합니다. -->
+<div class="english" id="english"></div> <!-- 영어 번역을 표시합니다. -->
+<div class="korean" id="korean"></div> <!-- 한국어 문장을 표시합니다. -->
+<div class="native-pronunciation" id="nativePronunciation"></div> <!-- 학습자 언어 문자로 발음을 표시합니다. -->
+<div class="roman" id="roman"></div> <!-- 발음을 표시합니다. -->
+</div> <!-- 대화 카드를 종료합니다. -->
+<div class="choice-list" id="choices"></div> <!-- 대화 선택지가 표시됩니다. -->
+<div class="input-row"><input id="userInput" type="text" placeholder="Type in what you want to ask..."><button class="send-button" onclick="submitText()">Send</button></div> <!-- 사용자가 자신의 언어로 입력할 수 있는 영역입니다. -->
+<div class="tools"><button class="tool-button" onclick="listen()">🎙 Speak</button><button class="tool-button" onclick="speakCurrent()">🔊 Listen</button></div> <!-- 음성 입력과 문장 듣기 버튼입니다. -->
+<div class="status" id="status">Choose a response or type a phrase.</div> <!-- 현재 상태를 안내합니다. -->
+</section> <!-- 대화 화면을 종료합니다. -->
+
+<section id="library" class="hidden"> <!-- 표현과 문법 학습 화면입니다. -->
+<button class="back-button" onclick="goHome()">← Back</button> <!-- 첫 화면으로 돌아갑니다. -->
+<h1 class="heading" id="libraryHeading">Learning Materials</h1> <!-- 학습 자료 제목입니다. -->
+<p class="subheading" id="librarySubheading">Useful Korean for your trip</p> <!-- 학습 자료 안내입니다. -->
+<div class="item-list" id="libraryList"></div> <!-- 학습 항목 목록을 표시합니다. -->
+</section> <!-- 학습 화면을 종료합니다. -->
+
+</section> <!-- 메인 콘텐츠 영역을 종료합니다. -->
+</main> <!-- 앱 전체 영역을 종료합니다. -->
+
+<script> // 앱의 동작을 담당하는 JavaScript를 시작합니다.
+const screens=["home","scenarios","conversation","library"]; // 앱에서 사용하는 화면 ID를 저장합니다.
+let currentPlace=""; // 현재 선택한 장소 ID를 저장합니다.
+let currentScenario=""; // 현재 선택한 상황 ID를 저장합니다.
+let currentStep=0; // 현재 대화의 순서를 저장합니다.
+let currentLibrary=""; // 현재 열어 둔 학습 자료 종류를 저장합니다.
+const placeNames={cafe:"Cafe",restaurant:"Restaurant",transport:"Transport",shopping:"Shopping",stay:"Accommodation"}; // 장소 ID와 화면 이름을 연결합니다.
+
+const scenarioData={ // 장소별 상황 목록을 저장합니다.
+cafe:[ // 카페에서 사용할 상황입니다.
+{id:"cafe_order",icon:"☕",name:"Order a drink",description:"Order coffee and customize your drink"}, // 음료 주문입니다.
+{id:"cafe_payment",icon:"💳",name:"Payment",description:"Pay and ask for a receipt"}, // 결제입니다.
+{id:"cafe_request",icon:"🗣️",name:"Make a request",description:"Ask for water, napkins or changes"} // 추가 요청입니다.
+], // 카페 상황 목록을 종료합니다.
+restaurant:[ // 식당에서 사용할 상황입니다.
+{id:"restaurant_order",icon:"🍽️",name:"Order food",description:"Choose dishes and place an order"}, // 음식 주문입니다.
+{id:"restaurant_extra",icon:"🥢",name:"Order more",description:"Ask for extra rice or side dishes"}, // 추가 주문입니다.
+{id:"restaurant_dietary",icon:"🥗",name:"Dietary needs",description:"Vegetarian, vegan, halal and gluten-free"}, // 식이 제한 확인입니다.
+{id:"restaurant_allergy",icon:"⚠️",name:"Food allergies",description:"Explain an allergy and ask about ingredients"}, // 알레르기 설명입니다.
+{id:"restaurant_payment",icon:"💳",name:"Pay the bill",description:"Ask for the bill and pay"} // 식당 결제입니다.
+], // 식당 상황 목록을 종료합니다.
+transport:[ // 교통에서 사용할 상황입니다.
+{id:"transport_subway",icon:"🚇",name:"Take the subway",description:"Ask about stations and tickets"}, // 지하철입니다.
+{id:"transport_bus",icon:"🚌",name:"Take the bus",description:"Find a bus and ask about stops"}, // 버스입니다.
+{id:"transport_taxi",icon:"🚕",name:"Take a taxi",description:"Tell the driver your destination"} // 택시입니다.
+], // 교통 상황 목록을 종료합니다.
+shopping:[ // 쇼핑에서 사용할 상황입니다.
+{id:"shopping_find",icon:"🛍️",name:"Find a product",description:"Ask where an item is"}, // 상품 찾기입니다.
+{id:"shopping_price",icon:"🏷️",name:"Ask about the price",description:"Check prices and discounts"}, // 가격 문의입니다.
+{id:"shopping_exchange",icon:"🔄",name:"Exchange or return",description:"Ask about returns and exchanges"} // 교환 및 환불입니다.
+], // 쇼핑 상황 목록을 종료합니다.
+stay:[ // 숙소에서 사용할 상황입니다.
+{id:"stay_checkin",icon:"🛎️",name:"Check in",description:"Check in and confirm your booking"}, // 체크인입니다.
+{id:"stay_checkout",icon:"🧳",name:"Check out",description:"Check out and settle the bill"}, // 체크아웃입니다.
+{id:"stay_facility",icon:"🛏️",name:"Ask about facilities",description:"Ask about Wi-Fi, laundry and facilities"} // 시설 문의입니다.
+] // 숙소 상황 목록을 종료합니다.
+}; // 장소별 상황 데이터를 종료합니다.
+
+const conversations={ // 각 상황에서 사용할 대화 데이터를 저장합니다.
+cafe_order:[ // 카페 음료 주문 대화입니다.
+{en:"Hello! What can I get for you?",ko:"안녕하세요! 무엇을 드릴까요?",ro:"Annyeonghaseyo! Mueoseul deurilkkayo?",choices:[["One iced Americano, please.","아이스 아메리카노 하나 주세요.","Aiseu Americano hana juseyo."],["One latte, please.","라테 하나 주세요.","Rate hana juseyo."]]}, // 주문을 시작합니다.
+{en:"Would you like it decaffeinated?",ko:"디카페인으로 드릴까요?",ro:"Dikapeineuro deurilkkayo?",choices:[["Yes, decaf, please.","네, 디카페인으로 주세요.","Ne, dikapeineuro juseyo."],["No, regular is fine.","아니요, 일반으로 주세요.","Aniyo, ilbaneuro juseyo."]]}, // 디카페인 여부를 묻습니다.
+{en:"Would you like an extra shot?",ko:"샷 추가해 드릴까요?",ro:"Syat chugahae deurilkkayo?",choices:[["Yes, please.","네, 추가해 주세요.","Ne, chugahae juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 샷 추가 여부를 묻습니다.
+{en:"What size would you like?",ko:"어떤 사이즈로 드릴까요?",ro:"Eotteon saijeuro deurilkkayo?",choices:[["A medium, please.","미디엄으로 주세요.","Midieomeuro juseyo."],["A large, please.","라지로 주세요.","Rajiro juseyo."]]}, // 사이즈를 묻습니다.
+{en:"Would you like it hot or iced?",ko:"따뜻하게 드릴까요, 아이스로 드릴까요?",ro:"Ttatteuthage deurilkkayo, aiseuro deurilkkayo?",choices:[["Iced, please.","아이스로 주세요.","Aiseuro juseyo."],["Hot, please.","따뜻하게 해 주세요.","Ttatteuthage hae juseyo."]]}, // 온도를 묻습니다.
+{en:"For here or to go?",ko:"드시고 가시나요, 포장하시나요?",ro:"Deusigo gasinayo, pojanghasinayo?",choices:[["For here, please.","먹고 갈게요.","Meokgo galgeyo."],["To go, please.","포장해 주세요.","Pojanghae juseyo."]]}, // 매장 또는 포장을 묻습니다.
+{en:"Would you like a receipt?",ko:"영수증 드릴까요?",ro:"Yeongsujeung deurilkkayo?",choices:[["Yes, please.","네, 주세요.","Ne, juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 영수증을 묻습니다.
+{en:"Enjoy your drink!",ko:"맛있게 드세요!",ro:"Masitge deuseyo!",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 주문을 마칩니다.
+], // 카페 주문 대화를 종료합니다.
+cafe_payment:[ // 카페 결제 대화입니다.
+{en:"Are you ready to pay?",ko:"결제하시겠어요?",ro:"Gyeoljehasigesseoyo?",choices:[["Yes, please.","네, 결제할게요.","Ne, gyeoljehalgeyo."],["Can I pay by card?","카드로 결제할 수 있나요?","Kadeuro gyeoljehal su innayo?"]]}, // 결제 여부를 묻습니다.
+{en:"Please insert your card.",ko:"카드를 꽂아 주세요.",ro:"Kadeureul kkoja juseyo.",choices:[["Here you go.","여기 있습니다.","Yeogi itseumnida."]]}, // 카드 결제를 안내합니다.
+{en:"Would you like a receipt?",ko:"영수증 드릴까요?",ro:"Yeongsujeung deurilkkayo?",choices:[["Yes, please.","네, 주세요.","Ne, juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 영수증을 묻습니다.
+{en:"Thank you. Have a nice day!",ko:"감사합니다. 좋은 하루 보내세요!",ro:"Gamsahamnida. Joeun haru bonaeseyo!",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 결제를 마칩니다.
+], // 카페 결제 대화를 종료합니다.
+cafe_request:[ // 카페 추가 요청 대화입니다.
+{en:"Is there anything else you need?",ko:"또 필요한 것 있으세요?",ro:"Tto piryohan geo isseuseyo?",choices:[["Could I have some water?","물 좀 주세요.","Mul jom juseyo."],["Could I have a napkin?","냅킨 좀 주세요.","Naepkin jom juseyo."]]}, // 추가 요청을 묻습니다.
+{en:"Of course. Anything else?",ko:"물론이죠. 또 필요한 게 있으세요?",ro:"Mullonjyo. Tto piryohan ge isseuseyo?",choices:[["That's all, thank you.","이게 전부예요. 감사합니다.","Ige jeonbuyeyo. Gamsahamnida."],["Could you make it less sweet?","덜 달게 해 주시겠어요?","Deol dalge hae jusigesseoyo."]]}, // 추가 요청을 확인합니다.
+{en:"Sure. I'll bring it right away.",ko:"네. 바로 가져다드릴게요.",ro:"Ne. Baro gajyeodadeurilgeyo.",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 요청을 마칩니다.
+], // 카페 요청 대화를 종료합니다.
+restaurant_order:[ // 식당 음식 주문 대화입니다.
+{en:"Welcome! How many people?",ko:"어서 오세요! 몇 분이세요?",ro:"Eoseo oseyo! Myeot buniseyo?",choices:[["One person.","한 명이에요.","Han myeongieyo."],["Two people.","두 명이에요.","Du myeongieyo."],["Three people.","세 명이에요.","Se myeongieyo."]]}, // 인원을 확인합니다.
+{en:"Are you ready to order?",ko:"주문하시겠어요?",ro:"Jumunhasigesseoyo?",choices:[["I'd like bibimbap.","비빔밥 주세요.","Bibimbap juseyo."],["I'd like bulgogi.","불고기 주세요.","Bulgogi juseyo."],["I'd like kimchi stew.","김치찌개 주세요.","Kimchijjigae juseyo."]]}, // 음식을 주문합니다.
+{en:"Would you like anything to drink?",ko:"음료도 주문하시겠어요?",ro:"Eumryodo jumunhasigesseoyo?",choices:[["Water, please.","물 주세요.","Mul juseyo."],["One cola, please.","콜라 하나 주세요.","Kolla hana juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 음료를 주문합니다.
+{en:"Anything else?",ko:"더 필요한 건 없으세요?",ro:"Deo piryohan geon eopseuseyo?",choices:[["That's all.","이게 전부예요.","Ige jeonbuyeyo."],["Could we have more side dishes?","반찬 좀 더 주시겠어요?","Banchan jom deo jusigesseoyo."]]}, // 추가 요청을 받습니다.
+{en:"Your order will be ready soon.",ko:"주문하신 음식 곧 나옵니다.",ro:"Jumunhasin eumsik got naomnida.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]} // 주문을 마칩니다.
+], // 식당 주문 대화를 종료합니다.
+restaurant_extra:[ // 식당 추가 주문 대화입니다.
+{en:"Would you like anything else?",ko:"더 필요한 건 있으세요?",ro:"Deo piryohan geon isseuseyo?",choices:[["One more serving of rice, please.","밥 하나 더 주세요.","Bap hana deo juseyo."],["Could we get more side dishes?","반찬 더 주시겠어요?","Banchan deo jusigesseoyo?"]]}, // 추가 주문을 받습니다.
+{en:"Certainly. Anything else?",ko:"네. 또 필요한 건 있으세요?",ro:"Ne. Tto piryohan geon isseuseyo?",choices:[["No, that's all.","아니요, 이게 전부예요.","Aniyo, ige jeonbuyeyo."],["Could we have more water?","물 좀 더 주시겠어요?","Mul jom deo jusigesseoyo?"]]}, // 추가 요청을 확인합니다.
+{en:"I'll bring it shortly.",ko:"곧 가져다드릴게요.",ro:"Got gajyeodadeurilgeyo.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]} // 대화를 마칩니다.
+], // 추가 주문 대화를 종료합니다.
+restaurant_dietary:[ // 식당 식이 제한 대화입니다.
+{en:"Do you have any dietary requirements?",ko:"식사와 관련해 특별히 피하시는 음식이 있나요?",ro:"Siksa-wa gwanryeonhae teukbyeolhi pihasineun eumsigi innayo?",choices:[["I'm vegetarian.","저는 채식주의자예요.","Jeoneun chaesikjuuijayeyo."],["I'm vegan.","저는 비건이에요.","Jeoneun biganieyo."],["I need halal food.","저는 할랄 음식이 필요해요.","Jeoneun hallal eumsigi piryohaeyo."],["I need gluten-free food.","저는 글루텐 프리 음식이 필요해요.","Jeoneun geulluten peur i eumsigi piryohaeyo."]]}, // 식이 조건을 확인합니다.
+{en:"Does this contain pork?",ko:"이 음식에 돼지고기가 들어가요?",ro:"I eumsige dwaejigogi deureogayo?",choices:[["Does it contain pork broth or pork fat?","돼지고기 육수나 기름도 들어가요?","Dwaejigogi yuksuna gireumdo deureogayo?"],["Is there a dish without meat?","고기가 들어가지 않는 음식이 있나요?","Gogiga deureogaji anneun eumsigi innayo?"]]}, // 돼지고기 포함 여부를 확인합니다.
+{en:"Does it contain wheat or gluten?",ko:"밀가루나 글루텐이 들어가요?",ro:"Milgaruna geulluteni deureogayo?",choices:[["Could you check the ingredients, please?","재료를 확인해 주시겠어요?","Jaeryoreul hwaginhae jusigesseoyo."],["Is there a separate cooking area?","조리 공간이 따로 있나요?","Jori gonggani ttaro innayo?"]]}, // 글루텐과 조리 환경을 확인합니다.
+{en:"I'll check with the kitchen. Please note that cross-contact may be possible.",ko:"주방에 확인해 보겠습니다. 다만 조리 과정에서 교차 접촉이 있을 수 있습니다.",ro:"Jubange hwaginhae bogetseumnida. Daman jori gwajeongeseo gyocha jeopchogi isseul su itseumnida.",choices:[["Thank you. Please check carefully.","감사합니다. 꼼꼼히 확인해 주세요.","Gamsahamnida. Kkkomkkkomhi hwaginhae juseyo."]]} // 주방 확인과 주의 사항을 안내합니다.
+], // 식이 제한 대화를 종료합니다.
+restaurant_allergy:[ // 음식 알레르기 대화입니다.
+{en:"Do you have any food allergies?",ko:"음식 알레르기가 있으세요?",ro:"Eumsik allerugiga isseuseyo?",choices:[["I'm allergic to peanuts.","저는 땅콩 알레르기가 있어요.","Jeoneun ttangkong allerugiga isseoyo."],["I'm allergic to shellfish.","저는 갑각류 알레르기가 있어요.","Jeoneun gapgakryu allerugiga isseoyo."],["I'm allergic to eggs.","저는 달걀 알레르기가 있어요.","Jeoneun dalgyal allerugiga isseoyo."]]}, // 알레르기 종류를 확인합니다.
+{en:"Is it a serious allergy?",ko:"심한 알레르기인가요?",ro:"Simhan allerugin-gayo?",choices:[["Yes, even a small amount is dangerous.","네, 조금만 먹어도 위험해요.","Ne, jogeumman meogeodo wiheomhaeyo."]]}, // 알레르기 위험도를 확인합니다.
+{en:"I'll check the ingredients with the kitchen.",ko:"주방에 재료를 확인해 보겠습니다.",ro:"Jubange jaeryoreul hwaginhae bogetseumnida.",choices:[["Thank you. Please check carefully.","감사합니다. 꼭 확인해 주세요.","Gamsahamnida. Kkok hwaginhae juseyo."]]} // 주방 확인을 안내합니다.
+], // 알레르기 대화를 종료합니다.
+restaurant_payment:[ // 식당 결제 대화입니다.
+{en:"Would you like the bill?",ko:"계산하시겠어요?",ro:"Gyesanhasigesseoyo?",choices:[["Yes, please.","네, 계산해 주세요.","Ne, gyesanhae juseyo."],["Can we pay separately?","따로 계산할 수 있나요?","Ttaro gyesanhal su innayo?"]]}, // 계산 여부를 묻습니다.
+{en:"Card or cash?",ko:"카드로 하시겠어요, 현금으로 하시겠어요?",ro:"Kadeuro hasigesseoyo, hyeongeumeuro hasigesseoyo?",choices:[["By card, please.","카드로 할게요.","Kadeuro halgeyo."],["In cash, please.","현금으로 할게요.","Hyeongeumeuro halgeyo."]]}, // 결제 수단을 묻습니다.
+{en:"Would you like a receipt?",ko:"영수증 드릴까요?",ro:"Yeongsujeung deurilkkayo?",choices:[["Yes, please.","네, 주세요.","Ne, juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]} // 영수증을 묻습니다.
+], // 식당 결제 대화를 종료합니다.
+transport_subway:[ // 지하철 이용 대화입니다.
+{en:"Where would you like to go?",ko:"어디까지 가세요?",ro:"Eodikkaji gaseyo?",choices:[["I'd like to go to Seoul Station.","서울역까지 가고 싶어요.","Seoullyeokkkaji gago sipeoyo."],["I'd like to go to Hongdae.","홍대까지 가고 싶어요.","Hongdaekkaji gago sipeoyo."]]}, // 목적지를 확인합니다.
+{en:"Do you need a ticket or do you have a transport card?",ko:"일회용 승차권이 필요하세요, 교통카드가 있으세요?",ro:"Ilhoeyong seungchagwoni piryohaseyo, gyotongkadeuga isseuseyo?",choices:[["I need a single-use ticket.","일회용 승차권이 필요해요.","Ilhoeyong seungchagwoni piryohaeyo."],["I have a transport card.","교통카드가 있어요.","Gyotongkadeuga isseoyo."]]}, // 승차권을 확인합니다.
+{en:"Please follow the signs to the platform.",ko:"표지판을 따라 승강장으로 가세요.",ro:"Pyojipaneul ttara seunggangjangeuro gaseyo.",choices:[["Which platform should I use?","몇 번 승강장으로 가야 하나요?","Myeot beon seunggangjangeuro gaya hanayo?"],["Thank you.","감사합니다.","Gamsahamnida."]]} // 승강장을 안내합니다.
+], // 지하철 대화를 종료합니다.
+transport_bus:[ // 버스 이용 대화입니다.
+{en:"Does this bus go to Myeongdong?",ko:"이 버스 명동에 가나요?",ro:"I beoseu Myeongdonge ganayo?",choices:[["Yes, it does.","네, 가요.","Ne, gayo."],["No, it doesn't.","아니요, 안 가요.","Aniyo, an gayo."]]}, // 버스 노선을 묻습니다.
+{en:"Where should I get off?",ko:"어디에서 내려야 하나요?",ro:"Eodieseo naeryeoya hanayo?",choices:[["Please tell me when we arrive.","도착하면 알려 주세요.","Dochakamyeon allyeo juseyo."],["How many stops are left?","몇 정거장 남았나요?","Myeot jeonggeojang namannayo?"]]}, // 내릴 곳을 묻습니다.
+{en:"This is your stop.",ko:"여기서 내리시면 돼요.",ro:"Yeogiseo naeris imyeon dwaeyo.",choices:[["Thank you very much.","정말 감사합니다.","Jeongmal gamsahamnida."]]} // 하차를 안내합니다.
+], // 버스 대화를 종료합니다.
+transport_taxi:[ // 택시 이용 대화입니다.
+{en:"Where would you like to go?",ko:"어디로 모셔다 드릴까요?",ro:"Eodiro mosyeoda deurilkkayo?",choices:[["Please take me to Seoul Station.","서울역으로 가 주세요.","Seoullyeogeuro ga juseyo."],["Please take me to this address.","이 주소로 가 주세요.","I jusoro ga juseyo."]]}, // 목적지를 묻습니다.
+{en:"Would you like to take the expressway?",ko:"고속도로로 갈까요?",ro:"Gosokdororo galkkayo?",choices:[["Yes, please.","네, 그렇게 해 주세요.","Ne, geureoke hae juseyo."],["No, take the regular road.","아니요, 일반 도로로 가 주세요.","Aniyo, ilban dororo ga juseyo."]]}, // 경로를 묻습니다.
+{en:"We're almost there.",ko:"거의 다 왔습니다.",ro:"Geoui da watseumnida.",choices:[["Please stop here.","여기 세워 주세요.","Yeogi sewo juseyo."],["Please stop in front of the entrance.","입구 앞에 세워 주세요.","Ipgu ape sewo juseyo."]]} // 하차 요청을 받습니다.
+], // 택시 대화를 종료합니다.
+shopping_find:[ // 쇼핑 상품 찾기 대화입니다.
+{en:"Can I help you find something?",ko:"찾으시는 물건 있으세요?",ro:"Chajeusineun mulgeon isseuseyo?",choices:[["I'm looking for a T-shirt.","티셔츠를 찾고 있어요.","Tisyeocheureul chatgo isseoyo."],["I'm looking for a bag.","가방을 찾고 있어요.","Gabangeul chatgo isseoyo."],["I'm looking for a gift.","선물을 찾고 있어요.","Seonmureul chatgo isseoyo."]]}, // 찾는 상품을 확인합니다.
+{en:"What color would you like?",ko:"어떤 색상을 찾으세요?",ro:"Eotteon saegsangeul chajeuseyo?",choices:[["Black, please.","검은색이요.","Geomeunsaegiyo."],["White, please.","흰색이요.","Huinsaegiyo."]]}, // 색상을 확인합니다.
+{en:"What size do you need?",ko:"어떤 사이즈가 필요하세요?",ro:"Eotteon saijeuga piryohaseyo?",choices:[["Small, please.","스몰 사이즈요.","Seumol saijeuyo."],["Medium, please.","미디엄 사이즈요.","Midieom saijeuyo."],["Large, please.","라지 사이즈요.","Raji saijeuyo."]]} // 사이즈를 확인합니다.
+], // 상품 찾기 대화를 종료합니다.
+shopping_price:[ // 쇼핑 가격 문의 대화입니다.
+{en:"How can I help you?",ko:"도와드릴까요?",ro:"Dowadeurilkkayo?",choices:[["How much is this?","이거 얼마예요?","Igeo eolmayeyo?"],["Is this on sale?","이거 할인 중인가요?","Igeo harin jungingayo?"]]}, // 가격을 묻습니다.
+{en:"It's 30,000 won.",ko:"3만 원입니다.",ro:"Samman wonimnida.",choices:[["Is there a discount?","할인되나요?","Harindoenayo?"],["Okay, I'll take it.","네, 이걸로 할게요.","Ne, igeollo halgeyo."]]} // 가격과 할인을 안내합니다.
+], // 가격 문의 대화를 종료합니다.
+shopping_exchange:[ // 교환 및 환불 대화입니다.
+{en:"How can I help you?",ko:"무엇을 도와드릴까요?",ro:"Mueoseul dowadeurilkkayo?",choices:[["I'd like to exchange this.","이거 교환하고 싶어요.","Igeo gyohwanhago sipeoyo."],["I'd like to return this.","이거 환불하고 싶어요.","Igeo hwanbulhago sipeoyo."]]}, // 교환 또는 환불을 요청합니다.
+{en:"Do you have the receipt?",ko:"영수증 있으세요?",ro:"Yeongsujeung isseuseyo?",choices:[["Yes, I have it.","네, 있어요.","Ne, isseoyo."],["No, I don't have it.","아니요, 없어요.","Aniyo, eopseoyo."]]}, // 영수증을 확인합니다.
+{en:"Let me check our return policy.",ko:"교환 및 환불 규정을 확인해 볼게요.",ro:"Gyohwan mit hwanbul gyujeongeul hwaginhae bolgeyo.",choices:[["Thank you.","감사합니다.","Gamsahamnida."]]} // 규정을 확인합니다.
+], // 교환 및 환불 대화를 종료합니다.
+stay_checkin:[ // 숙소 체크인 대화입니다.
+{en:"Welcome! Do you have a reservation?",ko:"어서 오세요! 예약하셨나요?",ro:"Eoseo oseyo! Yeyakhasyeonnayo?",choices:[["Yes, I have a reservation.","네, 예약했어요.","Ne, yeyakhaesseoyo."],["Do you have a room available?","빈방이 있나요?","Binbangi innayo?"]]}, // 예약 여부를 묻습니다.
+{en:"May I see your passport?",ko:"여권을 보여주시겠어요?",ro:"Yeogwoneul boyeojusigesseoyo?",choices:[["Here is my passport.","여권 여기 있습니다.","Yeogwon yeogi itseumnida."]]}, // 여권을 확인합니다.
+{en:"Your room is on the fifth floor.",ko:"객실은 5층에 있습니다.",ro:"Gaeksireun ocheunge itseumnida.",choices:[["What time is breakfast?","아침 식사는 몇 시인가요?","Achim siksaneun myeot siingayo?"],["Where is the elevator?","엘리베이터가 어디 있나요?","Ellibeiteoga eodi innayo?"]]} // 객실을 안내합니다.
+], // 체크인 대화를 종료합니다.
+stay_checkout:[ // 숙소 체크아웃 대화입니다.
+{en:"Are you checking out?",ko:"체크아웃하시나요?",ro:"Chekeuaut hasinayo?",choices:[["Yes, I'm checking out.","네, 체크아웃할게요.","Ne, chekeuaut halgeyo."],["Can I check out later?","늦게 체크아웃할 수 있나요?","Neutge chekeuaut hal su innayo?"]]}, // 체크아웃 여부를 묻습니다.
+{en:"Would you like a receipt?",ko:"영수증 드릴까요?",ro:"Yeongsujeung deurilkkayo?",choices:[["Yes, please.","네, 주세요.","Ne, juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]} // 영수증을 묻습니다.
+], // 체크아웃 대화를 종료합니다.
+stay_facility:[ // 숙소 시설 문의 대화입니다.
+{en:"How can I help you?",ko:"무엇을 도와드릴까요?",ro:"Mueoseul dowadeurilkkayo?",choices:[["What is the Wi-Fi password?","와이파이 비밀번호가 뭐예요?","Waipai bimilbeonhoga mwoyeyo?"],["Where is the laundry room?","세탁실이 어디예요?","Setaksiri eodiyeyo?"],["What time does the gym open?","헬스장은 몇 시에 여나요?","Helseujangeun myeot sie yeonayo?"]]}, // 시설 정보를 묻습니다.
+{en:"The Wi-Fi password is on your room card.",ko:"와이파이 비밀번호는 객실 카드에 적혀 있어요.",ro:"Waipai bimilbeoneun gaeksil kadeue jeokhyeo isseoyo.",choices:[["Could you help me connect?","연결하는 걸 도와주시겠어요?","Yeongyeolhaneun geol dowajusigesseoyo?"],["Thank you.","감사합니다.","Gamsahamnida."]]} // 와이파이를 안내합니다.
+] // 숙소 시설 대화를 종료합니다.
+}; // 모든 대화 데이터를 종료합니다.
+
+const expressions=[ // 공통으로 자주 사용하는 표현입니다.
+{en:"By any chance",ko:"혹시",ro:"Hoksi",note:"질문을 부드럽게 시작할 때 사용합니다."}, // 혹시입니다.
+{en:"Excuse me",ko:"실례합니다",ro:"Sillyehamnida",note:"모르는 사람에게 말을 걸 때 사용합니다."}, // 실례합니다입니다.
+{en:"Please give me...",ko:"... 좀 주세요",ro:"... jom juseyo",note:"물건이나 서비스를 정중하게 요청합니다."}, // 좀 주세요입니다.
+{en:"This",ko:"이거",ro:"Igeo",note:"말하는 사람 가까이에 있는 것을 가리킵니다."}, // 이거입니다.
+{en:"That",ko:"그거",ro:"Geugeo",note:"상대방 가까이에 있거나 앞에서 언급한 것을 가리킵니다."}, // 그거입니다.
+{en:"How much is it?",ko:"얼마예요?",ro:"Eolmayeyo?",note:"물건이나 서비스의 가격을 물어봅니다."}, // 얼마예요입니다.
+{en:"I'm sorry",ko:"죄송합니다",ro:"Joesonghamnida",note:"정중하게 사과하거나 양해를 구할 때 사용합니다."}, // 죄송합니다입니다.
+{en:"Thank you",ko:"감사합니다",ro:"Gamsahamnida",note:"정중하게 감사할 때 사용합니다."}, // 감사합니다입니다.
+{en:"It's okay",ko:"괜찮아요",ro:"Gwaenchanayo",note:"괜찮다는 뜻이나 사양할 때 사용합니다."}, // 괜찮아요입니다.
+{en:"Just a moment",ko:"잠시만요",ro:"Jamsimanyo",note:"잠깐 기다려 달라고 할 때 사용합니다."}, // 잠시만요입니다.
+{en:"Could you say that again?",ko:"다시 말씀해 주세요",ro:"Dasi malsseumhae juseyo",note:"상대방의 말을 다시 듣고 싶을 때 사용합니다."} // 다시 말씀해 주세요입니다.
+]; // 공통 표현 데이터를 종료합니다.
+
+const dietary=[ // 식이 제한 및 재료 확인 표현입니다.
+{en:"I'm vegetarian.",ko:"저는 채식주의자예요.",ro:"Jeoneun chaesikjuuijayeyo.",note:"Vegetarian: 식단에 따라 달걀이나 유제품은 먹을 수 있습니다."}, // 채식주의자입니다.
+{en:"I'm vegan.",ko:"저는 비건이에요.",ro:"Jeoneun biganieyo.",note:"Vegan: 고기, 생선, 달걀, 유제품 등 동물성 식품을 먹지 않습니다."}, // 비건입니다.
+{en:"Is this halal?",ko:"이거 할랄 음식인가요?",ro:"Igeo hallal eumsingayo?",note:"할랄 인증과 재료, 조리 과정을 확인할 때 사용합니다."}, // 할랄 확인입니다.
+{en:"I need gluten-free food.",ko:"저는 글루텐 프리 음식이 필요해요.",ro:"Jeoneun geulluten peur i eumsigi piryohaeyo.",note:"밀·보리·호밀 등 글루텐 관련 재료와 교차 접촉 여부도 확인하세요."}, // 글루텐 프리입니다.
+{en:"Does this contain pork?",ko:"이거 돼지고기 들어가요?",ro:"Igeo dwaejigogi deureogayo?",note:"돼지고기 포함 여부를 확인하는 핵심 질문입니다."}, // 돼지고기 포함 여부입니다.
+{en:"Does it contain pork broth or pork fat?",ko:"돼지고기 육수나 기름도 들어가요?",ro:"Dwaejigogi yuksuna gireumdo deureogayo?",note:"고기 조각뿐 아니라 육수와 기름도 확인합니다."}, // 육수와 기름입니다.
+{en:"Does this contain wheat or gluten?",ko:"밀가루나 글루텐이 들어가요?",ro:"Milgaruna geulluteni deureogayo?",note:"재료에 밀가루나 글루텐이 포함되어 있는지 묻습니다."}, // 글루텐 포함 여부입니다.
+{en:"Is there a dish without meat?",ko:"고기가 들어가지 않는 음식이 있나요?",ro:"Gogiga deureogaji anneun eumsigi innayo?",note:"고기가 없는 메뉴를 찾을 때 사용합니다."}, // 고기 없는 메뉴입니다.
+{en:"Could you check the ingredients, please?",ko:"재료를 확인해 주시겠어요?",ro:"Jaeryoreul hwaginhae jusigesseoyo?",note:"직원에게 재료 확인을 요청합니다."}, // 재료 확인입니다.
+{en:"Is there a risk of cross-contact?",ko:"다른 음식과 조리 도구를 함께 사용하나요?",ro:"Dareun eumsikgwa jori dogureul hamkke sayonghanayo?",note:"알레르기나 엄격한 식이 제한이 있다면 교차 접촉 가능성을 확인합니다."} // 교차 접촉 확인입니다.
+]; // 식이 제한 표현 데이터를 종료합니다.
+
+const grammar=[ // 여행 중 자주 쓸 문법과 대표 예문입니다.
+{pattern:"-아/어도 돼요?",meaning:"May I...? / Is it okay if...?",ko:"여기 들어가도 돼요?",en:"May I come in here?",ro:"Yeogi deureogado dwaeyo?",note:"어떤 행동을 해도 되는지 허락을 구할 때 사용합니다."}, // 허락 문법입니다.
+{pattern:"-아/어도 돼요?",meaning:"May I...?",ko:"사진 찍어도 돼요?",en:"May I take a picture?",ro:"Sajin jjigeodo dwaeyo?",note:"사진 촬영 허락을 구하는 표현입니다."}, // 사진 촬영 예문입니다.
+{pattern:"-아/어 봐도 돼요?",meaning:"May I try...?",ko:"이거 해 봐도 돼요?",en:"May I try this?",ro:"Igeo hae bwado dwaeyo?",note:"직접 시도하거나 체험해도 되는지 물어봅니다."}, // 시도 허락 예문입니다.
+{pattern:"-(으)면 안 돼요?",meaning:"Is it not allowed to...?",ko:"여기 들어가면 안 돼요?",en:"Am I not allowed to come in here?",ro:"Yeogi deureogamyeon an dwaeyo?",note:"금지 여부를 확인할 때 사용합니다. 보통 '여기 들어가면 안 돼요?'는 금지인지 확인하는 질문입니다."}, // 금지 문법입니다.
+{pattern:"-(으)ㄹ 줄 알아요",meaning:"I know how to...",ko:"저 한국어 할 줄 알아요.",en:"I know how to speak Korean.",ro:"Jeo hangugeo hal jul arayo.",note:"어떤 기술이나 방법을 알고 있다는 뜻입니다."}, // 능력 문법입니다.
+{pattern:"-아/어야 돼요",meaning:"Have to / Must",ko:"빨리 가야 돼요.",en:"I have to go quickly.",ro:"Ppalli gaya dwaeyo.",note:"필요하거나 반드시 해야 하는 일을 말합니다."}, // 의무 문법입니다.
+{pattern:"-아/어 주세요",meaning:"Please do...",ko:"조금만 빨리 해 주세요.",en:"Please do it a little faster.",ro:"Jogeumman ppalli hae juseyo.",note:"상대방에게 정중하게 행동을 부탁합니다."}, // 요청 문법입니다.
+{pattern:"-아/어 보다",meaning:"Try doing / Have tried",ko:"이거 한번 먹어 보세요.",en:"Please try eating this.",ro:"Igeo hanbeon meogeo boseyo.",note:"어떤 행동을 시도하거나 경험하는 의미입니다."}, // 시도 문법입니다.
+{pattern:"-(으)ㄴ 적 있어요?",meaning:"Have you ever...?",ko:"한국에 와 본 적 있어요?",en:"Have you ever been to Korea?",ro:"Hanguge wa bon jeok isseoyo?",note:"과거에 해 본 경험이 있는지 물어봅니다."}, // 경험 문법입니다.
+{pattern:"-아/어 주세요",meaning:"Please speak...",ko:"천천히 말해 주세요.",en:"Please speak slowly.",ro:"Cheoncheonhi malhae juseyo.",note:"여행 중 상대방에게 말하는 속도를 부탁할 때 유용합니다."} // 요청 예문입니다.
+]; // 문법 데이터를 종료합니다.
+
+const interfaceText={ // 첫 화면과 기본 버튼에 사용할 10개 언어의 번역입니다.
+en:{language:"Choose your language",home:"Where to?",homeSub:"Choose a place or learn useful Korean",learn:"Learn Korean",expressions:"Essential Expressions",expressionsDesc:"Useful phrases for everyday situations",grammar:"Useful Grammar",grammarDesc:"Practical grammar with travel examples",dietary:"Dietary Needs",dietaryDesc:"Vegetarian, vegan, halal and gluten-free",all:"All Learning Materials",allDesc:"Browse all expressions and grammar",situation:"Choose a situation",placeholder:"Type in what you want to ask...",send:"Send",speak:"Speak",listen:"Listen",status:"Choose a response or type a phrase."},
+es:{language:"Elige tu idioma",home:"¿Adónde quieres ir?",homeSub:"Elige un lugar o aprende coreano útil",learn:"Aprende coreano",expressions:"Expresiones esenciales",expressionsDesc:"Frases útiles para situaciones cotidianas",grammar:"Gramática útil",grammarDesc:"Gramática práctica para viajar",dietary:"Necesidades alimentarias",dietaryDesc:"Vegetariano, vegano, halal y sin gluten",all:"Todos los materiales",allDesc:"Explora expresiones y gramática",situation:"Elige una situación",placeholder:"Escribe lo que quieras preguntar...",send:"Enviar",speak:"Hablar",listen:"Escuchar",status:"Elige una respuesta o escribe una frase."},
+zh:{language:"选择你的语言",home:"你想去哪里？",homeSub:"选择地点或学习实用韩语",learn:"学习韩语",expressions:"常用表达",expressionsDesc:"日常情境中实用的表达",grammar:"实用语法",grammarDesc:"旅行中实用的语法",dietary:"饮食需求",dietaryDesc:"素食、纯素、清真和无麸质",all:"全部学习资料",allDesc:"浏览所有表达和语法",situation:"选择一个情境",placeholder:"输入你想问的问题...",send:"发送",speak:"说话",listen:"听",status:"请选择回答或输入句子。"},
+ja:{language:"使用する言語を選択",home:"どこへ行きますか？",homeSub:"場所を選ぶか、役立つ韓国語を学びましょう",learn:"韓国語を学ぶ",expressions:"基本表現",expressionsDesc:"日常で使える便利な表現",grammar:"実用文法",grammarDesc:"旅行で役立つ文法",dietary:"食事の希望",dietaryDesc:"ベジタリアン、ヴィーガン、ハラール、グルテンフリー",all:"すべての教材",allDesc:"表現と文法をすべて見る",situation:"状況を選択",placeholder:"聞きたいことを入力してください...",send:"送信",speak:"話す",listen:"聞く",status:"回答を選ぶか、文章を入力してください。"},
+fr:{language:"Choisissez votre langue",home:"Où voulez-vous aller ?",homeSub:"Choisissez un lieu ou apprenez le coréen utile",learn:"Apprendre le coréen",expressions:"Expressions essentielles",expressionsDesc:"Expressions utiles au quotidien",grammar:"Grammaire pratique",grammarDesc:"Grammaire utile en voyage",dietary:"Régimes alimentaires",dietaryDesc:"Végétarien, végétalien, halal et sans gluten",all:"Tous les supports",allDesc:"Parcourir les expressions et la grammaire",situation:"Choisissez une situation",placeholder:"Écrivez ce que vous souhaitez demander...",send:"Envoyer",speak:"Parler",listen:"Écouter",status:"Choisissez une réponse ou écrivez une phrase."},
+de:{language:"Wähle deine Sprache",home:"Wohin möchtest du?",homeSub:"Wähle einen Ort oder lerne nützliches Koreanisch",learn:"Koreanisch lernen",expressions:"Wichtige Ausdrücke",expressionsDesc:"Nützliche Sätze für den Alltag",grammar:"Nützliche Grammatik",grammarDesc:"Praktische Grammatik für Reisen",dietary:"Ernährungsbedürfnisse",dietaryDesc:"Vegetarisch, vegan, halal und glutenfrei",all:"Alle Lernmaterialien",allDesc:"Alle Ausdrücke und Grammatik ansehen",situation:"Wähle eine Situation",placeholder:"Gib ein, was du fragen möchtest...",send:"Senden",speak:"Sprechen",listen:"Anhören",status:"Wähle eine Antwort oder gib einen Satz ein."},
+ar:{language:"اختر لغتك",home:"إلى أين تريد الذهاب؟",homeSub:"اختر مكانًا أو تعلم الكورية المفيدة",learn:"تعلم الكورية",expressions:"عبارات أساسية",expressionsDesc:"عبارات مفيدة للمواقف اليومية",grammar:"قواعد مفيدة",grammarDesc:"قواعد عملية للسفر",dietary:"الاحتياجات الغذائية",dietaryDesc:"نباتي، نباتي صرف، حلال وخالٍ من الغلوتين",all:"جميع مواد التعلم",allDesc:"تصفح جميع العبارات والقواعد",situation:"اختر موقفًا",placeholder:"اكتب ما تريد أن تسأل عنه...",send:"إرسال",speak:"تحدث",listen:"استمع",status:"اختر إجابة أو اكتب عبارة."},
+pt:{language:"Escolha seu idioma",home:"Para onde você quer ir?",homeSub:"Escolha um lugar ou aprenda coreano útil",learn:"Aprenda coreano",expressions:"Expressões essenciais",expressionsDesc:"Frases úteis para situações do dia a dia",grammar:"Gramática útil",grammarDesc:"Gramática prática para viagens",dietary:"Necessidades alimentares",dietaryDesc:"Vegetariano, vegano, halal e sem glúten",all:"Todos os materiais",allDesc:"Veja todas as expressões e a gramática",situation:"Escolha uma situação",placeholder:"Digite o que você quer perguntar...",send:"Enviar",speak:"Falar",listen:"Ouvir",status:"Escolha uma resposta ou digite uma frase."},
+ru:{language:"Выберите язык",home:"Куда вы хотите пойти?",homeSub:"Выберите место или изучайте полезный корейский",learn:"Изучайте корейский",expressions:"Основные выражения",expressionsDesc:"Полезные фразы на каждый день",grammar:"Полезная грамматика",grammarDesc:"Практическая грамматика для путешествий",dietary:"Пищевые предпочтения",dietaryDesc:"Вегетарианское, веганское, халяльное и без глютена",all:"Все учебные материалы",allDesc:"Все выражения и грамматика",situation:"Выберите ситуацию",placeholder:"Напишите, о чём хотите спросить...",send:"Отправить",speak:"Говорить",listen:"Слушать",status:"Выберите ответ или введите фразу."},
+vi:{language:"Chọn ngôn ngữ của bạn",home:"Bạn muốn đi đâu?",homeSub:"Chọn địa điểm hoặc học tiếng Hàn hữu ích",learn:"Học tiếng Hàn",expressions:"Các câu giao tiếp cơ bản",expressionsDesc:"Câu hữu ích trong các tình huống hằng ngày",grammar:"Ngữ pháp hữu ích",grammarDesc:"Ngữ pháp thực tế khi đi du lịch",dietary:"Nhu cầu ăn uống",dietaryDesc:"Ăn chay, thuần chay, halal và không gluten",all:"Tất cả tài liệu học",allDesc:"Xem tất cả mẫu câu và ngữ pháp",situation:"Chọn tình huống",placeholder:"Nhập điều bạn muốn hỏi...",send:"Gửi",speak:"Nói",listen:"Nghe",status:"Hãy chọn câu trả lời hoặc nhập một câu."}
+}; // 10개 언어의 기본 화면 번역을 종료합니다.
+
+let selectedLanguage="en"; // 처음 선택된 언어는 영어입니다.
+
+function setLanguage(language){ // 사용자가 언어를 바꾸면 실행합니다.
+selectedLanguage=language; // 선택한 언어 코드를 저장합니다.
+const text=interfaceText[language]||interfaceText.en; // 선택한 언어의 번역을 가져옵니다.
+document.documentElement.lang=language; // HTML 문서의 언어 설정을 바꿉니다.
+document.getElementById("languageLabel").textContent=text.language; // 언어 선택 안내를 번역합니다.
+document.getElementById("homeTitle").textContent=text.home; // 첫 화면 제목을 번역합니다.
+document.getElementById("homeSubheading").textContent=text.homeSub; // 첫 화면 설명을 번역합니다.
+document.getElementById("learnTitle").textContent=text.learn; // 학습 영역 제목을 번역합니다.
+document.getElementById("featureExpressions").textContent=text.expressions; // 공통 표현 제목을 번역합니다.
+document.getElementById("featureExpressionsDesc").textContent=text.expressionsDesc; // 공통 표현 설명을 번역합니다.
+document.getElementById("featureGrammar").textContent=text.grammar; // 문법 제목을 번역합니다.
+document.getElementById("featureGrammarDesc").textContent=text.grammarDesc; // 문법 설명을 번역합니다.
+document.getElementById("featureDietary").textContent=text.dietary; // 식이 제한 제목을 번역합니다.
+document.getElementById("featureDietaryDesc").textContent=text.dietaryDesc; // 식이 제한 설명을 번역합니다.
+document.getElementById("featureAll").textContent=text.all; // 전체 자료 제목을 번역합니다.
+document.getElementById("featureAllDesc").textContent=text.allDesc; // 전체 자료 설명을 번역합니다.
+document.getElementById("scenarioSubheading").textContent=text.situation; // 상황 선택 안내를 번역합니다.
+document.getElementById("userInput").placeholder=text.placeholder; // 입력창 안내를 번역합니다.
+document.querySelector(".send-button").textContent=text.send; // 전송 버튼을 번역합니다.
+document.querySelectorAll(".tool-button")[0].textContent="🎙 "+text.speak; // 음성 입력 버튼을 번역합니다.
+document.querySelectorAll(".tool-button")[1].textContent="🔊 "+text.listen; // 문장 듣기 버튼을 번역합니다.
+document.getElementById("status").textContent=text.status; // 상태 안내를 번역합니다.
+} // 언어 변경 함수를 종료합니다.
+
+function showScreen(screenId){ // 지정한 화면만 보이게 하는 함수입니다.
+screens.forEach(id=>document.getElementById(id).classList.add("hidden")); // 모든 화면을 먼저 숨깁니다.
+document.getElementById(screenId).classList.remove("hidden"); // 선택한 화면만 표시합니다.
+} // 화면 전환 함수를 종료합니다.
+
+function selectPlace(placeId){ // 장소 카드를 눌렀을 때 실행합니다.
+currentPlace=placeId; // 선택한 장소 ID를 저장합니다.
+document.getElementById("placeHeading").textContent=placeNames[placeId]; // 선택한 장소 이름을 제목에 표시합니다.
+renderScenarios(); // 선택한 장소의 상황 목록을 새로 만듭니다.
+showScreen("scenarios"); // 상황 선택 화면으로 이동합니다.
+} // 장소 선택 함수를 종료합니다.
+
+function renderScenarios(){ // 현재 장소의 상황 목록을 표시합니다.
+const list=document.getElementById("scenarioList"); // 상황 목록을 표시할 영역을 가져옵니다.
+list.innerHTML=""; // 이전에 표시된 상황을 모두 지웁니다.
+const scenarios=scenarioData[currentPlace]||[]; // 현재 장소에 해당하는 상황만 가져옵니다.
+scenarios.forEach(scenario=>{ // 현재 장소의 상황을 하나씩 반복합니다.
+const button=document.createElement("button"); // 상황을 선택할 버튼을 만듭니다.
+button.className="scenario-card"; // 상황 카드 디자인을 적용합니다.
+button.innerHTML=`<span class="scenario-icon">${scenario.icon}</span><span class="scenario-text"><span class="scenario-name">${scenario.name}</span><span class="scenario-description">${scenario.description}</span></span><span class="arrow">›</span>`; // 아이콘, 이름, 설명을 버튼에 넣습니다.
+button.onclick=()=>selectScenario(scenario.id); // 버튼을 누르면 해당 상황 ID를 전달합니다.
+list.appendChild(button); // 만든 버튼을 화면에 추가합니다.
+}); // 상황 반복을 종료합니다.
+} // 상황 목록 표시 함수를 종료합니다.
+
+function selectScenario(scenarioId){ // 상황을 선택했을 때 실행합니다.
+currentScenario=scenarioId; // 선택한 상황 ID를 저장합니다.
+if(!conversations[scenarioId]){alert("This situation is being prepared.");return;} // 대화 데이터가 없으면 안내하고 종료합니다.
+currentStep=0; // 대화를 첫 단계부터 시작합니다.
+document.getElementById("conversationHeading").textContent=findScenarioName(scenarioId); // 대화 화면 제목을 설정합니다.
+document.getElementById("userInput").value=""; // 입력창을 비웁니다.
+document.getElementById("status").textContent="Choose a response or type a phrase."; // 상태 안내를 초기화합니다.
+showScreen("conversation"); // 대화 화면으로 이동합니다.
+renderStep(); // 첫 번째 대사를 표시합니다.
+} // 상황 선택 함수를 종료합니다.
+
+function findScenarioName(scenarioId){ // 상황 ID에 맞는 화면 이름을 찾습니다.
+for(const group of Object.values(scenarioData)){ // 모든 장소의 상황 목록을 순서대로 확인합니다.
+const found=group.find(item=>item.id===scenarioId); // 현재 목록에서 ID가 일치하는 상황을 찾습니다.
+if(found)return found.name; // 찾으면 상황 이름을 반환합니다.
+} // 모든 장소 검색을 종료합니다.
+return "Conversation"; // 일치하는 이름이 없으면 기본 제목을 반환합니다.
+} // 상황 이름 검색 함수를 종료합니다.
+
+// 아래 표기는 해당 언어의 문자를 이용한 한국어 발음 근사치입니다. 정확한 현지어 번역이나 표준 표기법은 아닙니다.
+const nativePronunciation={
+"안녕하세요! 무엇을 드릴까요?":{zh:"安宁哈塞哟！木奥瑟尔 德里尔嘎哟？",ja:"アンニョンハセヨ！ムオスル トゥリルカヨ？",ar:"أنيونغ هاسيو! مووسُل دُريلّكايو؟",ru:"Аннёнхасэё! Муосыль тырильккаё?",ne:"अन्योङ हासेयो! मुओसुल दुरिल्क्कायो?",si:"අන්යොං හසෙයෝ! මුවොසුල් දුරිල්ක්කායෝ?",th:"อัน-นยอง-ฮา-เซ-โย! มู-ออ-ซึล ทือ-ริล-กา-โย?"},
+"감사합니다!":{zh:"康撒哈姆尼达",ja:"カムサハムニダ",ar:"كامسا هام니다",ru:"Камсахамнида",ne:"काम्साहाम्निदा",si:"කාම්සාහම්නිදා",th:"คัมซาฮัมนีดา"},
+"감사합니다.":{zh:"康撒哈姆尼达",ja:"カムサハムニダ",ar:"كامسا هام니다",ru:"Камсахамнида",ne:"काम्साहाम्निदा",si:"කාම්සාහම්නිදා",th:"คัมซาฮัมนีดา"},
+"이거 주세요.":{zh:"伊戈 朱塞哟",ja:"イゴ ジュセヨ",ar:"إيغو جوسيو",ru:"Иго чусэё",ne:"इगो जुसेयो",si:"ඉගෝ ජුසෙයෝ",th:"อี-กอ จู-เซ-โย"},
+"이거 주세요":{zh:"伊戈 朱塞哟",ja:"イゴ ジュセヨ",ar:"إيغو جوسيو",ru:"Иго чусэё",ne:"इगो जुसेयो",si:"ඉගෝ ජුසෙයෝ",th:"อี-กอ จู-เซ-โย"},
+"물 주세요.":{zh:"木尔 朱塞哟",ja:"ムル ジュセヨ",ar:"مول جوسيو",ru:"Муль чусэё",ne:"मुल जुसेयो",si:"මුල් ජුසෙයෝ",th:"มุล จู-เซ-โย"},
+"물 주세요":{zh:"木尔 朱塞哟",ja:"ムル ジュセヨ",ar:"مول جوسيو",ru:"Муль чусэё",ne:"मुल जुसेयो",si:"මුල් ජුසෙයෝ",th:"มุล จู-เซ-โย"},
+"얼마예요?":{zh:"奥尔马耶哟？",ja:"オルマエヨ？",ar:"أولماييو؟",ru:"Ольмаеё?",ne:"ओल्मायेयो?",si:"ඕල්මායෙයෝ?",th:"ออล-มา-เย-โย?"},
+"화장실이 어디예요?":{zh:"花张西里 奥迪耶哟？",ja:"ファジャンシリ オディエヨ？",ar:"هواجانشيري أوديييو؟",ru:"Хваджаншири одиэё?",ne:"ह्वाजाङशिरि ओडियेयो?",si:"හ්වාජංශිරි ඔඩියෙයෝ?",th:"ฮวา-จัง-ชิ-รี ออ-ดี-เย-โย?"},
+"죄송합니다":{zh:"催松哈姆尼达",ja:"チェソンハムニダ",ar:"تشويسونغهامنيدا",ru:"Чвесонхамнида",ne:"छ्वेसोङहाम्निदा",si:"ච්වෙසොංහම්නිදා",th:"ชเว-ซง-ฮัมนี-ดา"},
+"괜찮아요":{zh:"宽恰纳哟",ja:"ケンチャナヨ",ar:"كوينتشان아요",ru:"Квэнчанаё",ne:"क्वेन्चानायो",si:"ක්වෙන්චානයෝ",th:"ควェน-ชา-นา-โย"},
+"얼마예요?":{zh:"奥尔马耶哟？",ja:"オルマエヨ？",ar:"أولماييو؟",ru:"Ольмаеё?",ne:"ओल्मायेयो?",si:"ඕල්මායෙයෝ?",th:"ออล-มา-เย-โย?"}
 };
-
-// ==========================================
-// 4부: 다국어 화면 번역
-// ==========================================
-
-const translations = {
-
-  en: {
-    home: "Where to?",
-    sub: "Explore Korea and learn useful Korean",
-    language: "Choose your language",
-    learn: "Learn Korean",
-    scenario: "Choose a situation",
-    back: "← Back",
-    library: "Learning Materials",
-    librarySub: "Useful Korean for your trip",
-    expressions: "Essential Expressions",
-    expressionsDesc: "Useful phrases for everyday situations",
-    grammar: "Useful Grammar",
-    grammarDesc: "Practical grammar with travel examples",
-    dietary: "Dietary Needs",
-    dietaryDesc: "Food preferences and allergies",
-    all: "All Learning Materials",
-    allDesc: "Browse all expressions and grammar",
-    send: "Send",
-    input: "Type in what you want to ask...",
-    status: "Choose a response or type a phrase.",
-    selected: "You've completed this conversation.",
-    empty: "No learning materials found.",
-    foreignLabel: "YOUR LANGUAGE",
-    koreanLabel: "KOREAN",
-    pronunciationLabel: "KOREAN PRONUNCIATION",
-    speak: "🎙 Speak Korean",
-    listen: "🔊 Listen",
-    places: {
-      cafe: "Cafe",
-      restaurant: "Restaurant",
-      transport: "Transport",
-      shopping: "Shopping",
-      stay: "Accommodation"
-    }
-  },
-
-  es: {
-    home: "¿Adónde vamos?",
-    sub: "Explora Corea y aprende coreano útil",
-    language: "Elige tu idioma",
-    learn: "Aprende coreano",
-    scenario: "Elige una situación",
-    back: "← Volver",
-    library: "Materiales de aprendizaje",
-    librarySub: "Coreano útil para tu viaje",
-    expressions: "Expresiones esenciales",
-    expressionsDesc: "Frases útiles para situaciones cotidianas",
-    grammar: "Gramática útil",
-    grammarDesc: "Gramática práctica con ejemplos de viaje",
-    dietary: "Necesidades alimentarias",
-    dietaryDesc: "Preferencias alimentarias y alergias",
-    all: "Todos los materiales",
-    allDesc: "Explora todas las expresiones y la gramática",
-    send: "Enviar",
-    input: "Escribe lo que quieres preguntar...",
-    status: "Elige una respuesta o escribe una frase.",
-    selected: "Has completado esta conversación.",
-    empty: "No se encontraron materiales.",
-    foreignLabel: "TU IDIOMA",
-    koreanLabel: "COREANO",
-    pronunciationLabel: "PRONUNCIACIÓN COREANA",
-    speak: "🎙 Hablar coreano",
-    listen: "🔊 Escuchar",
-    places: {
-      cafe: "Cafetería",
-      restaurant: "Restaurante",
-      transport: "Transporte",
-      shopping: "Compras",
-      stay: "Alojamiento"
-    }
-  },
-
-  zh: {
-    home: "想去哪里？",
-    sub: "探索韩国，学习实用韩语",
-    language: "选择你的语言",
-    learn: "学习韩语",
-    scenario: "选择一个场景",
-    back: "← 返回",
-    library: "学习资料",
-    librarySub: "旅行实用韩语",
-    expressions: "常用表达",
-    expressionsDesc: "日常生活中常用的句子",
-    grammar: "实用语法",
-    grammarDesc: "结合旅行场景学习语法",
-    dietary: "饮食需求",
-    dietaryDesc: "饮食偏好与过敏",
-    all: "全部学习资料",
-    allDesc: "浏览所有表达和语法",
-    send: "发送",
-    input: "输入你想问的内容...",
-    status: "请选择一个回答或输入句子。",
-    selected: "对话已完成。",
-    empty: "没有找到学习资料。",
-    foreignLabel: "你的语言",
-    koreanLabel: "韩语",
-    pronunciationLabel: "韩语发音",
-    speak: "🎙 说韩语",
-    listen: "🔊 听发音",
-    places: {
-      cafe: "咖啡馆",
-      restaurant: "餐厅",
-      transport: "交通",
-      shopping: "购物",
-      stay: "住宿"
-    }
-  },
-
-  ja: {
-    home: "どこに行きますか？",
-    sub: "韓国を楽しみながら実用的な韓国語を学ぼう",
-    language: "言語を選択",
-    learn: "韓国語を学ぶ",
-    scenario: "場面を選択",
-    back: "← 戻る",
-    library: "学習教材",
-    librarySub: "旅行で役立つ韓国語",
-    expressions: "基本表現",
-    expressionsDesc: "日常生活で使える便利な表現",
-    grammar: "実用文法",
-    grammarDesc: "旅行の例文で学ぶ文法",
-    dietary: "食事の希望",
-    dietaryDesc: "食事の好みとアレルギー",
-    all: "すべての学習教材",
-    allDesc: "表現と文法をすべて見る",
-    send: "送信",
-    input: "質問したいことを入力してください...",
-    status: "返答を選ぶか、文章を入力してください。",
-    selected: "会話が終了しました。",
-    empty: "学習教材がありません。",
-    foreignLabel: "あなたの言語",
-    koreanLabel: "韓国語",
-    pronunciationLabel: "韓国語の発音",
-    speak: "🎙 韓国語を話す",
-    listen: "🔊 聞く",
-    places: {
-      cafe: "カフェ",
-      restaurant: "レストラン",
-      transport: "交通",
-      shopping: "ショッピング",
-      stay: "宿泊"
-    }
-  },
-
-  fr: {
-    home: "Où aller ?",
-    sub: "Explorez la Corée et apprenez le coréen pratique",
-    language: "Choisissez votre langue",
-    learn: "Apprendre le coréen",
-    scenario: "Choisissez une situation",
-    back: "← Retour",
-    library: "Matériel pédagogique",
-    librarySub: "Le coréen utile pour votre voyage",
-    expressions: "Expressions essentielles",
-    expressionsDesc: "Phrases utiles au quotidien",
-    grammar: "Grammaire pratique",
-    grammarDesc: "Grammaire avec des exemples de voyage",
-    dietary: "Besoins alimentaires",
-    dietaryDesc: "Préférences alimentaires et allergies",
-    all: "Tout le matériel",
-    allDesc: "Toutes les expressions et la grammaire",
-    send: "Envoyer",
-    input: "Écrivez ce que vous voulez demander...",
-    status: "Choisissez une réponse ou écrivez une phrase.",
-    selected: "Cette conversation est terminée.",
-    empty: "Aucun matériel trouvé.",
-    foreignLabel: "VOTRE LANGUE",
-    koreanLabel: "CORÉEN",
-    pronunciationLabel: "PRONONCIATION CORÉENNE",
-    speak: "🎙 Parler coréen",
-    listen: "🔊 Écouter",
-    places: {
-      cafe: "Café",
-      restaurant: "Restaurant",
-      transport: "Transport",
-      shopping: "Shopping",
-      stay: "Hébergement"
-    }
-  },
-
-  de: {
-    home: "Wohin möchtest du?",
-    sub: "Entdecke Korea und lerne praktisches Koreanisch",
-    language: "Sprache auswählen",
-    learn: "Koreanisch lernen",
-    scenario: "Situation auswählen",
-    back: "← Zurück",
-    library: "Lernmaterialien",
-    librarySub: "Nützliches Koreanisch für deine Reise",
-    expressions: "Wichtige Ausdrücke",
-    expressionsDesc: "Nützliche Sätze für den Alltag",
-    grammar: "Praktische Grammatik",
-    grammarDesc: "Grammatik mit Reisebeispielen",
-    dietary: "Ernährungsbedürfnisse",
-    dietaryDesc: "Essenswünsche und Allergien",
-    all: "Alle Lernmaterialien",
-    allDesc: "Alle Ausdrücke und Grammatik ansehen",
-    send: "Senden",
-    input: "Gib deine Frage ein...",
-    status: "Wähle eine Antwort oder gib einen Satz ein.",
-    selected: "Dieses Gespräch ist beendet.",
-    empty: "Keine Lernmaterialien gefunden.",
-    foreignLabel: "DEINE SPRACHE",
-    koreanLabel: "KOREANISCH",
-    pronunciationLabel: "KOREANISCHE AUSSPRACHE",
-    speak: "🎙 Koreanisch sprechen",
-    listen: "🔊 Anhören",
-    places: {
-      cafe: "Café",
-      restaurant: "Restaurant",
-      transport: "Verkehr",
-      shopping: "Einkaufen",
-      stay: "Unterkunft"
-    }
-  },
-
-  ar: {
-    home: "إلى أين تريد الذهاب؟",
-    sub: "اكتشف كوريا وتعلم اللغة الكورية المفيدة",
-    language: "اختر لغتك",
-    learn: "تعلم الكورية",
-    scenario: "اختر موقفًا",
-    back: "← رجوع",
-    library: "مواد التعلم",
-    librarySub: "كورية مفيدة لرحلتك",
-    expressions: "تعبيرات أساسية",
-    expressionsDesc: "عبارات مفيدة للحياة اليومية",
-    grammar: "قواعد عملية",
-    grammarDesc: "قواعد مع أمثلة من السفر",
-    dietary: "الاحتياجات الغذائية",
-    dietaryDesc: "التفضيلات الغذائية والحساسية",
-    all: "جميع مواد التعلم",
-    allDesc: "تصفح جميع التعبيرات والقواعد",
-    send: "إرسال",
-    input: "اكتب ما تريد أن تسأل عنه...",
-    status: "اختر إجابة أو اكتب عبارة.",
-    selected: "انتهت هذه المحادثة.",
-    empty: "لم يتم العثور على مواد تعليمية.",
-    foreignLabel: "لغتك",
-    koreanLabel: "الكورية",
-    pronunciationLabel: "النطق الكوري",
-    speak: "🎙 تحدث بالكورية",
-    listen: "🔊 استمع",
-    places: {
-      cafe: "مقهى",
-      restaurant: "مطعم",
-      transport: "المواصلات",
-      shopping: "التسوق",
-      stay: "الإقامة"
-    }
-  },
-
-  pt: {
-    home: "Para onde vamos?",
-    sub: "Explore a Coreia e aprenda coreano útil",
-    language: "Escolha seu idioma",
-    learn: "Aprender coreano",
-    scenario: "Escolha uma situação",
-    back: "← Voltar",
-    library: "Materiais de aprendizagem",
-    librarySub: "Coreano útil para sua viagem",
-    expressions: "Expressões essenciais",
-    expressionsDesc: "Frases úteis para o dia a dia",
-    grammar: "Gramática prática",
-    grammarDesc: "Gramática com exemplos de viagem",
-    dietary: "Necessidades alimentares",
-    dietaryDesc: "Preferências alimentares e alergias",
-    all: "Todos os materiais",
-    allDesc: "Veja todas as expressões e a gramática",
-    send: "Enviar",
-    input: "Digite o que deseja perguntar...",
-    status: "Escolha uma resposta ou digite uma frase.",
-    selected: "Esta conversa foi concluída.",
-    empty: "Nenhum material encontrado.",
-    foreignLabel: "SEU IDIOMA",
-    koreanLabel: "COREANO",
-    pronunciationLabel: "PRONÚNCIA COREANA",
-    speak: "🎙 Falar coreano",
-    listen: "🔊 Ouvir",
-    places: {
-      cafe: "Cafeteria",
-      restaurant: "Restaurante",
-      transport: "Transporte",
-      shopping: "Compras",
-      stay: "Hospedagem"
-    }
-  },
-
-  ru: {
-    home: "Куда пойдём?",
-    sub: "Откройте для себя Корею и изучайте корейский",
-    language: "Выберите язык",
-    learn: "Учить корейский",
-    scenario: "Выберите ситуацию",
-    back: "← Назад",
-    library: "Учебные материалы",
-    librarySub: "Полезный корейский для путешествия",
-    expressions: "Основные выражения",
-    expressionsDesc: "Полезные фразы на каждый день",
-    grammar: "Практическая грамматика",
-    grammarDesc: "Грамматика с примерами из путешествий",
-    dietary: "Пищевые предпочтения",
-    dietaryDesc: "Предпочтения в еде и аллергии",
-    all: "Все учебные материалы",
-    allDesc: "Все выражения и грамматика",
-    send: "Отправить",
-    input: "Введите свой вопрос...",
-    status: "Выберите ответ или введите фразу.",
-    selected: "Разговор завершён.",
-    empty: "Материалы не найдены.",
-    foreignLabel: "ВАШ ЯЗЫК",
-    koreanLabel: "КОРЕЙСКИЙ",
-    pronunciationLabel: "ПРОИЗНОШЕНИЕ",
-    speak: "🎙 Говорить по-корейски",
-    listen: "🔊 Слушать",
-    places: {
-      cafe: "Кафе",
-      restaurant: "Ресторан",
-      transport: "Транспорт",
-      shopping: "Покупки",
-      stay: "Жильё"
-    }
-  },
-
-  vi: {
-    home: "Bạn muốn đi đâu?",
-    sub: "Khám phá Hàn Quốc và học tiếng Hàn hữu ích",
-    language: "Chọn ngôn ngữ",
-    learn: "Học tiếng Hàn",
-    scenario: "Chọn tình huống",
-    back: "← Quay lại",
-    library: "Tài liệu học tập",
-    librarySub: "Tiếng Hàn hữu ích cho chuyến đi",
-    expressions: "Cụm từ cơ bản",
-    expressionsDesc: "Những câu hữu ích trong cuộc sống",
-    grammar: "Ngữ pháp thực tế",
-    grammarDesc: "Ngữ pháp với ví dụ du lịch",
-    dietary: "Nhu cầu ăn uống",
-    dietaryDesc: "Sở thích ăn uống và dị ứng",
-    all: "Tất cả tài liệu",
-    allDesc: "Xem tất cả cụm từ và ngữ pháp",
-    send: "Gửi",
-    input: "Nhập điều bạn muốn hỏi...",
-    status: "Chọn câu trả lời hoặc nhập một câu.",
-    selected: "Cuộc hội thoại đã kết thúc.",
-    empty: "Không tìm thấy tài liệu.",
-    foreignLabel: "NGÔN NGỮ CỦA BẠN",
-    koreanLabel: "TIẾNG HÀN",
-    pronunciationLabel: "PHÁT ÂM TIẾNG HÀN",
-    speak: "🎙 Nói tiếng Hàn",
-    listen: "🔊 Nghe",
-    places: {
-      cafe: "Quán cà phê",
-      restaurant: "Nhà hàng",
-      transport: "Giao thông",
-      shopping: "Mua sắm",
-      stay: "Chỗ ở"
-    }
-  },
-
-  si: {
-    home: "ඔබට යාමට අවශ්‍ය කොහේද?",
-    sub: "කොරියාව ගවේෂණය කර ප්‍රයෝජනවත් කොරියානු භාෂාව ඉගෙන ගන්න",
-    language: "ඔබේ භාෂාව තෝරන්න",
-    learn: "කොරියානු භාෂාව ඉගෙන ගන්න",
-    scenario: "අවස්ථාවක් තෝරන්න",
-    back: "← ආපසු",
-    library: "ඉගෙනුම් ද්‍රව්‍ය",
-    librarySub: "ඔබේ සංචාරයට ප්‍රයෝජනවත් කොරියානු",
-    expressions: "අත්‍යවශ්‍ය ප්‍රකාශන",
-    expressionsDesc: "දෛනික ජීවිතයට ප්‍රයෝජනවත් වාක්‍ය",
-    grammar: "ප්‍රායෝගික ව්‍යාකරණ",
-    grammarDesc: "සංචාරක උදාහරණ සමඟ ව්‍යාකරණ",
-    dietary: "ආහාර අවශ්‍යතා",
-    dietaryDesc: "ආහාර කැමැත්ත සහ අසාත්මිකතා",
-    all: "සියලුම ඉගෙනුම් ද්‍රව්‍ය",
-    allDesc: "සියලුම ප්‍රකාශන සහ ව්‍යාකරණ බලන්න",
-    send: "යවන්න",
-    input: "ඔබට ඇසීමට අවශ්‍ය දේ ලියන්න...",
-    status: "පිළිතුරක් තෝරන්න හෝ වාක්‍යයක් ලියන්න.",
-    selected: "මෙම සංවාදය අවසන්.",
-    empty: "ඉගෙනුම් ද්‍රව්‍ය හමු නොවීය.",
-    foreignLabel: "ඔබේ භාෂාව",
-    koreanLabel: "කොරියානු",
-    pronunciationLabel: "කොරියානු උච්චාරණය",
-    speak: "🎙 කොරියානු කතා කරන්න",
-    listen: "🔊 සවන් දෙන්න",
-    places: {
-      cafe: "කැෆේ",
-      restaurant: "ආපනශාලාව",
-      transport: "ප්‍රවාහනය",
-      shopping: "සාප්පු සවාරි",
-      stay: "නවාතැන්"
-    }
-  },
-
-  ne: {
-    home: "कहाँ जाने?",
-    sub: "कोरिया घुम्नुहोस् र उपयोगी कोरियन सिक्नुहोस्",
-    language: "आफ्नो भाषा छान्नुहोस्",
-    learn: "कोरियन भाषा सिक्नुहोस्",
-    scenario: "एउटा परिस्थिति छान्नुहोस्",
-    back: "← पछाडि",
-    library: "अध्ययन सामग्री",
-    librarySub: "तपाईंको यात्राका लागि उपयोगी कोरियन",
-    expressions: "आवश्यक अभिव्यक्तिहरू",
-    expressionsDesc: "दैनिक जीवनमा उपयोगी वाक्यहरू",
-    grammar: "व्यावहारिक व्याकरण",
-    grammarDesc: "यात्राका उदाहरणसहित व्याकरण",
-    dietary: "खानपानसम्बन्धी आवश्यकता",
-    dietaryDesc: "खानपानको रुचि र एलर्जी",
-    all: "सबै अध्ययन सामग्री",
-    allDesc: "सबै अभिव्यक्ति र व्याकरण हेर्नुहोस्",
-    send: "पठाउनुहोस्",
-    input: "तपाईंले सोध्न चाहेको कुरा लेख्नुहोस्...",
-    status: "उत्तर छान्नुहोस् वा वाक्य लेख्नुहोस्।",
-    selected: "यो कुराकानी पूरा भयो।",
-    empty: "अध्ययन सामग्री भेटिएन।",
-    foreignLabel: "तपाईंको भाषा",
-    koreanLabel: "कोरियन",
-    pronunciationLabel: "कोरियन उच्चारण",
-    speak: "🎙 कोरियन बोल्नुहोस्",
-    listen: "🔊 सुन्नुहोस्",
-    places: {
-      cafe: "क्याफे",
-      restaurant: "रेस्टुरेन्ट",
-      transport: "यातायात",
-      shopping: "किनमेल",
-      stay: "आवास"
-    }
-  },
-
-  th: {
-    home: "อยากไปที่ไหน?",
-    sub: "สำรวจเกาหลีและเรียนภาษาเกาหลีที่ใช้ได้จริง",
-    language: "เลือกภาษาของคุณ",
-    learn: "เรียนภาษาเกาหลี",
-    scenario: "เลือกสถานการณ์",
-    back: "← กลับ",
-    library: "สื่อการเรียนรู้",
-    librarySub: "ภาษาเกาหลีที่มีประโยชน์สำหรับการเดินทาง",
-    expressions: "ประโยคพื้นฐาน",
-    expressionsDesc: "ประโยคที่มีประโยชน์ในชีวิตประจำวัน",
-    grammar: "ไวยากรณ์ที่ใช้ได้จริง",
-    grammarDesc: "ไวยากรณ์พร้อมตัวอย่างการเดินทาง",
-    dietary: "ความต้องการด้านอาหาร",
-    dietaryDesc: "ความชอบด้านอาหารและอาการแพ้",
-    all: "สื่อการเรียนรู้ทั้งหมด",
-    allDesc: "ดูประโยคและไวยากรณ์ทั้งหมด",
-    send: "ส่ง",
-    input: "พิมพ์สิ่งที่คุณต้องการถาม...",
-    status: "เลือกคำตอบหรือพิมพ์ประโยค",
-    selected: "บทสนทนานี้เสร็จสิ้นแล้ว",
-    empty: "ไม่พบสื่อการเรียนรู้",
-    foreignLabel: "ภาษาของคุณ",
-    koreanLabel: "ภาษาเกาหลี",
-    pronunciationLabel: "การออกเสียงภาษาเกาหลี",
-    speak: "🎙 พูดภาษาเกาหลี",
-    listen: "🔊 ฟัง",
-    places: {
-      cafe: "คาเฟ่",
-      restaurant: "ร้านอาหาร",
-      transport: "การเดินทาง",
-      shopping: "ช้อปปิ้ง",
-      stay: "ที่พัก"
-    }
-  }
-
-};
-
-// ==========================================
-// 5부: 장소별 상황 이름 번역
-// ==========================================
-
-const scenarioNames = {
-
-  en: {
-    cafe_order: "Ordering a Drink",
-    cafe_size: "Choosing a Size",
-    cafe_payment: "Paying at a Cafe",
-    restaurant_order: "Ordering Food",
-    restaurant_spicy: "Asking About Spicy Food",
-    restaurant_allergy: "Food Allergies",
-    restaurant_payment: "Paying the Bill",
-    transport_direction: "Asking for Directions",
-    transport_taxi: "Taking a Taxi",
-    transport_subway: "Using the Subway",
-    shopping_price: "Asking the Price",
-    shopping_tryon: "Trying on Clothes",
-    shopping_payment: "Paying for Shopping",
-    stay_checkin: "Checking In",
-    stay_facilities: "Asking About Facilities",
-    stay_problem: "Reporting a Problem"
-  },
-
-  es: {
-    cafe_order: "Pedir una bebida",
-    cafe_size: "Elegir un tamaño",
-    cafe_payment: "Pagar en una cafetería",
-    restaurant_order: "Pedir comida",
-    restaurant_spicy: "Preguntar si pica",
-    restaurant_allergy: "Alergias alimentarias",
-    restaurant_payment: "Pagar la cuenta",
-    transport_direction: "Pedir indicaciones",
-    transport_taxi: "Tomar un taxi",
-    transport_subway: "Usar el metro",
-    shopping_price: "Preguntar el precio",
-    shopping_tryon: "Probarse ropa",
-    shopping_payment: "Pagar las compras",
-    stay_checkin: "Registrarse",
-    stay_facilities: "Preguntar por las instalaciones",
-    stay_problem: "Informar de un problema"
-  },
-
-  zh: {
-    cafe_order: "点饮料",
-    cafe_size: "选择杯型",
-    cafe_payment: "在咖啡馆付款",
-    restaurant_order: "点餐",
-    restaurant_spicy: "询问辣不辣",
-    restaurant_allergy: "食物过敏",
-    restaurant_payment: "结账",
-    transport_direction: "问路",
-    transport_taxi: "乘坐出租车",
-    transport_subway: "乘坐地铁",
-    shopping_price: "询问价格",
-    shopping_tryon: "试穿衣服",
-    shopping_payment: "购物付款",
-    stay_checkin: "办理入住",
-    stay_facilities: "询问设施",
-    stay_problem: "报告问题"
-  },
-
-  ja: {
-    cafe_order: "飲み物を注文する",
-    cafe_size: "サイズを選ぶ",
-    cafe_payment: "カフェで支払う",
-    restaurant_order: "料理を注文する",
-    restaurant_spicy: "辛さを尋ねる",
-    restaurant_allergy: "食物アレルギー",
-    restaurant_payment: "会計する",
-    transport_direction: "道を尋ねる",
-    transport_taxi: "タクシーに乗る",
-    transport_subway: "地下鉄を利用する",
-    shopping_price: "値段を尋ねる",
-    shopping_tryon: "服を試着する",
-    shopping_payment: "買い物の支払い",
-    stay_checkin: "チェックインする",
-    stay_facilities: "設備について尋ねる",
-    stay_problem: "問題を伝える"
-  },
-
-  fr: {
-    cafe_order: "Commander une boisson",
-    cafe_size: "Choisir une taille",
-    cafe_payment: "Payer au café",
-    restaurant_order: "Commander un repas",
-    restaurant_spicy: "Demander si c'est épicé",
-    restaurant_allergy: "Allergies alimentaires",
-    restaurant_payment: "Payer l'addition",
-    transport_direction: "Demander son chemin",
-    transport_taxi: "Prendre un taxi",
-    transport_subway: "Prendre le métro",
-    shopping_price: "Demander le prix",
-    shopping_tryon: "Essayer des vêtements",
-    shopping_payment: "Payer ses achats",
-    stay_checkin: "S'enregistrer",
-    stay_facilities: "Demander les équipements",
-    stay_problem: "Signaler un problème"
-  },
-
-  de: {
-    cafe_order: "Ein Getränk bestellen",
-    cafe_size: "Eine Größe wählen",
-    cafe_payment: "Im Café bezahlen",
-    restaurant_order: "Essen bestellen",
-    restaurant_spicy: "Nach Schärfe fragen",
-    restaurant_allergy: "Lebensmittelallergien",
-    restaurant_payment: "Die Rechnung bezahlen",
-    transport_direction: "Nach dem Weg fragen",
-    transport_taxi: "Ein Taxi nehmen",
-    transport_subway: "Die U-Bahn benutzen",
-    shopping_price: "Nach dem Preis fragen",
-    shopping_tryon: "Kleidung anprobieren",
-    shopping_payment: "Einkäufe bezahlen",
-    stay_checkin: "Einchecken",
-    stay_facilities: "Nach Einrichtungen fragen",
-    stay_problem: "Ein Problem melden"
-  },
-
-  ar: {
-    cafe_order: "طلب مشروب",
-    cafe_size: "اختيار الحجم",
-    cafe_payment: "الدفع في المقهى",
-    restaurant_order: "طلب الطعام",
-    restaurant_spicy: "السؤال عن الطعام الحار",
-    restaurant_allergy: "حساسية الطعام",
-    restaurant_payment: "دفع الحساب",
-    transport_direction: "السؤال عن الاتجاهات",
-    transport_taxi: "ركوب سيارة أجرة",
-    transport_subway: "استخدام المترو",
-    shopping_price: "السؤال عن السعر",
-    shopping_tryon: "تجربة الملابس",
-    shopping_payment: "الدفع مقابل المشتريات",
-    stay_checkin: "تسجيل الوصول",
-    stay_facilities: "السؤال عن المرافق",
-    stay_problem: "الإبلاغ عن مشكلة"
-  },
-
-  pt: {
-    cafe_order: "Pedir uma bebida",
-    cafe_size: "Escolher o tamanho",
-    cafe_payment: "Pagar no café",
-    restaurant_order: "Pedir comida",
-    restaurant_spicy: "Perguntar se é picante",
-    restaurant_allergy: "Alergias alimentares",
-    restaurant_payment: "Pagar a conta",
-    transport_direction: "Pedir informações",
-    transport_taxi: "Pegar um táxi",
-    transport_subway: "Usar o metrô",
-    shopping_price: "Perguntar o preço",
-    shopping_tryon: "Experimentar roupas",
-    shopping_payment: "Pagar as compras",
-    stay_checkin: "Fazer o check-in",
-    stay_facilities: "Perguntar sobre instalações",
-    stay_problem: "Relatar um problema"
-  },
-
-  ru: {
-    cafe_order: "Заказать напиток",
-    cafe_size: "Выбрать размер",
-    cafe_payment: "Оплатить в кафе",
-    restaurant_order: "Заказать еду",
-    restaurant_spicy: "Узнать, острое ли блюдо",
-    restaurant_allergy: "Пищевая аллергия",
-    restaurant_payment: "Оплатить счёт",
-    transport_direction: "Спросить дорогу",
-    transport_taxi: "Взять такси",
-    transport_subway: "Пользоваться метро",
-    shopping_price: "Узнать цену",
-    shopping_tryon: "Примерить одежду",
-    shopping_payment: "Оплатить покупки",
-    stay_checkin: "Заселение",
-    stay_facilities: "Спросить об удобствах",
-    stay_problem: "Сообщить о проблеме"
-  },
-
-  vi: {
-    cafe_order: "Gọi đồ uống",
-    cafe_size: "Chọn kích cỡ",
-    cafe_payment: "Thanh toán tại quán cà phê",
-    restaurant_order: "Gọi món",
-    restaurant_spicy: "Hỏi món ăn có cay không",
-    restaurant_allergy: "Dị ứng thực phẩm",
-    restaurant_payment: "Thanh toán hóa đơn",
-    transport_direction: "Hỏi đường",
-    transport_taxi: "Đi taxi",
-    transport_subway: "Đi tàu điện ngầm",
-    shopping_price: "Hỏi giá",
-    shopping_tryon: "Thử quần áo",
-    shopping_payment: "Thanh toán khi mua sắm",
-    stay_checkin: "Nhận phòng",
-    stay_facilities: "Hỏi về tiện nghi",
-    stay_problem: "Báo sự cố"
-  },
-
-  si: {
-    cafe_order: "පානයක් ඇණවුම් කිරීම",
-    cafe_size: "ප්‍රමාණයක් තෝරා ගැනීම",
-    cafe_payment: "කැෆේ එකේ ගෙවීම",
-    restaurant_order: "ආහාර ඇණවුම් කිරීම",
-    restaurant_spicy: "ආහාරය සැරදැයි විමසීම",
-    restaurant_allergy: "ආහාර අසාත්මිකතා",
-    restaurant_payment: "බිල ගෙවීම",
-    transport_direction: "මඟ විමසීම",
-    transport_taxi: "ටැක්සියක් ගැනීම",
-    transport_subway: "උමං දුම්රිය භාවිතය",
-    shopping_price: "මිල විමසීම",
-    shopping_tryon: "ඇඳුම් ඇඳ බැලීම",
-    shopping_payment: "මිලදී ගැනීම් සඳහා ගෙවීම",
-    stay_checkin: "පදිංචි වීම",
-    stay_facilities: "පහසුකම් විමසීම",
-    stay_problem: "ගැටලුවක් දැනුම් දීම"
-  },
-
-  ne: {
-    cafe_order: "पेय पदार्थ अर्डर गर्ने",
-    cafe_size: "आकार छान्ने",
-    cafe_payment: "क्याफेमा भुक्तानी गर्ने",
-    restaurant_order: "खाना अर्डर गर्ने",
-    restaurant_spicy: "खाना पिरो छ कि भनेर सोध्ने",
-    restaurant_allergy: "खानाको एलर्जी",
-    restaurant_payment: "बिल तिर्ने",
-    transport_direction: "बाटो सोध्ने",
-    transport_taxi: "ट्याक्सी चढ्ने",
-    transport_subway: "मेट्रो प्रयोग गर्ने",
-    shopping_price: "मूल्य सोध्ने",
-    shopping_tryon: "लुगा लगाएर हेर्ने",
-    shopping_payment: "किनमेलको भुक्तानी गर्ने",
-    stay_checkin: "चेक-इन गर्ने",
-    stay_facilities: "सुविधाबारे सोध्ने",
-    stay_problem: "समस्या जानकारी दिने"
-  },
-
-  th: {
-    cafe_order: "สั่งเครื่องดื่ม",
-    cafe_size: "เลือกขนาด",
-    cafe_payment: "จ่ายเงินที่คาเฟ่",
-    restaurant_order: "สั่งอาหาร",
-    restaurant_spicy: "ถามว่าอาหารเผ็ดไหม",
-    restaurant_allergy: "อาการแพ้อาหาร",
-    restaurant_payment: "จ่ายค่าอาหาร",
-    transport_direction: "ถามทาง",
-    transport_taxi: "ขึ้นแท็กซี่",
-    transport_subway: "ใช้รถไฟใต้ดิน",
-    shopping_price: "ถามราคา",
-    shopping_tryon: "ลองเสื้อผ้า",
-    shopping_payment: "จ่ายเงินค่าสินค้า",
-    stay_checkin: "เช็กอิน",
-    stay_facilities: "สอบถามสิ่งอำนวยความสะดวก",
-    stay_problem: "แจ้งปัญหา"
-  }
-
-};
-
-// ==========================================
-// 6부: 상황 설명 번역
-// ==========================================
-
-const scenarioDescriptions = {
-
-  en: {
-    cafe_order: "Order coffee and other drinks",
-    cafe_size: "Ask about drink sizes",
-    cafe_payment: "Pay and ask for a receipt",
-    restaurant_order: "Order food at a restaurant",
-    restaurant_spicy: "Ask how spicy a dish is",
-    restaurant_allergy: "Explain your food allergy",
-    restaurant_payment: "Ask for the bill and a receipt",
-    transport_direction: "Find your way around Korea",
-    transport_taxi: "Tell the driver where to go",
-    transport_subway: "Ask about subway tickets",
-    shopping_price: "Ask how much something costs",
-    shopping_tryon: "Ask to try on clothes",
-    shopping_payment: "Pay by card or cash",
-    stay_checkin: "Check in at your accommodation",
-    stay_facilities: "Ask about hotel facilities",
-    stay_problem: "Explain a problem in your room"
-  },
-
-  es: {
-    cafe_order: "Pide café y otras bebidas",
-    cafe_size: "Pregunta por los tamaños",
-    cafe_payment: "Paga y pide un recibo",
-    restaurant_order: "Pide comida en un restaurante",
-    restaurant_spicy: "Pregunta qué tan picante es un plato",
-    restaurant_allergy: "Explica tus alergias alimentarias",
-    restaurant_payment: "Pide la cuenta y el recibo",
-    transport_direction: "Encuentra tu camino por Corea",
-    transport_taxi: "Indica al conductor adónde ir",
-    transport_subway: "Pregunta por los billetes de metro",
-    shopping_price: "Pregunta cuánto cuesta algo",
-    shopping_tryon: "Pregunta si puedes probarte ropa",
-    shopping_payment: "Paga con tarjeta o en efectivo",
-    stay_checkin: "Regístrate en tu alojamiento",
-    stay_facilities: "Pregunta por las instalaciones",
-    stay_problem: "Explica un problema en tu habitación"
-  },
-
-  zh: {
-    cafe_order: "点咖啡和其他饮料",
-    cafe_size: "询问饮料的尺寸",
-    cafe_payment: "付款并索要收据",
-    restaurant_order: "在餐厅点餐",
-    restaurant_spicy: "询问菜品的辣度",
-    restaurant_allergy: "说明食物过敏情况",
-    restaurant_payment: "结账并索要收据",
-    transport_direction: "在韩国问路",
-    transport_taxi: "告诉司机目的地",
-    transport_subway: "询问地铁车票",
-    shopping_price: "询问商品价格",
-    shopping_tryon: "询问能否试穿衣服",
-    shopping_payment: "使用现金或银行卡付款",
-    stay_checkin: "在住宿处办理入住",
-    stay_facilities: "询问住宿设施",
-    stay_problem: "说明房间的问题"
-  },
-
-  ja: {
-    cafe_order: "コーヒーなどの飲み物を注文する",
-    cafe_size: "ドリンクのサイズを尋ねる",
-    cafe_payment: "支払いとレシートのお願い",
-    restaurant_order: "レストランで料理を注文する",
-    restaurant_spicy: "料理の辛さを尋ねる",
-    restaurant_allergy: "食物アレルギーを伝える",
-    restaurant_payment: "会計とレシートをお願いする",
-    transport_direction: "韓国で道を尋ねる",
-    transport_taxi: "運転手に行き先を伝える",
-    transport_subway: "地下鉄の切符について尋ねる",
-    shopping_price: "商品の値段を尋ねる",
-    shopping_tryon: "服を試着できるか尋ねる",
-    shopping_payment: "現金またはカードで支払う",
-    stay_checkin: "宿泊先でチェックインする",
-    stay_facilities: "宿泊施設について尋ねる",
-    stay_problem: "部屋の問題を伝える"
-  },
-
-  fr: {
-    cafe_order: "Commander du café et d'autres boissons",
-    cafe_size: "Demander les tailles des boissons",
-    cafe_payment: "Payer et demander un reçu",
-    restaurant_order: "Commander dans un restaurant",
-    restaurant_spicy: "Demander si un plat est épicé",
-    restaurant_allergy: "Expliquer ses allergies alimentaires",
-    restaurant_payment: "Demander l'addition et un reçu",
-    transport_direction: "Se repérer en Corée",
-    transport_taxi: "Indiquer sa destination au chauffeur",
-    transport_subway: "Demander des informations sur le métro",
-    shopping_price: "Demander le prix d'un article",
-    shopping_tryon: "Demander à essayer un vêtement",
-    shopping_payment: "Payer par carte ou en espèces",
-    stay_checkin: "S'enregistrer à son hébergement",
-    stay_facilities: "Se renseigner sur les équipements",
-    stay_problem: "Signaler un problème dans sa chambre"
-  },
-
-  de: {
-    cafe_order: "Kaffee und andere Getränke bestellen",
-    cafe_size: "Nach Getränkegrößen fragen",
-    cafe_payment: "Bezahlen und einen Beleg verlangen",
-    restaurant_order: "Im Restaurant Essen bestellen",
-    restaurant_spicy: "Nach der Schärfe eines Gerichts fragen",
-    restaurant_allergy: "Lebensmittelallergien erklären",
-    restaurant_payment: "Nach der Rechnung und einem Beleg fragen",
-    transport_direction: "In Korea nach dem Weg fragen",
-    transport_taxi: "Dem Fahrer das Ziel nennen",
-    transport_subway: "Nach U-Bahn-Tickets fragen",
-    shopping_price: "Nach dem Preis fragen",
-    shopping_tryon: "Fragen, ob man Kleidung anprobieren darf",
-    shopping_payment: "Mit Karte oder Bargeld bezahlen",
-    stay_checkin: "In der Unterkunft einchecken",
-    stay_facilities: "Nach Einrichtungen fragen",
-    stay_problem: "Ein Problem im Zimmer melden"
-  },
-
-  ar: {
-    cafe_order: "طلب القهوة والمشروبات الأخرى",
-    cafe_size: "السؤال عن أحجام المشروبات",
-    cafe_payment: "الدفع وطلب الإيصال",
-    restaurant_order: "طلب الطعام في المطعم",
-    restaurant_spicy: "السؤال عن مدى حرارة الطبق",
-    restaurant_allergy: "شرح الحساسية الغذائية",
-    restaurant_payment: "طلب الحساب والإيصال",
-    transport_direction: "السؤال عن الطريق في كوريا",
-    transport_taxi: "إخبار السائق بالوجهة",
-    transport_subway: "السؤال عن تذاكر المترو",
-    shopping_price: "السؤال عن سعر شيء ما",
-    shopping_tryon: "طلب تجربة الملابس",
-    shopping_payment: "الدفع نقدًا أو بالبطاقة",
-    stay_checkin: "تسجيل الدخول إلى مكان الإقامة",
-    stay_facilities: "السؤال عن مرافق الفندق",
-    stay_problem: "شرح مشكلة في الغرفة"
-  },
-
-  pt: {
-    cafe_order: "Pedir café e outras bebidas",
-    cafe_size: "Perguntar sobre os tamanhos",
-    cafe_payment: "Pagar e pedir um recibo",
-    restaurant_order: "Pedir comida em um restaurante",
-    restaurant_spicy: "Perguntar se um prato é picante",
-    restaurant_allergy: "Explicar alergias alimentares",
-    restaurant_payment: "Pedir a conta e o recibo",
-    transport_direction: "Pedir informações na Coreia",
-    transport_taxi: "Informar o destino ao motorista",
-    transport_subway: "Perguntar sobre bilhetes do metrô",
-    shopping_price: "Perguntar o preço de algo",
-    shopping_tryon: "Perguntar se pode experimentar uma roupa",
-    shopping_payment: "Pagar com cartão ou dinheiro",
-    stay_checkin: "Fazer check-in na hospedagem",
-    stay_facilities: "Perguntar sobre as instalações",
-    stay_problem: "Explicar um problema no quarto"
-  },
-
-  ru: {
-    cafe_order: "Заказать кофе и другие напитки",
-    cafe_size: "Узнать о размерах напитков",
-    cafe_payment: "Оплатить и попросить чек",
-    restaurant_order: "Заказать еду в ресторане",
-    restaurant_spicy: "Узнать, насколько острое блюдо",
-    restaurant_allergy: "Объяснить пищевую аллергию",
-    restaurant_payment: "Попросить счёт и чек",
-    transport_direction: "Спросить дорогу в Корее",
-    transport_taxi: "Сообщить водителю пункт назначения",
-    transport_subway: "Узнать о билетах на метро",
-    shopping_price: "Узнать стоимость товара",
-    shopping_tryon: "Спросить, можно ли примерить одежду",
-    shopping_payment: "Оплатить картой или наличными",
-    stay_checkin: "Заселиться в жильё",
-    stay_facilities: "Узнать об удобствах",
-    stay_problem: "Сообщить о проблеме в номере"
-  },
-
-  vi: {
-    cafe_order: "Gọi cà phê và đồ uống khác",
-    cafe_size: "Hỏi về kích cỡ đồ uống",
-    cafe_payment: "Thanh toán và xin hóa đơn",
-    restaurant_order: "Gọi món tại nhà hàng",
-    restaurant_spicy: "Hỏi món ăn có cay không",
-    restaurant_allergy: "Giải thích về dị ứng thực phẩm",
-    restaurant_payment: "Yêu cầu thanh toán và hóa đơn",
-    transport_direction: "Hỏi đường ở Hàn Quốc",
-    transport_taxi: "Nói với tài xế nơi muốn đến",
-    transport_subway: "Hỏi về vé tàu điện ngầm",
-    shopping_price: "Hỏi giá sản phẩm",
-    shopping_tryon: "Hỏi có thể thử quần áo không",
-    shopping_payment: "Thanh toán bằng thẻ hoặc tiền mặt",
-    stay_checkin: "Làm thủ tục nhận phòng",
-    stay_facilities: "Hỏi về tiện nghi",
-    stay_problem: "Báo vấn đề trong phòng"
-  },
-
-  si: {
-    cafe_order: "කෝපි සහ වෙනත් පානයන් ඇණවුම් කරන්න",
-    cafe_size: "පාන ප්‍රමාණ ගැන විමසන්න",
-    cafe_payment: "ගෙවා රිසිට්පතක් ඉල්ලන්න",
-    restaurant_order: "ආපනශාලාවක ආහාර ඇණවුම් කරන්න",
-    restaurant_spicy: "ආහාරය සැරදැයි විමසන්න",
-    restaurant_allergy: "ආහාර අසාත්මිකතා පැහැදිලි කරන්න",
-    restaurant_payment: "බිල සහ රිසිට්පත ඉල්ලන්න",
-    transport_direction: "කොරියාවේ මඟ විමසන්න",
-    transport_taxi: "රියදුරුට ගමනාන්තය කියන්න",
-    transport_subway: "උමං දුම්රිය ටිකට් ගැන විමසන්න",
-    shopping_price: "භාණ්ඩයක මිල විමසන්න",
-    shopping_tryon: "ඇඳුම් ඇඳ බැලීමට අවසර ඉල්ලන්න",
-    shopping_payment: "කාඩ්පතෙන් හෝ මුදලින් ගෙවන්න",
-    stay_checkin: "නවාතැනට ඇතුළු වන්න",
-    stay_facilities: "පහසුකම් ගැන විමසන්න",
-    stay_problem: "කාමරයේ ගැටලුවක් දැනුම් දෙන්න"
-  },
-
-  ne: {
-    cafe_order: "कफी र अन्य पेय अर्डर गर्ने",
-    cafe_size: "पेयको आकारबारे सोध्ने",
-    cafe_payment: "भुक्तानी गरेर रसिद माग्ने",
-    restaurant_order: "रेस्टुरेन्टमा खाना अर्डर गर्ने",
-    restaurant_spicy: "खाना पिरो छ कि भनेर सोध्ने",
-    restaurant_allergy: "खानाको एलर्जीबारे बताउने",
-    restaurant_payment: "बिल र रसिद माग्ने",
-    transport_direction: "कोरियामा बाटो सोध्ने",
-    transport_taxi: "चालकलाई गन्तव्य बताउने",
-    transport_subway: "मेट्रो टिकटबारे सोध्ने",
-    shopping_price: "सामानको मूल्य सोध्ने",
-    shopping_tryon: "लुगा लगाएर हेर्न अनुमति माग्ने",
-    shopping_payment: "कार्ड वा नगदबाट भुक्तानी गर्ने",
-    stay_checkin: "आवासमा चेक-इन गर्ने",
-    stay_facilities: "सुविधाबारे सोध्ने",
-    stay_problem: "कोठाको समस्या बताउने"
-  },
-
-  th: {
-    cafe_order: "สั่งกาแฟและเครื่องดื่มอื่น ๆ",
-    cafe_size: "ถามเกี่ยวกับขนาดเครื่องดื่ม",
-    cafe_payment: "จ่ายเงินและขอใบเสร็จ",
-    restaurant_order: "สั่งอาหารในร้านอาหาร",
-    restaurant_spicy: "ถามว่าอาหารเผ็ดแค่ไหน",
-    restaurant_allergy: "อธิบายอาการแพ้อาหาร",
-    restaurant_payment: "ขอเช็กบิลและใบเสร็จ",
-    transport_direction: "ถามทางในเกาหลี",
-    transport_taxi: "บอกจุดหมายกับคนขับ",
-    transport_subway: "ถามเกี่ยวกับตั๋วรถไฟใต้ดิน",
-    shopping_price: "ถามราคาสินค้า",
-    shopping_tryon: "ถามว่าลองเสื้อผ้าได้ไหม",
-    shopping_payment: "จ่ายด้วยบัตรหรือเงินสด",
-    stay_checkin: "เช็กอินที่พัก",
-    stay_facilities: "ถามเกี่ยวกับสิ่งอำนวยความสะดวก",
-    stay_problem: "แจ้งปัญหาในห้องพัก"
-  }
-
-};
-
-// ==========================================
-// 7부: 대화 문장 번역
-// 한국어 문장을 기준으로 외국어 번역을 연결
-// ==========================================
-
-const phraseTranslations = {
-
-  "무엇을 주문하시겠어요?": {
-    en: "What would you like to order?",
-    es: "¿Qué desea pedir?",
-    zh: "您想点什么？",
-    ja: "何をご注文なさいますか？",
-    fr: "Que souhaitez-vous commander ?",
-    de: "Was möchten Sie bestellen?",
-    ar: "ماذا تود أن تطلب؟",
-    pt: "O que gostaria de pedir?",
-    ru: "Что вы хотите заказать?",
-    vi: "Bạn muốn gọi món gì?",
-    si: "ඔබ ඇණවුම් කිරීමට කැමති කුමක්ද?",
-    ne: "तपाईं के अर्डर गर्न चाहनुहुन्छ?",
-    th: "คุณต้องการสั่งอะไร?"
-  },
-
-  "아이스 아메리카노 하나 주세요.": {
-    en: "An iced Americano, please.",
-    es: "Un americano con hielo, por favor.",
-    zh: "请给我一杯冰美式。",
-    ja: "アイスアメリカーノを一つください。",
-    fr: "Un americano glacé, s'il vous plaît.",
-    de: "Einen Iced Americano, bitte.",
-    ar: "أمريكانو مثلج واحد من فضلك.",
-    pt: "Um americano gelado, por favor.",
-    ru: "Один айс-американо, пожалуйста.",
-    vi: "Cho tôi một Americano đá.",
-    si: "අයිස් ඇමරිකානෝ එකක් දෙන්න.",
-    ne: "एउटा आइस अमेरिकानो दिनुहोस्।",
-    th: "ขอไอซ์อเมริกาโนหนึ่งแก้ว"
-  },
-
-  "따뜻한 라테 하나 주세요.": {
-    en: "A hot latte, please.",
-    es: "Un latte caliente, por favor.",
-    zh: "请给我一杯热拿铁。",
-    ja: "ホットラテを一つください。",
-    fr: "Un latte chaud, s'il vous plaît.",
-    de: "Einen heißen Latte, bitte.",
-    ar: "لاتيه ساخن واحد من فضلك.",
-    pt: "Um latte quente, por favor.",
-    ru: "Один горячий латте, пожалуйста.",
-    vi: "Cho tôi một ly latte nóng.",
-    si: "උණුසුම් ලාටේ එකක් දෙන්න.",
-    ne: "एउटा तातो लाटे दिनुहोस्।",
-    th: "ขอลาเต้ร้อนหนึ่งแก้ว"
-  },
-
-  "메뉴를 볼 수 있을까요?": {
-    en: "Can I see the menu?",
-    es: "¿Puedo ver el menú?",
-    zh: "我可以看一下菜单吗？",
-    ja: "メニューを見てもいいですか？",
-    fr: "Puis-je voir le menu ?",
-    de: "Kann ich die Speisekarte sehen?",
-    ar: "هل يمكنني رؤية القائمة؟",
-    pt: "Posso ver o cardápio?",
-    ru: "Можно посмотреть меню?",
-    vi: "Tôi có thể xem thực đơn không?",
-    si: "මට මෙනුව බලන්න පුළුවන්ද?",
-    ne: "के म मेनु हेर्न सक्छु?",
-    th: "ขอดูเมนูได้ไหม?"
-  },
-
-  "물 좀 주세요.": {
-    en: "Could I have some water?",
-    es: "¿Me puede dar un poco de agua?",
-    zh: "请给我一些水。",
-    ja: "お水をいただけますか？",
-    fr: "Pourrais-je avoir de l'eau ?",
-    de: "Könnte ich bitte etwas Wasser bekommen?",
-    ar: "هل يمكنني الحصول على بعض الماء؟",
-    pt: "Pode me trazer um pouco de água?",
-    ru: "Можно мне немного воды?",
-    vi: "Cho tôi xin một chút nước.",
-    si: "මට වතුර ටිකක් දෙන්න පුළුවන්ද?",
-    ne: "मलाई अलिकति पानी दिनुहुन्छ?",
-    th: "ขอน้ำหน่อยได้ไหม?"
-  },
-
-  "감사합니다.": {
-    en: "Thank you.",
-    es: "Gracias.",
-    zh: "谢谢。",
-    ja: "ありがとうございます。",
-    fr: "Merci.",
-    de: "Vielen Dank.",
-    ar: "شكراً.",
-    pt: "Obrigado.",
-    ru: "Спасибо.",
-    vi: "Cảm ơn.",
-    si: "ස්තුතියි.",
-    ne: "धन्यवाद।",
-    th: "ขอบคุณ"
-  },
-
-  "차갑게 해 주세요.": {
-    en: "Iced, please.",
-    es: "Con hielo, por favor.",
-    zh: "请做成冰的。",
-    ja: "冷たくしてください。",
-    fr: "Froid, s'il vous plaît.",
-    de: "Bitte kalt.",
-    ar: "بارد من فضلك.",
-    pt: "Gelado, por favor.",
-    ru: "Со льдом, пожалуйста.",
-    vi: "Cho tôi loại lạnh.",
-    si: "සීතලට දෙන්න.",
-    ne: "चिसो दिनुहोस्।",
-    th: "ขอแบบเย็น"
-  },
-
-  "따뜻하게 해 주세요.": {
-    en: "Hot, please.",
-    es: "Caliente, por favor.",
-    zh: "请做热的。",
-    ja: "温かくしてください。",
-    fr: "Chaud, s'il vous plaît.",
-    de: "Bitte heiß.",
-    ar: "ساخن من فضلك.",
-    pt: "Quente, por favor.",
-    ru: "Горячим, пожалуйста.",
-    vi: "Cho tôi loại nóng.",
-    si: "උණුසුම්ව දෙන්න.",
-    ne: "तातो दिनुहोस्।",
-    th: "ขอแบบร้อน"
-  },
-
-  "이게 전부예요. 감사합니다.": {
-    en: "That's all, thank you.",
-    es: "Eso es todo, gracias.",
-    zh: "就这些，谢谢。",
-    ja: "以上です。ありがとうございます。",
-    fr: "Ce sera tout, merci.",
-    de: "Das ist alles, danke.",
-    ar: "هذا كل شيء، شكراً.",
-    pt: "É só isso, obrigado.",
-    ru: "Это всё, спасибо.",
-    vi: "Chỉ vậy thôi, cảm ơn.",
-    si: "එපමණයි, ස්තුතියි.",
-    ne: "यति नै हो, धन्यवाद।",
-    th: "แค่นี้ค่ะ/ครับ ขอบคุณ"
-  },
-
-  "어떤 사이즈로 드릴까요?": {
-    en: "What size would you like?",
-    es: "¿Qué tamaño desea?",
-    zh: "您想要什么尺寸？",
-    ja: "サイズはいかがなさいますか？",
-    fr: "Quelle taille souhaitez-vous ?",
-    de: "Welche Größe möchten Sie?",
-    ar: "ما الحجم الذي تريده؟",
-    pt: "Qual tamanho você gostaria?",
-    ru: "Какой размер вы хотите?",
-    vi: "Bạn muốn kích cỡ nào?",
-    si: "ඔබට අවශ්‍ය ප්‍රමාණය කුමක්ද?",
-    ne: "तपाईंलाई कुन आकार चाहिन्छ?",
-    th: "คุณต้องการขนาดไหน?"
-  },
-
-  "작은 사이즈로 주세요.": {
-    en: "Small, please.",
-    es: "Pequeño, por favor.",
-    zh: "请给我小杯。",
-    ja: "小さいサイズでお願いします。",
-    fr: "Petit, s'il vous plaît.",
-    de: "Klein, bitte.",
-    ar: "حجم صغير من فضلك.",
-    pt: "Pequeno, por favor.",
-    ru: "Маленький, пожалуйста.",
-    vi: "Cho tôi cỡ nhỏ.",
-    si: "කුඩා ප්‍රමාණය දෙන්න.",
-    ne: "सानो आकार दिनुहोस्।",
-    th: "ขอขนาดเล็ก"
-  },
-
-  "중간 사이즈로 주세요.": {
-    en: "Medium, please.",
-    es: "Mediano, por favor.",
-    zh: "请给我中杯。",
-    ja: "ミディアムサイズでお願いします。",
-    fr: "Moyen, s'il vous plaît.",
-    de: "Mittel, bitte.",
-    ar: "حجم متوسط من فضلك.",
-    pt: "Médio, por favor.",
-    ru: "Средний, пожалуйста.",
-    vi: "Cho tôi cỡ vừa.",
-    si: "මධ්‍යම ප්‍රමාණය දෙන්න.",
-    ne: "मध्यम आकार दिनुहोस्।",
-    th: "ขนาดกลาง"
-  },
-
-  "큰 사이즈로 주세요.": {
-    en: "Large, please.",
-    es: "Grande, por favor.",
-    zh: "请给我大杯。",
-    ja: "大きいサイズでお願いします。",
-    fr: "Grand, s'il vous plaît.",
-    de: "Groß, bitte.",
-    ar: "حجم كبير من فضلك.",
-    pt: "Grande, por favor.",
-    ru: "Большой, пожалуйста.",
-    vi: "Cho tôi cỡ lớn.",
-    si: "විශාල ප්‍රමාණය දෙන්න.",
-    ne: "ठूलो आकार दिनुहोस्।",
-    th: "ขนาดใหญ่"
-  },
-
-  "어떻게 결제하시겠어요?": {
-    en: "How would you like to pay?",
-    es: "¿Cómo desea pagar?",
-    zh: "您想怎么付款？",
-    ja: "お支払い方法はいかがなさいますか？",
-    fr: "Comment souhaitez-vous payer ?",
-    de: "Wie möchten Sie bezahlen?",
-    ar: "كيف تود الدفع؟",
-    pt: "Como gostaria de pagar?",
-    ru: "Как вы хотите оплатить?",
-    vi: "Bạn muốn thanh toán bằng cách nào?",
-    si: "ඔබ ගෙවීමට කැමති කෙසේද?",
-    ne: "तपाईं कसरी भुक्तानी गर्न चाहनुहुन्छ?",
-    th: "คุณต้องการชำระเงินอย่างไร?"
-  },
-
-  "카드로 결제할게요.": {
-    en: "I'll pay by card.",
-    es: "Pagaré con tarjeta.",
-    zh: "我用银行卡付款。",
-    ja: "カードで支払います。",
-    fr: "Je vais payer par carte.",
-    de: "Ich bezahle mit Karte.",
-    ar: "سأدفع بالبطاقة.",
-    pt: "Vou pagar com cartão.",
-    ru: "Я оплачу картой.",
-    vi: "Tôi sẽ thanh toán bằng thẻ.",
-    si: "මම කාඩ්පතෙන් ගෙවන්නම්.",
-    ne: "म कार्डबाट भुक्तानी गर्छु।",
-    th: "ฉันจะจ่ายด้วยบัตร"
-  },
-
-  "현금으로 낼게요.": {
-    en: "I'll pay in cash.",
-    es: "Pagaré en efectivo.",
-    zh: "我付现金。",
-    ja: "現金で支払います。",
-    fr: "Je vais payer en espèces.",
-    de: "Ich bezahle bar.",
-    ar: "سأدفع نقداً.",
-    pt: "Vou pagar em dinheiro.",
-    ru: "Я заплачу наличными.",
-    vi: "Tôi sẽ trả bằng tiền mặt.",
-    si: "මම මුදලින් ගෙවන්නම්.",
-    ne: "म नगद तिर्छु।",
-    th: "ฉันจะจ่ายเป็นเงินสด"
-  },
-
-  "네, 주세요.": {
-    en: "Yes, please.",
-    es: "Sí, por favor.",
-    zh: "好的，请给我。",
-    ja: "はい、お願いします。",
-    fr: "Oui, s'il vous plaît.",
-    de: "Ja, bitte.",
-    ar: "نعم، من فضلك.",
-    pt: "Sim, por favor.",
-    ru: "Да, пожалуйста.",
-    vi: "Vâng, cho tôi xin.",
-    si: "ඔව්, දෙන්න.",
-    ne: "हुन्छ, दिनुहोस्।",
-    th: "ใช่ค่ะ/ครับ"
-  },
-
-  "아니요, 괜찮아요.": {
-    en: "No, thank you.",
-    es: "No, gracias.",
-    zh: "不用了，谢谢。",
-    ja: "いいえ、大丈夫です。",
-    fr: "Non, merci.",
-    de: "Nein, danke.",
-    ar: "لا، شكراً.",
-    pt: "Não, obrigado.",
-    ru: "Нет, спасибо.",
-    vi: "Không, cảm ơn.",
-    si: "නැහැ, කමක් නැහැ.",
-    ne: "होइन, धन्यवाद।",
-    th: "ไม่เป็นไร ขอบคุณ"
-  },
-
-  "주문하시겠어요?": {
-    en: "Are you ready to order?",
-    es: "¿Está listo para pedir?",
-    zh: "您准备好点餐了吗？",
-    ja: "ご注文はお決まりですか？",
-    fr: "Êtes-vous prêt à commander ?",
-    de: "Möchten Sie bestellen?",
-    ar: "هل أنت مستعد للطلب؟",
-    pt: "Está pronto para pedir?",
-    ru: "Вы готовы сделать заказ?",
-    vi: "Bạn đã sẵn sàng gọi món chưa?",
-    si: "ඔබ ඇණවුම් කිරීමට සූදානම්ද?",
-    ne: "के तपाईं अर्डर गर्न तयार हुनुहुन्छ?",
-    th: "พร้อมสั่งอาหารหรือยัง?"
-  },
-
-  "이걸로 주세요.": {
-    en: "I'd like this, please.",
-    es: "Quisiera esto, por favor.",
-    zh: "请给我这个。",
-    ja: "これをください。",
-    fr: "Je voudrais ceci, s'il vous plaît.",
-    de: "Ich nehme bitte das hier.",
-    ar: "أريد هذا من فضلك.",
-    pt: "Quero este, por favor.",
-    ru: "Мне, пожалуйста, вот это.",
-    vi: "Cho tôi món này.",
-    si: "මට මේක දෙන්න.",
-    ne: "मलाई यो दिनुहोस्।",
-    th: "ขออันนี้ค่ะ/ครับ"
-  },
-
-  "뭐가 맛있어요?": {
-    en: "What do you recommend?",
-    es: "¿Qué me recomienda?",
-    zh: "您推荐什么？",
-    ja: "おすすめは何ですか？",
-    fr: "Que me conseillez-vous ?",
-    de: "Was empfehlen Sie?",
-    ar: "ماذا تنصحني؟",
-    pt: "O que você recomenda?",
-    ru: "Что вы посоветуете?",
-    vi: "Bạn giới thiệu món nào?",
-    si: "ඔබ නිර්දේශ කරන්නේ කුමක්ද?",
-    ne: "तपाईं के सिफारिस गर्नुहुन्छ?",
-    th: "คุณแนะนำอะไร?"
-  },
-
-  "음료는 뭐로 드릴까요?": {
-    en: "Would you like anything to drink?",
-    es: "¿Qué desea beber?",
-    zh: "您想喝点什么？",
-    ja: "お飲み物はいかがですか？",
-    fr: "Que souhaitez-vous boire ?",
-    de: "Möchten Sie etwas trinken?",
-    ar: "ماذا تود أن تشرب؟",
-    pt: "O que gostaria de beber?",
-    ru: "Что будете пить?",
-    vi: "Bạn muốn uống gì?",
-    si: "ඔබට පානය කිරීමට අවශ්‍ය කුමක්ද?",
-    ne: "तपाईं के पिउन चाहनुहुन्छ?",
-    th: "รับเครื่องดื่มอะไรดี?"
-  },
-
-  "콜라 하나 주세요.": {
-    en: "One cola, please.",
-    es: "Una cola, por favor.",
-    zh: "请给我一杯可乐。",
-    ja: "コーラを一つください。",
-    fr: "Un cola, s'il vous plaît.",
-    de: "Eine Cola, bitte.",
-    ar: "كولا واحدة من فضلك.",
-    pt: "Uma cola, por favor.",
-    ru: "Одну колу, пожалуйста.",
-    vi: "Cho tôi một lon cola.",
-    si: "කෝලා එකක් දෙන්න.",
-    ne: "एउटा कोला दिनुहोस्।",
-    th: "ขอโคล่าหนึ่งแก้ว"
-  },
-
-  "더 궁금한 점 있으세요?": {
-    en: "Is there anything else you'd like to know?",
-    es: "¿Hay algo más que quiera saber?",
-    zh: "您还有其他想了解的吗？",
-    ja: "ほかに知りたいことはありますか？",
-    fr: "Souhaitez-vous savoir autre chose ?",
-    de: "Möchten Sie noch etwas wissen?",
-    ar: "هل هناك شيء آخر تود معرفته؟",
-    pt: "Gostaria de saber mais alguma coisa?",
-    ru: "Вы хотите узнать что-нибудь ещё?",
-    vi: "Bạn còn muốn biết điều gì nữa không?",
-    si: "ඔබට තවත් දැනගැනීමට අවශ්‍ය දෙයක් තිබේද?",
-    ne: "तपाईं अरू केही जान्न चाहनुहुन्छ?",
-    th: "มีอะไรอยากทราบเพิ่มเติมไหม?"
-  },
-
-  "이거 매워요?": {
-    en: "Is this spicy?",
-    es: "¿Esto es picante?",
-    zh: "这个辣吗？",
-    ja: "これは辛いですか？",
-    fr: "Est-ce que c'est épicé ?",
-    de: "Ist das scharf?",
-    ar: "هل هذا حار؟",
-    pt: "Isto é apimentado?",
-    ru: "Это острое?",
-    vi: "Món này có cay không?",
-    si: "මේක සැරද?",
-    ne: "के यो पिरो छ?",
-    th: "อันนี้เผ็ดไหม?"
-  },
-
-  "네, 매워요.": {
-    en: "Yes, it's spicy.",
-    es: "Sí, es picante.",
-    zh: "是的，很辣。",
-    ja: "はい、辛いです。",
-    fr: "Oui, c'est épicé.",
-    de: "Ja, es ist scharf.",
-    ar: "نعم، إنه حار.",
-    pt: "Sim, é apimentado.",
-    ru: "Да, острое.",
-    vi: "Vâng, món này cay.",
-    si: "ඔව්, මේක සැරයි.",
-    ne: "हो, यो पिरो छ।",
-    th: "ใช่ เผ็ด"
-  },
-
-  "아니요, 맵지 않아요.": {
-    en: "No, it's not spicy.",
-    es: "No, no es picante.",
-    zh: "不，不辣。",
-    ja: "いいえ、辛くありません。",
-    fr: "Non, ce n'est pas épicé.",
-    de: "Nein, es ist nicht scharf.",
-    ar: "لا، إنه ليس حاراً.",
-    pt: "Não, não é apimentado.",
-    ru: "Нет, не острое.",
-    vi: "Không, món này không cay.",
-    si: "නැහැ, මේක සැර නැහැ.",
-    ne: "होइन, यो पिरो छैन।",
-    th: "ไม่ ไม่เผ็ด"
-  },
-
-  "덜 맵게 해 주실 수 있나요?": {
-    en: "Could you make it less spicy?",
-    es: "¿Podría hacerlo menos picante?",
-    zh: "可以做得不那么辣吗？",
-    ja: "辛さを控えめにしていただけますか？",
-    fr: "Pourriez-vous le faire moins épicé ?",
-    de: "Könnten Sie es weniger scharf machen?",
-    ar: "هل يمكنك جعله أقل حرارة؟",
-    pt: "Poderia fazer menos apimentado?",
-    ru: "Можно сделать не таким острым?",
-    vi: "Bạn có thể làm ít cay hơn không?",
-    si: "මේක අඩුවෙන් සැරට හදන්න පුළුවන්ද?",
-    ne: "के यसलाई कम पिरो बनाउन सक्नुहुन्छ?",
-    th: "ช่วยทำให้เผ็ดน้อยลงได้ไหม?"
-  },
-
-  "그럼 다른 걸로 주문할게요.": {
-    en: "Then, I'll order something else.",
-    es: "Entonces pediré otra cosa.",
-    zh: "那我点别的吧。",
-    ja: "では、別のものを注文します。",
-    fr: "Alors, je vais commander autre chose.",
-    de: "Dann bestelle ich etwas anderes.",
-    ar: "إذن سأطلب شيئاً آخر.",
-    pt: "Então vou pedir outra coisa.",
-    ru: "Тогда я закажу что-нибудь другое.",
-    vi: "Vậy tôi sẽ gọi món khác.",
-    si: "එහෙනම් මම වෙනත් දෙයක් ඇණවුම් කරන්නම්.",
-    ne: "त्यसो भए म अर्को कुरा अर्डर गर्छु।",
-    th: "ถ้าอย่างนั้นฉันจะสั่งอย่างอื่น"
-  },
-
-  "음식 알레르기가 있으세요?": {
-    en: "Do you have any food allergies?",
-    es: "¿Tiene alguna alergia alimentaria?",
-    zh: "您有食物过敏吗？",
-    ja: "食物アレルギーはありますか？",
-    fr: "Avez-vous des allergies alimentaires ?",
-    de: "Haben Sie Lebensmittelallergien?",
-    ar: "هل لديك حساسية من الطعام؟",
-    pt: "Você tem alguma alergia alimentar?",
-    ru: "У вас есть пищевая аллергия?",
-    vi: "Bạn có bị dị ứng thực phẩm không?",
-    si: "ඔබට ආහාර අසාත්මිකතා තිබේද?",
-    ne: "के तपाईंलाई खानाबाट एलर्जी छ?",
-    th: "คุณแพ้อาหารอะไรไหม?"
-  },
-
-  "저는 땅콩 알레르기가 있어요.": {
-    en: "I'm allergic to peanuts.",
-    es: "Tengo alergia a los cacahuetes.",
-    zh: "我对花生过敏。",
-    ja: "私はピーナッツアレルギーがあります。",
-    fr: "Je suis allergique aux cacahuètes.",
-    de: "Ich bin allergisch gegen Erdnüsse.",
-    ar: "لدي حساسية من الفول السوداني.",
-    pt: "Tenho alergia a amendoim.",
-    ru: "У меня аллергия на арахис.",
-    vi: "Tôi bị dị ứng với đậu phộng.",
-    si: "මට රටකජු අසාත්මිකතාවක් තිබෙනවා.",
-    ne: "मलाई बदामबाट एलर्जी छ।",
-    th: "ฉันแพ้ถั่วลิสง"
-  },
-
-  "저는 해산물 알레르기가 있어요.": {
-    en: "I'm allergic to seafood.",
-    es: "Tengo alergia al marisco.",
-    zh: "我对海鲜过敏。",
-    ja: "私はシーフードアレルギーがあります。",
-    fr: "Je suis allergique aux fruits de mer.",
-    de: "Ich bin allergisch gegen Meeresfrüchte.",
-    ar: "لدي حساسية من المأكولات البحرية.",
-    pt: "Tenho alergia a frutos do mar.",
-    ru: "У меня аллергия на морепродукты.",
-    vi: "Tôi bị dị ứng với hải sản.",
-    si: "මට මුහුදු ආහාර අසාත්මිකතාවක් තිබෙනවා.",
-    ne: "मलाई समुद्री खानाबाट एलर्जी छ।",
-    th: "ฉันแพ้อาหารทะเล"
-  },
-
-  "저는 우유 알레르기가 있어요.": {
-    en: "I'm allergic to milk.",
-    es: "Tengo alergia a la leche.",
-    zh: "我对牛奶过敏。",
-    ja: "私は牛乳アレルギーがあります。",
-    fr: "Je suis allergique au lait.",
-    de: "Ich bin allergisch gegen Milch.",
-    ar: "لدي حساسية من الحليب.",
-    pt: "Tenho alergia a leite.",
-    ru: "У меня аллергия на молоко.",
-    vi: "Tôi bị dị ứng với sữa.",
-    si: "මට කිරි අසාත්මිකතාවක් තිබෙනවා.",
-    ne: "मलाई दूधबाट एलर्जी छ।",
-    th: "ฉันแพ้นม"
-  },
-
-  "주방에 확인해 볼게요.": {
-    en: "I'll check with the kitchen.",
-    es: "Lo consultaré con la cocina.",
-    zh: "我去厨房确认一下。",
-    ja: "厨房に確認してみます。",
-    fr: "Je vais vérifier avec la cuisine.",
-    de: "Ich werde in der Küche nachfragen.",
-    ar: "سأتحقق من المطبخ.",
-    pt: "Vou confirmar com a cozinha.",
-    ru: "Я уточню на кухне.",
-    vi: "Tôi sẽ kiểm tra với nhà bếp.",
-    si: "මම මුළුතැන්ගෙයෙන් විමසන්නම්.",
-    ne: "म भान्सामा सोध्छु।",
-    th: "ฉันจะตรวจสอบกับห้องครัว"
-  },
-
-  "영수증 필요하세요?": {
-    en: "Would you like a receipt?",
-    es: "¿Desea un recibo?",
-    zh: "您需要收据吗？",
-    ja: "レシートはご入用ですか？",
-    fr: "Souhaitez-vous un reçu ?",
-    de: "Möchten Sie einen Beleg?",
-    ar: "هل تريد إيصالاً؟",
-    pt: "Gostaria de um recibo?",
-    ru: "Вам нужен чек?",
-    vi: "Bạn có cần hóa đơn không?",
-    si: "ඔබට රිසිට්පතක් අවශ්‍යද?",
-    ne: "के तपाईंलाई रसिद चाहिन्छ?",
-    th: "รับใบเสร็จไหม?"
-  },
-
-  "네, 영수증 주세요.": {
-    en: "Yes, please. Could I have a receipt?",
-    es: "Sí, por favor. ¿Me da el recibo?",
-    zh: "好的，请给我收据。",
-    ja: "はい、レシートをください。",
-    fr: "Oui, s'il vous plaît. Je voudrais un reçu.",
-    de: "Ja, bitte. Ich hätte gern einen Beleg.",
-    ar: "نعم من فضلك، أريد إيصالاً.",
-    pt: "Sim, por favor. Pode me dar o recibo?",
-    ru: "Да, пожалуйста. Дайте мне чек.",
-    vi: "Vâng, cho tôi xin hóa đơn.",
-    si: "ඔව්, මට රිසිට්පතක් දෙන්න.",
-    ne: "हुन्छ, मलाई रसिद दिनुहोस्।",
-    th: "ใช่ค่ะ/ครับ ขอใบเสร็จด้วย"
-  },
-
-  "실례합니다. 이거 얼마예요?": {
-    en: "Excuse me. How much is this?",
-    es: "Disculpe. ¿Cuánto cuesta esto?",
-    zh: "打扰一下，这个多少钱？",
-    ja: "すみません。これはいくらですか？",
-    fr: "Excusez-moi. Combien coûte ceci ?",
-    de: "Entschuldigung. Wie viel kostet das?",
-    ar: "عذراً، كم سعر هذا؟",
-    pt: "Com licença. Quanto custa isto?",
-    ru: "Извините, сколько это стоит?",
-    vi: "Xin lỗi, cái này giá bao nhiêu?",
-    si: "සමාවන්න, මේක කීයද?",
-    ne: "माफ गर्नुहोस्, यसको मूल्य कति हो?",
-    th: "ขอโทษนะ อันนี้ราคาเท่าไหร่?"
-  },
-
-  "화장실이 어디예요?": {
-    en: "Where is the bathroom?",
-    es: "¿Dónde está el baño?",
-    zh: "洗手间在哪里？",
-    ja: "トイレはどこですか？",
-    fr: "Où sont les toilettes ?",
-    de: "Wo ist die Toilette?",
-    ar: "أين الحمام؟",
-    pt: "Onde fica o banheiro?",
-    ru: "Где туалет?",
-    vi: "Nhà vệ sinh ở đâu?",
-    si: "වැසිකිළිය කොහෙද?",
-    ne: "शौचालय कहाँ छ?",
-    th: "ห้องน้ำอยู่ที่ไหน?"
-  },
-
-  "돼지고기가 들어가나요?": {
-    en: "Does this contain pork?",
-    es: "¿Esto contiene cerdo?",
-    zh: "这个里面有猪肉吗？",
-    ja: "これは豚肉が入っていますか？",
-    fr: "Est-ce que cela contient du porc ?",
-    de: "Enthält das Schweinefleisch?",
-    ar: "هل يحتوي هذا على لحم الخنزير؟",
-    pt: "Isto contém carne de porco?",
-    ru: "Здесь есть свинина?",
-    vi: "Món này có thịt lợn không?",
-    si: "මේකේ ඌරු මස් තියෙනවද?",
-    ne: "के यसमा सुँगुरको मासु छ?",
-    th: "อันนี้มีเนื้อหมูไหม?"
-  },
-
-  "이거 입어 봐도 돼요?": {
-    en: "Can I try this on?",
-    es: "¿Puedo probarme esto?",
-    zh: "我可以试穿这个吗？",
-    ja: "これを試着してもいいですか？",
-    fr: "Puis-je essayer ceci ?",
-    de: "Kann ich das anprobieren?",
-    ar: "هل يمكنني تجربة هذا؟",
-    pt: "Posso experimentar isto?",
-    ru: "Можно это примерить?",
-    vi: "Tôi có thể thử cái này không?",
-    si: "මට මේක ඇඳලා බලන්න පුළුවන්ද?",
-    ne: "के म यो लगाएर हेर्न सक्छु?",
-    th: "ขอลองใส่อันนี้ได้ไหม?"
-  },
-
-  "도와드릴까요?": {
-    en: "Can I help you?",
-    es: "¿Puedo ayudarle?",
-    zh: "需要帮忙吗？",
-    ja: "何かお手伝いしましょうか？",
-    fr: "Puis-je vous aider ?",
-    de: "Kann ich Ihnen helfen?",
-    ar: "هل يمكنني مساعدتك؟",
-    pt: "Posso ajudar?",
-    ru: "Могу я вам помочь?",
-    vi: "Tôi có thể giúp gì cho bạn?",
-    si: "මට ඔබට උදව් කරන්න පුළුවන්ද?",
-    ne: "के म तपाईंलाई सहयोग गर्न सक्छु?",
-    th: "ให้ช่วยอะไรไหม?"
-  },
-
-  "그럼요. 탈의실은 저쪽에 있어요.": {
-    en: "Of course. The fitting room is over there.",
-    es: "Por supuesto. El probador está allí.",
-    zh: "当然可以。试衣间在那边。",
-    ja: "もちろんです。試着室はあちらです。",
-    fr: "Bien sûr. La cabine d'essayage est là-bas.",
-    de: "Natürlich. Die Umkleidekabine ist dort drüben.",
-    ar: "بالتأكيد. غرفة القياس هناك.",
-    pt: "Claro. O provador fica ali.",
-    ru: "Конечно. Примерочная находится вон там.",
-    vi: "Tất nhiên. Phòng thử đồ ở đằng kia.",
-    si: "අනිවාර්යයෙන්ම. ඇඳුම් මාරු කරන කාමරය අතනයි.",
-    ne: "पक्कै। लुगा फेर्ने कोठा त्यहाँ छ।",
-    th: "ได้เลย ห้องลองเสื้ออยู่ทางโน้น"
-  },
-
-  "탈의실이 어디예요?": {
-    en: "Where is the fitting room?",
-    es: "¿Dónde está el probador?",
-    zh: "试衣间在哪里？",
-    ja: "試着室はどこですか？",
-    fr: "Où est la cabine d'essayage ?",
-    de: "Wo ist die Umkleidekabine?",
-    ar: "أين غرفة القياس؟",
-    pt: "Onde fica o provador?",
-    ru: "Где находится примерочная?",
-    vi: "Phòng thử đồ ở đâu?",
-    si: "ඇඳුම් මාරු කරන කාමරය කොහෙද?",
-    ne: "लुगा फेर्ने कोठा कहाँ छ?",
-    th: "ห้องลองเสื้ออยู่ที่ไหน?"
-  },
-
-  "이거 다른 사이즈도 있나요?": {
-    en: "Do you have this in another size?",
-    es: "¿Tiene esto en otra talla?",
-    zh: "这个有其他尺码吗？",
-    ja: "これはほかのサイズもありますか？",
-    fr: "Avez-vous ceci dans une autre taille ?",
-    de: "Haben Sie das in einer anderen Größe?",
-    ar: "هل لديكم هذا بمقاس آخر؟",
-    pt: "Você tem isto em outro tamanho?",
-    ru: "У вас есть это в другом размере?",
-    vi: "Bạn có mẫu này ở kích cỡ khác không?",
-    si: "මේක වෙනත් ප්‍රමාණයකින් තියෙනවද?",
-    ne: "के यो अर्को साइजमा पनि छ?",
-    th: "มีไซซ์อื่นไหม?"
-  },
-
-  "사이즈가 잘 맞으세요?": {
-    en: "How does it fit?",
-    es: "¿Le queda bien?",
-    zh: "尺寸合适吗？",
-    ja: "サイズはいかがですか？",
-    fr: "La taille vous convient-elle ?",
-    de: "Passt die Größe?",
-    ar: "هل المقاس مناسب؟",
-    pt: "O tamanho ficou bom?",
-    ru: "Как вам размер?",
-    vi: "Kích cỡ có vừa không?",
-    si: "ප්‍රමාණය හොඳින් ගැළපෙනවාද?",
-    ne: "साइज मिल्यो?",
-    th: "ขนาดพอดีไหม?"
-  },
-
-  "잘 맞아요.": {
-    en: "It fits well.",
-    es: "Me queda bien.",
-    zh: "很合身。",
-    ja: "ちょうどいいです。",
-    fr: "La taille me va bien.",
-    de: "Es passt gut.",
-    ar: "المقاس مناسب.",
-    pt: "Ficou bem.",
-    ru: "Хорошо подходит.",
-    vi: "Nó vừa vặn.",
-    si: "හොඳින් ගැළපෙනවා.",
-    ne: "राम्रोसँग मिल्यो।",
-    th: "พอดีเลย"
-  },
-
-  "조금 작아요.": {
-    en: "It's a little small.",
-    es: "Es un poco pequeño.",
-    zh: "有一点小。",
-    ja: "少し小さいです。",
-    fr: "C'est un peu petit.",
-    de: "Es ist etwas klein.",
-    ar: "إنه صغير قليلاً.",
-    pt: "É um pouco pequeno.",
-    ru: "Немного маловато.",
-    vi: "Nó hơi nhỏ.",
-    si: "ටිකක් කුඩායි.",
-    ne: "अलि सानो छ।",
-    th: "เล็กไปนิดหน่อย"
-  },
-
-  "조금 커요.": {
-    en: "It's a little big.",
-    es: "Es un poco grande.",
-    zh: "有一点大。",
-    ja: "少し大きいです。",
-    fr: "C'est un peu grand.",
-    de: "Es ist etwas groß.",
-    ar: "إنه كبير قليلاً.",
-    pt: "É um pouco grande.",
-    ru: "Немного великовато.",
-    vi: "Nó hơi rộng.",
-    si: "ටිකක් විශාලයි.",
-    ne: "अलि ठूलो छ।",
-    th: "ใหญ่ไปนิดหน่อย"
-  }
-
-};
-
- 
-// ==========================================
-// 8부: 앱 상태 관리
-// ==========================================
-
-// 현재 선택된 언어
-let currentLanguage = "en";
-
-// 현재 선택된 장소
-let currentPlace = null;
-
-// 현재 선택된 상황
-let currentScenario = null;
-
-// 현재 대화 순서
-let currentStep = 0;
-
-// 현재 학습 자료 카테고리
-let currentLibraryCategory = "all";
-
-// 현재 화면
-let currentScreen = "home";
-
-
-// ==========================================
-// 9부: 공통 도우미 함수
-// ==========================================
-
-// HTML 요소를 ID로 가져오기
-function getElement(id) {
-  return document.getElementById(id);
+function getNativePronunciation(korean){
+const entry=nativePronunciation[(korean||"").trim()];
+return entry ? (entry[selectedLanguage]||"") : "";
 }
 
-// 요소의 글자 변경
-function setText(id, value) {
-  const element = getElement(id);
-
-  if (element) {
-    element.textContent = value;
-  }
-}
-
-// 선택한 언어의 번역 가져오기
-function getText(key) {
-  return (
-    translations[currentLanguage]?.[key] ||
-    translations.en[key] ||
-    key
-  );
-}
-
-// 현재 언어의 장소 이름 가져오기
-function getPlaceName(placeId) {
-  return getText("places")[placeId] || placeId;
-}
-
-// 현재 언어의 상황 이름 가져오기
-function getScenarioName(scenarioId, fallback) {
-  return (
-    scenarioNames[currentLanguage]?.[scenarioId] ||
-    scenarioNames.en[scenarioId] ||
-    fallback
-  );
-}
-
-// 현재 언어의 상황 설명 가져오기
-function getScenarioDescription(scenarioId, fallback) {
-  return (
-    scenarioDescriptions[currentLanguage]?.[scenarioId] ||
-    scenarioDescriptions.en[scenarioId] ||
-    fallback
-  );
-}
-
-// 한국어 문장을 현재 언어로 번역
-function getPhraseTranslation(korean, fallback = "") {
-  const translationsForPhrase = phraseTranslations[korean];
-
-  if (translationsForPhrase) {
-    return (
-      translationsForPhrase[currentLanguage] ||
-      translationsForPhrase.en ||
-      fallback ||
-      korean
-    );
-  }
-
-  return fallback || korean;
-}
-
-
-// ==========================================
-// 10부: 화면 전환
-// ==========================================
-
-function showScreen(screenId) {
-
-  const screens = [
-    "home",
-    "scenarios",
-    "conversation",
-    "library"
-  ];
-
-  screens.forEach(id => {
-    const element = getElement(id);
-
-    if (element) {
-      element.classList.toggle("hidden", id !== screenId);
-    }
-  });
-
-  currentScreen = screenId;
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
-
-// 홈으로 돌아가기
-function goHome() {
-
-  currentPlace = null;
-  currentScenario = null;
-  currentStep = 0;
-
-  showScreen("home");
-}
-
-// 상황 목록으로 돌아가기
-function goScenarios() {
-
-  currentScenario = null;
-  currentStep = 0;
-
-  if (currentPlace) {
-    renderScenarios();
-    showScreen("scenarios");
-  } else {
-    goHome();
-  }
-}
-
-
-// ==========================================
-// 11부: 언어 선택과 화면 번역
-// ==========================================
-
-function setLanguage(language) {
-
-  // 지원하는 언어인지 확인
-  if (!translations[language]) {
-    language = "en";
-  }
-
-  currentLanguage = language;
-
-  // 언어 선택 메뉴 업데이트
-  const languageSelect = getElement("languageSelect");
-
-  if (languageSelect) {
-    languageSelect.value = language;
-  }
-
-  // 아랍어는 오른쪽에서 왼쪽으로 표시
-  document.documentElement.lang = language;
-  document.documentElement.dir =
-    language === "ar" ? "rtl" : "ltr";
-
-  // 사용자의 언어 설정 저장
-  try {
-    localStorage.setItem("ktrep-language", language);
-  } catch (error) {
-    console.warn("Language preference could not be saved.", error);
-  }
-
-  // 홈 화면 번역
-  updateInterface();
-
-  // 현재 화면에 맞는 내용 다시 표시
-  if (currentScreen === "scenarios" && currentPlace) {
-    renderScenarios();
-  }
-
-  if (currentScreen === "conversation" && currentScenario) {
-    renderDialogue();
-    renderChoices();
-  }
-
-  if (currentScreen === "library") {
-    renderLibrary();
-  }
-}
-
-// 화면에 표시되는 기본 텍스트 업데이트
-function updateInterface() {
-
-  setText("homeTitle", getText("home"));
-  setText("homeSubheading", getText("sub"));
-  setText("languageLabel", getText("language"));
-  setText("learnTitle", getText("learn"));
-
-  setText("scenarioSubheading", getText("scenario"));
-
-  setText("libraryHeading", getText("library"));
-  setText("librarySubheading", getText("librarySub"));
-
-  setText("featureExpressions", getText("expressions"));
-  setText("featureExpressionsDesc", getText("expressionsDesc"));
-
-  setText("featureGrammar", getText("grammar"));
-  setText("featureGrammarDesc", getText("grammarDesc"));
-
-  setText("featureDietary", getText("dietary"));
-  setText("featureDietaryDesc", getText("dietaryDesc"));
-
-  setText("featureAll", getText("all"));
-  setText("featureAllDesc", getText("allDesc"));
-
-  setText("foreignLabel", getText("foreignLabel"));
-  setText("koreanLabel", getText("koreanLabel"));
-  setText("pronunciationLabel", getText("pronunciationLabel"));
-
-  setText("sendButton", getText("send"));
-  setText("speakButton", getText("speak"));
-  setText("listenButton", getText("listen"));
-
-  // 입력창 안내 문구
-  const input = getElement("userInput");
-
-  if (input) {
-    input.placeholder = getText("input");
-  }
-
-  // 홈 화면의 장소 이름 변경
-  document.querySelectorAll("[data-place]").forEach(element => {
-
-    const placeId = element.dataset.place;
-
-    element.textContent = getPlaceName(placeId);
-
-  });
-}
-
-
-// ==========================================
-// 12부: 장소 선택
-// ==========================================
-
-function getCurrentPlaceData() {
-
-  return appData.find(place => {
-    return place.id === currentPlace;
-  });
-}
-
-function selectPlace(placeId) {
-
-  const place = appData.find(item => item.id === placeId);
-
-  if (!place) {
-    return;
-  }
-
-  currentPlace = placeId;
-  currentScenario = null;
-  currentStep = 0;
-
-  renderScenarios();
-
-  showScreen("scenarios");
-}
-
-
-// ==========================================
-// 13부: 상황 목록 표시
-// ==========================================
-
-function renderScenarios() {
-
-  const place = getCurrentPlaceData();
-
-  if (!place) {
-    return;
-  }
-
-  // 장소 제목
-  setText("placeHeading", getPlaceName(place.id));
-
-  // 상황 목록 요소
-  const container = getElement("scenarioList");
-
-  if (!container) {
-    return;
-  }
-
-  container.innerHTML = "";
-
-  // 장소에 포함된 모든 상황 표시
-  place.scenarios.forEach(scenario => {
-
-    const button = document.createElement("button");
-
-    button.className = "scenario-card";
-    button.type = "button";
-
-    const icon = document.createElement("span");
-    icon.className = "scenario-icon";
-    icon.textContent = scenario.icon;
-
-    const textWrapper = document.createElement("span");
-    textWrapper.className = "scenario-text";
-
-    const title = document.createElement("span");
-    title.className = "scenario-name";
-
-    title.textContent = getScenarioName(
-      scenario.id,
-      scenario.title
-    );
-
-    const description = document.createElement("span");
-    description.className = "scenario-description";
-
-    description.textContent = getScenarioDescription(
-      scenario.id,
-      scenario.description
-    );
-
-    const arrow = document.createElement("span");
-    arrow.className = "arrow";
-    arrow.textContent = "›";
-
-    textWrapper.appendChild(title);
-    textWrapper.appendChild(description);
-
-    button.appendChild(icon);
-    button.appendChild(textWrapper);
-    button.appendChild(arrow);
-
-    // 상황을 누르면 대화 화면으로 이동
-    button.addEventListener("click", () => {
-      selectScenario(scenario.id);
-    });
-
-    container.appendChild(button);
-
-  });
-}
-
-
-// ==========================================
-// 14부: 대화 상황 선택
-// ==========================================
-
-function selectScenario(scenarioId) {
-
-  const place = getCurrentPlaceData();
-
-  if (!place) {
-    return;
-  }
-
-  const scenario = place.scenarios.find(item => {
-    return item.id === scenarioId;
-  });
-
-  if (!scenario) {
-    return;
-  }
-
-  currentScenario = scenario;
-  currentStep = 0;
-
-  setText(
-    "conversationHeading",
-    getScenarioName(scenario.id, scenario.title)
-  );
-
-  renderDialogue();
-  renderChoices();
-
-  setText("status", getText("status"));
-
-  const input = getElement("userInput");
-
-  if (input) {
-    input.value = "";
-  }
-
-  showScreen("conversation");
-}
-
-
-// ==========================================
-// 15부: 현재 대화 가져오기
-// ==========================================
-
-function getCurrentConversation() {
-
-  if (!currentScenario) {
-    return null;
-  }
-
-  return currentScenario.dialogues[currentStep] || null;
-}
-
-
-// ==========================================
-// 16부: 대화 내용 표시
-// ==========================================
-
-function renderDialogue() {
-
-  const dialogue = getCurrentConversation();
-
-  // 모든 대화가 끝났을 때
-  if (!dialogue) {
-
-    setText("speaker", "COMPLETED");
-    setText("foreign", getText("selected"));
-    setText("korean", "대화가 끝났어요.");
-    setText("pronunciation", "");
-
-    setText("status", getText("selected"));
-
-    const choices = getElement("choices");
-
-    if (choices) {
-      choices.innerHTML = "";
-    }
-
-    return;
-  }
-
-  // 말하는 사람
-  setText("speaker", dialogue.speaker);
-
-  // 외국어 번역
-  setText(
-    "foreign",
-    getPhraseTranslation(dialogue.ko, dialogue.en)
-  );
-
-  // 한국어 원문
-  setText("korean", dialogue.ko);
-
-  // 한국어 발음
-  setText("pronunciation", dialogue.roman);
-
-  // 현재 대화의 제목
-  if (currentScenario) {
-    setText(
-      "conversationHeading",
-      getScenarioName(
-        currentScenario.id,
-        currentScenario.title
-      )
-    );
-  }
-}
-
-
-// ==========================================
-// 17부: 선택지 표시
-// ==========================================
-
-function renderChoices() {
-
-  const container = getElement("choices");
-
-  if (!container) {
-    return;
-  }
-
-  container.innerHTML = "";
-
-  const dialogue = getCurrentConversation();
-
-  // 대화가 끝났다면 선택지 표시하지 않음
-  if (!dialogue || !dialogue.choices) {
-    return;
-  }
-
-  dialogue.choices.forEach(choice => {
-
-    const button = document.createElement("button");
-
-    button.className = "choice";
-    button.type = "button";
-
-    const foreign = document.createElement("span");
-    foreign.className = "choice-foreign";
-
-    foreign.textContent = getPhraseTranslation(
-      choice.ko,
-      choice.en
-    );
-
-    const korean = document.createElement("span");
-    korean.className = "choice-ko";
-    korean.textContent = choice.ko;
-
-    const pronunciation = document.createElement("span");
-    pronunciation.className = "choice-pronunciation";
-    pronunciation.textContent = choice.roman;
-
-    button.appendChild(foreign);
-    button.appendChild(korean);
-    button.appendChild(pronunciation);
-
-    // 선택지를 누르면 다음 대화로 이동
-    button.addEventListener("click", () => {
-      selectChoice(choice);
-    });
-
-    container.appendChild(button);
-
-  });
-}
-
-
-// ==========================================
-// 18부: 선택지 진행
-// ==========================================
-
-function selectChoice(choice) {
-
-  if (!currentScenario || !choice) {
-    return;
-  }
-
-  // 사용자가 선택한 문장을 상태 영역에 표시
-  const selectedText = getPhraseTranslation(
-    choice.ko,
-    choice.en
-  );
-
-  setText(
-    "status",
-    "✓ " + selectedText
-  );
-
-  // 다음 대화 순서로 이동
-  currentStep++;
-
-  // 다음 대화 표시
-  renderDialogue();
-  renderChoices();
-
-  // 대화가 모두 끝났을 때
-  if (currentStep >= currentScenario.dialogues.length) {
-    setText("status", getText("selected"));
-  }
-}
-
-
-// ==========================================
-// 19부: 학습 자료 카테고리
-// ==========================================
-
-function getLibraryItems(category) {
-
-  if (category === "all") {
-
-    return [
-      ...learningMaterials.expressions,
-      ...learningMaterials.grammar,
-      ...learningMaterials.dietary
-    ];
-  }
-
-  return learningMaterials[category] || [];
-}
-
-
-// ==========================================
-// 20부: 학습 자료 화면 열기
-// ==========================================
-
-function openLibrary(category = "all") {
-
-  currentLibraryCategory = category;
-
-  renderLibrary();
-
-  showScreen("library");
-}
-
-
-// ==========================================
-// 21부: 학습 자료 표시
-// ==========================================
-
-function renderLibrary() {
-
-  const container = getElement("libraryList");
-
-  if (!container) {
-    return;
-  }
-
-  container.innerHTML = "";
-
-  // 카테고리 버튼
-  const categories = [
-    {
-      id: "all",
-      label: getText("all")
-    },
-    {
-      id: "expressions",
-      label: getText("expressions")
-    },
-    {
-      id: "grammar",
-      label: getText("grammar")
-    },
-    {
-      id: "dietary",
-      label: getText("dietary")
-    }
-  ];
-
-  const categoryWrapper = document.createElement("div");
-
-  categoryWrapper.className = "feature-grid";
-
-  categories.forEach(category => {
-
-    const button = document.createElement("button");
-
-    button.className = "feature-card";
-    button.type = "button";
-
-    button.textContent = category.label;
-
-    // 현재 선택된 카테고리 표시
-    if (currentLibraryCategory === category.id) {
-      button.style.border = "2px solid #b6a8d2";
-      button.style.background = "#f5f0fb";
-    }
-
-    button.addEventListener("click", () => {
-      currentLibraryCategory = category.id;
-      renderLibrary();
-    });
-
-    categoryWrapper.appendChild(button);
-
-  });
-
-  container.appendChild(categoryWrapper);
-
-  // 선택된 카테고리의 학습 자료 가져오기
-  const items = getLibraryItems(currentLibraryCategory);
-
-  if (items.length === 0) {
-
-    const empty = document.createElement("p");
-
-    empty.className = "status";
-    empty.textContent = getText("empty");
-
-    container.appendChild(empty);
-
-    return;
-  }
-
-  // 학습 자료 카드 만들기
-  items.forEach(item => {
-
-    const card = document.createElement("article");
-
-    card.className = "item-card";
-
-    const foreign = document.createElement("div");
-    foreign.className = "item-en";
-
-    foreign.textContent = getPhraseTranslation(
-      item.ko,
-      item.en
-    );
-
-    const korean = document.createElement("div");
-    korean.className = "item-ko";
-    korean.textContent = item.ko;
-
-    const roman = document.createElement("div");
-    roman.className = "item-ro";
-    roman.textContent = item.roman;
-
-    const note = document.createElement("div");
-    note.className = "item-note";
-
-    note.textContent = item.note;
-
-    card.appendChild(foreign);
-    card.appendChild(korean);
-    card.appendChild(roman);
-    card.appendChild(note);
-
-    container.appendChild(card);
-
-  });
-}
-
-
-// ==========================================
-// 22부: 한국어 음성 재생
-// ==========================================
-
-function speakText(text) {
-
-  if (!("speechSynthesis" in window)) {
-
-    setText(
-      "status",
-      "음성 재생을 지원하지 않는 브라우저입니다."
-    );
-
-    return;
-  }
-
-  // 이전 음성 재생 중지
-  window.speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-
-  // 한국어 발음 설정
-  utterance.lang = "ko-KR";
-
-  // 기본 속도
-  utterance.rate = 0.85;
-
-  // 음성 높이
-  utterance.pitch = 1;
-
-  window.speechSynthesis.speak(utterance);
-}
-
-
-// 현재 대화의 한국어 문장 듣기
-function speakCurrent() {
-
-  const dialogue = getCurrentConversation();
-
-  if (!dialogue) {
-    setText("status", getText("selected"));
-    return;
-  }
-
-  speakText(dialogue.ko);
-}
-
-
-// ==========================================
-// 23부: 한국어 음성 인식
-// ==========================================
-
-function listen() {
-
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-  // 브라우저 지원 여부 확인
-  if (!SpeechRecognition) {
-
-    setText(
-      "status",
-      "이 브라우저에서는 음성 인식을 지원하지 않습니다. Safari 또는 지원되는 브라우저에서 다시 시도해 주세요."
-    );
-
-    return;
-  }
-
-  const recognition = new SpeechRecognition();
-
-  // 한국어 인식
-  recognition.lang = "ko-KR";
-
-  // 한 번의 발화 인식
-  recognition.continuous = false;
-
-  // 중간 결과는 표시하지 않음
-  recognition.interimResults = false;
-
-  recognition.maxAlternatives = 1;
-
-  setText("status", "듣고 있어요. 한국어로 말해 보세요.");
-
-  recognition.onresult = function(event) {
-
-    const result = event.results[0][0].transcript;
-
-    const input = getElement("userInput");
-
-    if (input) {
-      input.value = result;
-    }
-
-    setText(
-      "status",
-      "인식한 문장: " + result
-    );
-
-  };
-
-  recognition.onerror = function(event) {
-
-    setText(
-      "status",
-      "음성 인식 오류: " + event.error
-    );
-
-  };
-
-  recognition.onend = function() {
-
-    const status = getElement("status");
-
-    if (status && status.textContent.includes("듣고 있어요")) {
-      setText("status", "음성 인식이 종료되었습니다.");
-    }
-
-  };
-
-  try {
-    recognition.start();
-  } catch (error) {
-    setText(
-      "status",
-      "마이크를 시작할 수 없습니다. 잠시 후 다시 시도해 주세요."
-    );
-  }
-}
-
-
-// ==========================================
-// 24부: 문장 입력 기능
-// ==========================================
-
-function submitText() {
-
-  const input = getElement("userInput");
-
-  if (!input) {
-    return;
-  }
-
-  const value = input.value.trim();
-
-  if (!value) {
-    setText("status", "문장을 먼저 입력해 주세요.");
-    return;
-  }
-
-  // 입력한 한국어 문장을 표시
-  setText(
-    "status",
-    "입력한 문장: " + value
-  );
-
-  // 입력창 비우기
-  input.value = "";
-}
-
-
-// 키보드 Enter로 입력
-const userInput = getElement("userInput");
-
-if (userInput) {
-
-  userInput.addEventListener("keydown", function(event) {
-
-    if (event.key === "Enter") {
-      submitText();
-    }
-
-  });
-
-}
-
-
-// ==========================================
-// 25부: 앱 초기화
-// ==========================================
-
-function initializeApp() {
-
-  // 저장된 언어 설정 불러오기
-  let savedLanguage = "en";
-
-  try {
-
-    savedLanguage =
-      localStorage.getItem("ktrep-language") || "en";
-
-  } catch (error) {
-
-    savedLanguage = "en";
-
-  }
-
-  // 언어 설정 적용
-  setLanguage(savedLanguage);
-
-  // 첫 화면은 홈
-  showScreen("home");
-
-}
-
-
-// ==========================================
-// 26부: 앱 실행
-// ==========================================
-
-if (document.readyState === "loading") {
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    initializeApp
-  );
-
-} else {
-
-  initializeApp();
-
-}
-
-</script>
-</body>
-</html>
-
+function renderStep(){ // 현재 대화 단계를 화면에 표시합니다.
+const steps=conversations[currentScenario]; // 현재 상황의 전체 대화 데이터를 가져옵니다.
+const step=steps[currentStep]; // 현재 순서의 대화 한 개를 가져옵니다.
+document.getElementById("speaker").textContent="STAFF"; // 현재 문장의 화자를 직원으로 표시합니다.
+document.getElementById("english").textContent=step.en; // 영어 번역을 표시합니다.
+document.getElementById("korean").textContent=step.ko; // 한국어 문장을 표시합니다.
+document.getElementById("nativePronunciation").textContent=getNativePronunciation(step.ko); // 선택 언어의 문자로 발음을 표시합니다.
+document.getElementById("roman").textContent=step.ro; // 로마자 발음을 보조로 표시합니다.
+const list=document.getElementById("choices"); // 선택지 영역을 가져옵니다.
+list.innerHTML=""; // 이전 선택지를 지웁니다.
+step.choices.forEach(choice=>{ // 현재 단계의 선택지를 하나씩 만듭니다.
+const button=document.createElement("button"); // 선택지 버튼을 만듭니다.
+button.className="choice"; // 선택지 디자인을 적용합니다.
+const native=getNativePronunciation(choice[1]);
+button.innerHTML=`<span class="choice-en">${choice[0]}</span><span class="choice-ko">${choice[1]}</span>${native?`<span class="choice-native">${native}</span>`:""}<span class="choice-ro">${choice[2]}</span>`; // 영어, 한국어, 발음을 표시합니다.
+button.onclick=()=>chooseAnswer(choice); // 선택하면 다음 단계로 이동합니다.
+list.appendChild(button); // 선택지 버튼을 화면에 추가합니다.
+}); // 선택지 반복을 종료합니다.
+} // 대화 단계 표시 함수를 종료합니다.
+
+function chooseAnswer(choice){ // 사용자가 선택지를 눌렀을 때 실행합니다.
+const steps=conversations[currentScenario]; // 현재 상황의 대화 데이터를 가져옵니다.
+if(currentStep<steps.length-1){ // 아직 마지막 단계가 아닌지 확인합니다.
+currentStep+=1; // 다음 대화 단계로 이동합니다.
+renderStep(); // 다음 대사를 표시합니다.
+document.getElementById("status").textContent="Response selected."; // 선택 완료 안내를 표시합니다.
+}else{ // 마지막 대화 단계라면 실행합니다.
+currentStep=0; // 대화를 처음 단계로 되돌립니다.
+renderStep(); // 첫 대사를 다시 표시합니다.
+document.getElementById("status").textContent="Conversation complete. You can start again."; // 대화가 끝났음을 안내합니다.
+} // 마지막 단계인지 확인하는 조건문을 종료합니다.
+} // 선택지 처리 함수를 종료합니다.
+
+function submitText(){ // 사용자가 입력창에 쓴 문장을 처리합니다.
+const input=document.getElementById("userInput"); // 입력창 요소를 가져옵니다.
+const typed=input.value.trim().replace(/\s/g,""); // 입력 문장의 앞뒤와 모든 공백을 제거합니다.
+if(!typed)return; // 아무것도 입력하지 않았다면 종료합니다.
+const step=conversations[currentScenario][currentStep]; // 현재 대화 단계의 선택지를 가져옵니다.
+const matched=step.choices.find(choice=>choice[1].replace(/\s/g,"")===typed); // 입력 문장이 선택지 한국어와 정확히 같은지 확인합니다.
+if(matched){chooseAnswer(matched);}else{document.getElementById("status").textContent="For now, choose one of the Korean responses shown above."; } // 일치하면 다음 단계로 가고 아니면 선택지를 안내합니다.
+input.value=""; // 입력창을 비웁니다.
+} // 직접 입력 함수를 종료합니다.
+
+function listen(){ // 브라우저 음성 인식을 시작합니다.
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition; // 브라우저가 지원하는 음성 인식 기능을 찾습니다.
+if(!SpeechRecognition){document.getElementById("status").textContent="Speech recognition is not supported in this browser.";return;} // 지원하지 않으면 안내하고 종료합니다.
+const recognition=new SpeechRecognition(); // 음성 인식 객체를 생성합니다.
+recognition.lang="ko-KR"; // 현재 버전에서는 한국어 음성을 인식하도록 설정합니다.
+recognition.interimResults=false; // 중간 인식 결과는 받지 않습니다.
+document.getElementById("status").textContent="Listening..."; // 듣기 중임을 표시합니다.
+recognition.onresult=event=>{ // 음성 인식 결과가 도착하면 실행합니다.
+const spoken=event.results[0][0].transcript; // 인식된 문장을 가져옵니다.
+document.getElementById("userInput").value=spoken; // 인식한 문장을 입력창에 넣습니다.
+document.getElementById("status").textContent="Recognized: "+spoken; // 인식 결과를 안내합니다.
+submitText(); // 인식한 문장을 현재 선택지와 비교합니다.
+}; // 음성 인식 결과 처리를 종료합니다.
+recognition.onerror=event=>{document.getElementById("status").textContent="Speech error: "+event.error;}; // 음성 인식 오류를 화면에 표시합니다.
+recognition.start(); // 음성 인식을 시작합니다.
+} // 음성 인식 함수를 종료합니다.
+
+function speakCurrent(){ // 현재 한국어 문장을 브라우저 음성으로 읽습니다.
+if(!("speechSynthesis" in window)){document.getElementById("status").textContent="Text-to-speech is not supported.";return;} // 음성 출력 기능이 없으면 안내합니다.
+const utterance=new SpeechSynthesisUtterance(document.getElementById("korean").textContent); // 현재 한국어 문장으로 음성 객체를 만듭니다.
+utterance.lang="ko-KR"; // 한국어 음성으로 설정합니다.
+utterance.rate=0.88; // 학습하기 좋도록 읽는 속도를 조금 낮춥니다.
+window.speechSynthesis.cancel(); // 이전에 재생 중인 음성을 중지합니다.
+window.speechSynthesis.speak(utterance); // 현재 문장을 읽습니다.
+} // 문장 듣기 함수를 종료합니다.
+
+function openLibrary(type){ // 학습 카테고리를 열 때 실행합니다.
+currentLibrary=type; // 선택한 학습 카테고리를 저장합니다.
+const list=document.getElementById("libraryList"); // 학습 항목을 표시할 영역을 가져옵니다.
+list.innerHTML=""; // 이전 항목을 지웁니다.
+const titles={expressions:"Essential Expressions",grammar:"Useful Grammar",dietary:"Dietary Needs",all:"All Learning Materials"}; // 카테고리별 제목을 저장합니다.
+const descriptions={expressions:"Useful phrases for everyday situations",grammar:"Practical grammar with travel examples",dietary:"Food restrictions and ingredient questions",all:"Expressions, dietary needs and grammar"}; // 카테고리별 설명을 저장합니다.
+document.getElementById("libraryHeading").textContent=titles[type]; // 화면 제목을 설정합니다.
+document.getElementById("librarySubheading").textContent=descriptions[type]; // 화면 설명을 설정합니다.
+let items=[]; // 표시할 학습 항목 배열을 준비합니다.
+if(type==="expressions"||type==="all")items=items.concat(expressions.map(item=>({...item,category:"Essential Expression"}))); // 공통 표현을 목록에 추가합니다.
+if(type==="dietary"||type==="all")items=items.concat(dietary.map(item=>({...item,category:"Dietary Needs"}))); // 식이 제한 표현을 목록에 추가합니다.
+if(type==="grammar"||type==="all")items=items.concat(grammar.map(item=>({...item,category:item.pattern}))); // 문법 예문을 목록에 추가합니다.
+items.forEach(item=>{ // 각 학습 항목을 카드로 만듭니다.
+const card=document.createElement("article"); // 학습 카드 요소를 생성합니다.
+card.className="item-card"; // 학습 카드 디자인을 적용합니다.
+const native=getNativePronunciation(item.ko);
+card.innerHTML=`<span class="tag">${item.category}</span><div class="item-en">${item.en||item.meaning||""}</div><div class="item-ko">${item.ko}</div>${native?`<div class="item-native">${native}</div>`:""}<div class="item-ro">${item.ro||""}</div><div class="item-note">${item.note||""}</div>`; // 영어, 한국어, 발음, 설명을 카드에 표시합니다.
+list.appendChild(card); // 학습 카드를 화면에 추가합니다.
+}); // 학습 항목 반복을 종료합니다.
+showScreen("library"); // 학습 화면으로 이동합니다.
+} // 학습 자료 표시 함수를 종료합니다.
+
+function goHome(){ // 첫 화면으로 돌아갑니다.
+showScreen("home"); // 첫 화면을 표시합니다.
+} // 첫 화면 이동 함수를 종료합니다.
+
+function goScenarios(){ // 상황 목록 화면으로 돌아갑니다.
+renderScenarios(); // 현재 선택한 장소의 상황 목록을 다시 표시합니다.
+showScreen("scenarios"); // 상황 선택 화면으로 이동합니다.
+} // 상황 목록 이동 함수를 종료합니다.
+
+setLanguage("en"); // 처음 화면의 안내 문구를 영어로 설정합니다.
+
+document.getElementById("userInput").addEventListener("keydown",event=>{ // 입력창에서 키보드 입력을 감지합니다.
+if(event.key==="Enter")submitText(); // Enter 키를 누르면 입력 문장을 처리합니다.
+}); // 키보드 이벤트 설정을 종료합니다.
+</script> <!-- JavaScript를 종료합니다. -->
+</body> <!-- 화면 내용을 종료합니다. -->
+</html> <!-- HTML 문서를 종료합니다. -->
