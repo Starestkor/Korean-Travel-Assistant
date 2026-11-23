@@ -63,6 +63,36 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent} /* 버튼에 마�
 .tag{display:inline-block;padding:4px 8px;border-radius:20px;background:#eeeaf7;color:#8d80a8;font-size:10px;margin-bottom:8px} /* 분류 태그를 표시합니다. */
 .hidden{display:none!important} /* hidden 클래스가 붙은 화면을 숨깁니다. */
 @media(max-width:420px){.main{padding:16px}.place-card{height:125px}.heading{font-size:24px}.korean{font-size:21px}.dialogue-card{padding:18px}} /* 작은 모바일 화면에서 여백과 글자 크기를 조절합니다. */
+
+/* Push-to-talk Korean interpreter */
+.interpreter-launch{width:100%;margin:0 0 16px;padding:15px 16px;border:1px solid #fff;border-radius:17px;background:linear-gradient(120deg,#f7f1ff,#eef6fb);box-shadow:0 8px 20px #6473961c;color:#647590;text-align:left;display:flex;align-items:center;gap:12px}
+.interpreter-launch .launch-icon{width:42px;height:42px;border-radius:14px;background:#fff;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.interpreter-launch strong{display:block;font-size:14px}
+.interpreter-launch small{display:block;color:#9997ab;font-size:11px;margin-top:4px}
+#interpreterPanel{display:none;margin:0 0 18px;padding:18px;border-radius:20px;border:1px solid #fff;background:#ffffffc9;box-shadow:0 9px 23px #69769620}
+#interpreterPanel.open{display:block}
+.interpreter-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.interpreter-title{font-size:17px;color:#596a88;font-weight:700}
+.interpreter-hint{font-size:11px;color:#9997ab;line-height:1.5;margin:0 0 14px}
+.record-button{width:100%;border:0;border-radius:16px;padding:15px;background:linear-gradient(135deg,#8c82b8,#7799b8);color:white;font-weight:700;box-shadow:0 8px 18px #64739630}
+.record-button.recording{background:linear-gradient(135deg,#cf777d,#b95d71);animation:recordPulse 1.5s infinite}
+.record-button:disabled{opacity:.55;cursor:wait}
+@keyframes recordPulse{50%{filter:brightness(1.12);transform:scale(.99)}}
+.interpreter-status{font-size:12px;color:#8d91ad;text-align:center;min-height:20px;margin:10px 0}
+.interpreter-result{display:none;gap:10px;flex-direction:column;margin-top:12px}
+.interpreter-result.show{display:flex}
+.interpreter-result-card{padding:13px 14px;border-radius:14px;background:#f7f7fb;border:1px solid #fff}
+.interpreter-result-label{font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#9997ab;font-weight:700;margin-bottom:6px}
+.interpreter-result-text{font-size:14px;line-height:1.65;color:#5f6c83;white-space:pre-wrap;overflow-wrap:anywhere}
+.interpreter-actions{display:flex;gap:8px}
+.interpreter-actions button{flex:1;border:1px solid #fff;border-radius:12px;padding:10px;background:#fff;color:#71809d;font-size:12px}
+.interpreter-close{border:0;background:transparent;color:#9997ab;font-size:20px;padding:0 4px}
+
+
+.interpreter-modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.interpreter-mode{border:1px solid #fff;border-radius:12px;padding:11px 8px;background:#fff;color:#7c86a0;font-size:11px;font-weight:700;line-height:1.4}
+.interpreter-mode.active{background:#e9e5f5;border-color:#cfc6e7;color:#655d8e;box-shadow:inset 0 0 0 1px #d7cfea}
+
 </style> <!-- CSS 디자인을 종료합니다. -->
 </head> <!-- 문서 설정을 종료합니다. -->
 <body> <!-- 화면 내용을 시작합니다. -->
@@ -95,6 +125,31 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent} /* 버튼에 마�
 <option value="th">ไทย</option> <!-- 태국어 사용자를 위한 발음 표기입니다. -->
 </select> <!-- 언어 선택 메뉴를 종료합니다. -->
 </div> <!-- 언어 선택 영역을 종료합니다. -->
+<button class="interpreter-launch" id="interpreterLaunch" type="button" onclick="toggleInterpreter(true)">
+  <span class="launch-icon">🎙️</span>
+  <span><strong id="interpreterLaunchTitle">직원 말 번역하기</strong><small id="interpreterLaunchSub">버튼을 눌러 한국어를 듣고 내 언어로 번역</small></span>
+</button>
+<section id="interpreterPanel" aria-live="polite">
+  <div class="interpreter-top">
+    <div class="interpreter-title" id="interpreterTitle">한국어 음성 통역</div>
+    <button class="interpreter-close" type="button" onclick="toggleInterpreter(false)" aria-label="Close">×</button>
+  </div>
+  <div class="interpreter-modes" role="group" aria-label="Translation direction">
+    <button type="button" class="interpreter-mode active" id="modeStaffToUser" onclick="setInterpreterMode('staffToUser')">직원 말 → 내 언어</button>
+    <button type="button" class="interpreter-mode" id="modeUserToStaff" onclick="setInterpreterMode('userToStaff')">내 말 → 한국어</button>
+  </div>
+  <p class="interpreter-hint" id="interpreterHint">직원이 말할 때 녹음 버튼을 누르세요. 말을 마치면 버튼을 다시 눌러 번역합니다.</p>
+  <button class="record-button" id="recordButton" type="button" onclick="toggleRecording()">● <span id="recordButtonText">눌러서 녹음 시작</span></button>
+  <div class="interpreter-status" id="interpreterStatus">마이크 권한이 필요합니다.</div>
+  <div class="interpreter-result" id="interpreterResult">
+    <div class="interpreter-result-card"><div class="interpreter-result-label" id="heardLabel">직원이 말한 한국어</div><div class="interpreter-result-text" id="heardText"></div></div>
+    <div class="interpreter-result-card"><div class="interpreter-result-label" id="translatedLabel">번역</div><div class="interpreter-result-text" id="translatedText"></div></div>
+    <div class="interpreter-actions">
+      <button type="button" id="speakTranslationButton" onclick="speakInterpreterTranslation()">🔊 <span id="speakTranslationText">번역 듣기</span></button>
+      <button type="button" id="copyTranslationButton" onclick="copyInterpreterTranslation()">복사</button>
+    </div>
+  </div>
+</section>
 <div class="place-grid"> <!-- 장소 선택 카드들을 배치합니다. -->
 <button class="place-card" onclick="selectPlace('cafe')"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700" alt="Cafe" data-place-alt="cafe"><span class="place-overlay"></span><span class="place-name" data-place="cafe">Cafe</span></button> <!-- 카페를 선택합니다. -->
 <button class="place-card" onclick="selectPlace('restaurant')"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700" alt="Restaurant" data-place-alt="restaurant"><span class="place-overlay"></span><span class="place-name" data-place="restaurant">Restaurant</span></button> <!-- 식당을 선택합니다. -->
@@ -625,6 +680,119 @@ setLanguage(initialLanguage); // 저장된 언어 설정으로 첫 화면을 표
 document.getElementById("userInput").addEventListener("keydown",event=>{ // 입력창에서 키보드 입력을 감지합니다.
 if(event.key==="Enter")submitText(); // Enter 키를 누르면 입력 문장을 처리합니다.
 }); // 키보드 이벤트 설정을 종료합니다.
+
+// Button-based Korean speech interpreter. Audio is sent only to the configured server endpoint.
+const interpreterLabels = {
+ en:{launch:"Translate staff speech",sub:"Tap to record Korean and translate into your language",title:"Korean voice interpreter",hint:"Tap to start recording while the staff member speaks. Tap again when they finish.",start:"Tap to start recording",stop:"Stop and translate",working:"Transcribing and translating…",ready:"Ready. Your microphone is not active.",mic:"Please allow microphone access.",heard:"What the staff member said (Korean)",translated:"Translation",listen:"Listen to translation",copy:"Copy",copied:"Copied",unsupported:"Audio recording is not supported in this browser.",error:"Could not translate. Please try again.",empty:"No speech was detected."},
+ es:{launch:"Traducir lo que dice el personal",sub:"Pulsa para grabar coreano y traducirlo a tu idioma",title:"Intérprete de coreano",hint:"Pulsa para grabar mientras habla el personal. Pulsa de nuevo cuando termine.",start:"Toca para empezar a grabar",stop:"Detener y traducir",working:"Transcribiendo y traduciendo…",ready:"Listo. El micrófono está apagado.",mic:"Permite el acceso al micrófono.",heard:"Lo que dijo el personal (coreano)",translated:"Traducción",listen:"Escuchar traducción",copy:"Copiar",copied:"Copiado",unsupported:"Este navegador no admite la grabación de audio.",error:"No se pudo traducir. Inténtalo de nuevo.",empty:"No se detectó voz."},
+ zh:{launch:"翻译店员说的话",sub:"按下按钮录制韩语，并翻译成你的语言",title:"韩语语音翻译",hint:"店员说话时按下录音键，结束后再次按下进行翻译。",start:"按下开始录音",stop:"停止并翻译",working:"正在转写和翻译…",ready:"准备就绪。麦克风未开启。",mic:"请允许使用麦克风。",heard:"店员说的韩语",translated:"翻译",listen:"播放译文",copy:"复制",copied:"已复制",unsupported:"此浏览器不支持录音。",error:"翻译失败，请重试。",empty:"没有检测到语音。"},
+ ja:{launch:"店員の言葉を翻訳",sub:"ボタンを押して韓国語を録音し、自分の言語に翻訳",title:"韓国語音声通訳",hint:"店員が話している間に録音ボタンを押し、話し終わったらもう一度押してください。",start:"押して録音開始",stop:"停止して翻訳",working:"文字起こし・翻訳中…",ready:"準備完了。マイクはオフです。",mic:"マイクの使用を許可してください。",heard:"店員が話した韓国語",translated:"翻訳",listen:"翻訳を聞く",copy:"コピー",copied:"コピーしました",unsupported:"このブラウザーは録音に対応していません。",error:"翻訳できませんでした。もう一度お試しください。",empty:"音声が検出されませんでした。"},
+ fr:{launch:"Traduire les paroles du personnel",sub:"Appuyez pour enregistrer le coréen et le traduire dans votre langue",title:"Interprète vocal coréen",hint:"Appuyez pour enregistrer pendant que le personnel parle. Appuyez à nouveau lorsqu'il a terminé.",start:"Appuyer pour enregistrer",stop:"Arrêter et traduire",working:"Transcription et traduction…",ready:"Prêt. Le microphone est désactivé.",mic:"Veuillez autoriser l'accès au microphone.",heard:"Paroles du personnel (coréen)",translated:"Traduction",listen:"Écouter la traduction",copy:"Copier",copied:"Copié",unsupported:"Ce navigateur ne prend pas en charge l'enregistrement audio.",error:"Traduction impossible. Réessayez.",empty:"Aucune parole détectée."},
+ de:{launch:"Mitarbeiteraussagen übersetzen",sub:"Tippen, um Koreanisch aufzunehmen und in deine Sprache zu übersetzen",title:"Koreanischer Sprachdolmetscher",hint:"Tippe auf Aufnahme, während die Person spricht. Tippe erneut, wenn sie fertig ist.",start:"Zum Aufnehmen tippen",stop:"Stoppen und übersetzen",working:"Wird transkribiert und übersetzt…",ready:"Bereit. Das Mikrofon ist ausgeschaltet.",mic:"Bitte erlaube den Mikrofonzugriff.",heard:"Aussage des Personals (Koreanisch)",translated:"Übersetzung",listen:"Übersetzung anhören",copy:"Kopieren",copied:"Kopiert",unsupported:"Dieser Browser unterstützt keine Audioaufnahme.",error:"Übersetzung fehlgeschlagen. Bitte erneut versuchen.",empty:"Keine Sprache erkannt."},
+ ar:{launch:"ترجمة كلام الموظف",sub:"اضغط لتسجيل الكورية وترجمتها إلى لغتك",title:"مترجم صوتي للكورية",hint:"اضغط للتسجيل أثناء حديث الموظف، ثم اضغط مرة أخرى عند الانتهاء.",start:"اضغط لبدء التسجيل",stop:"إيقاف وترجمة",working:"جارٍ تحويل الصوت وترجمته…",ready:"جاهز. الميكروفون متوقف.",mic:"يرجى السماح باستخدام الميكروفون.",heard:"كلام الموظف (بالكورية)",translated:"الترجمة",listen:"استمع إلى الترجمة",copy:"نسخ",copied:"تم النسخ",unsupported:"هذا المتصفح لا يدعم التسجيل الصوتي.",error:"تعذرت الترجمة. حاول مرة أخرى.",empty:"لم يتم اكتشاف كلام."},
+ pt:{launch:"Traduzir o que a equipe diz",sub:"Toque para gravar coreano e traduzir para seu idioma",title:"Intérprete de coreano",hint:"Toque para gravar enquanto a pessoa fala. Toque novamente quando terminar.",start:"Toque para começar a gravar",stop:"Parar e traduzir",working:"Transcrevendo e traduzindo…",ready:"Pronto. O microfone está desligado.",mic:"Permita o acesso ao microfone.",heard:"O que a pessoa disse (coreano)",translated:"Tradução",listen:"Ouvir tradução",copy:"Copiar",copied:"Copiado",unsupported:"Este navegador não oferece suporte à gravação de áudio.",error:"Não foi possível traduzir. Tente novamente.",empty:"Nenhuma fala foi detectada."},
+ ru:{launch:"Перевести речь сотрудника",sub:"Нажмите, чтобы записать корейскую речь и перевести на ваш язык",title:"Голосовой переводчик с корейского",hint:"Нажмите запись, пока сотрудник говорит. Нажмите ещё раз, когда он закончит.",start:"Нажмите, чтобы записать",stop:"Остановить и перевести",working:"Распознавание и перевод…",ready:"Готово. Микрофон выключен.",mic:"Разрешите доступ к микрофону.",heard:"Что сказал сотрудник (по-корейски)",translated:"Перевод",listen:"Прослушать перевод",copy:"Копировать",copied:"Скопировано",unsupported:"Этот браузер не поддерживает запись аудио.",error:"Не удалось перевести. Попробуйте ещё раз.",empty:"Речь не обнаружена."},
+ vi:{launch:"Dịch lời nhân viên",sub:"Nhấn để ghi âm tiếng Hàn và dịch sang ngôn ngữ của bạn",title:"Phiên dịch tiếng Hàn",hint:"Nhấn để ghi âm khi nhân viên nói. Nhấn lần nữa khi họ nói xong.",start:"Nhấn để bắt đầu ghi âm",stop:"Dừng và dịch",working:"Đang chuyển giọng nói thành văn bản và dịch…",ready:"Sẵn sàng. Mic đang tắt.",mic:"Vui lòng cho phép truy cập mic.",heard:"Lời nhân viên nói (tiếng Hàn)",translated:"Bản dịch",listen:"Nghe bản dịch",copy:"Sao chép",copied:"Đã sao chép",unsupported:"Trình duyệt này không hỗ trợ ghi âm.",error:"Không thể dịch. Vui lòng thử lại.",empty:"Không phát hiện được lời nói."},
+ id:{launch:"Terjemahkan ucapan staf",sub:"Tekan untuk merekam bahasa Korea dan menerjemahkannya ke bahasa Anda",title:"Penerjemah suara Korea",hint:"Tekan untuk merekam saat staf berbicara. Tekan sekali lagi setelah mereka selesai.",start:"Tekan untuk mulai merekam",stop:"Berhenti dan terjemahkan",working:"Sedang mengubah suara menjadi teks dan menerjemahkan…",ready:"Siap. Mikrofon tidak aktif.",mic:"Izinkan akses ke mikrofon.",heard:"Ucapan staf (bahasa Korea)",translated:"Terjemahan",listen:"Dengarkan terjemahan",copy:"Salin",copied:"Tersalin",unsupported:"Browser ini tidak mendukung perekaman audio.",error:"Terjemahan gagal. Silakan coba lagi.",empty:"Tidak ada ucapan yang terdeteksi."},
+ ne:{launch:"कर्मचारीको कुरा अनुवाद गर्नुहोस्",sub:"बटन थिचेर कोरियाली आवाज रेकर्ड गरी आफ्नो भाषामा अनुवाद गर्नुहोस्",title:"कोरियाली आवाज अनुवादक",hint:"कर्मचारी बोल्दा रेकर्ड बटन थिच्नुहोस्। बोलेर सकेपछि फेरि थिच्नुहोस्।",start:"रेकर्ड गर्न थिच्नुहोस्",stop:"रोक्नुहोस् र अनुवाद गर्नुहोस्",working:"आवाज लेखेर अनुवाद गर्दै…",ready:"तयार छ। माइक्रोफोन बन्द छ।",mic:"माइक्रोफोन प्रयोग गर्न अनुमति दिनुहोस्।",heard:"कर्मचारीले भनेको कोरियाली",translated:"अनुवाद",listen:"अनुवाद सुन्नुहोस्",copy:"प्रतिलिपि",copied:"प्रतिलिपि भयो",unsupported:"यो ब्राउजरले अडियो रेकर्ड गर्न सक्दैन।",error:"अनुवाद भएन। फेरि प्रयास गर्नुहोस्।",empty:"आवाज सुनिएन।"},
+ th:{launch:"แปลคำพูดของพนักงาน",sub:"กดปุ่มเพื่อบันทึกเสียงภาษาเกาหลีและแปลเป็นภาษาของคุณ",title:"ล่ามเสียงภาษาเกาหลี",hint:"กดบันทึกขณะที่พนักงานพูด แล้วกดอีกครั้งเมื่อพูดจบ",start:"กดเพื่อเริ่มบันทึก",stop:"หยุดและแปล",working:"กำลังถอดเสียงและแปล…",ready:"พร้อมแล้ว ไมโครโฟนปิดอยู่",mic:"กรุณาอนุญาตให้ใช้ไมโครโฟน",heard:"คำพูดของพนักงาน (ภาษาเกาหลี)",translated:"คำแปล",listen:"ฟังคำแปล",copy:"คัดลอก",copied:"คัดลอกแล้ว",unsupported:"เบราว์เซอร์นี้ไม่รองรับการบันทึกเสียง",error:"แปลไม่สำเร็จ กรุณาลองอีกครั้ง",empty:"ไม่พบเสียงพูด"},
+ si:{launch:"සේවකයා කියන දේ පරිවර්තනය කරන්න",sub:"බොත්තම ඔබා කොරියානු කථනය පටිගත කර ඔබේ භාෂාවට පරිවර්තනය කරන්න",title:"කොරියානු හඬ පරිවර්තකය",hint:"සේවකයා කතා කරන විට පටිගත කිරීම ඔබන්න. කතා කර අවසන් වූ විට නැවත ඔබන්න.",start:"පටිගත කිරීමට ඔබන්න",stop:"නවතා පරිවර්තනය කරන්න",working:"කථනය ලියා පරිවර්තනය කරමින්…",ready:"සූදානම්. මයික්‍රෆෝනය අක්‍රියයි.",mic:"මයික්‍රෆෝනය භාවිතයට අවසර දෙන්න.",heard:"සේවකයා පැවසූ කොරියානු වචන",translated:"පරිවර්තනය",listen:"පරිවර්තනය අසන්න",copy:"පිටපත් කරන්න",copied:"පිටපත් කළා",unsupported:"මෙම බ්‍රවුසරය ශබ්ද පටිගත කිරීමට සහාය නොදක්වයි.",error:"පරිවර්තනය කළ නොහැකි විය. නැවත උත්සාහ කරන්න.",empty:"කථනයක් හඳුනාගත නොහැකි විය."}
+};
+const interpreterModeLabels = {"en":{"staff":"Staff → my language","user":"My speech → Korean","hintStaff":"Record the staff member speaking Korean. Tap again to translate into your language.","hintUser":"Speak in your selected language. Tap again to translate your words into Korean.","heardStaff":"Staff member (Korean)","heardUser":"You said"},"es":{"staff":"Personal → mi idioma","user":"Yo → coreano","hintStaff":"Graba al personal hablando coreano. Pulsa otra vez para traducirlo a tu idioma.","hintUser":"Habla en el idioma seleccionado. Pulsa otra vez para traducir tus palabras al coreano.","heardStaff":"Personal (coreano)","heardUser":"Tú dijiste"},"zh":{"staff":"店员 → 我的语言","user":"我说的话 → 韩语","hintStaff":"录下店员说的韩语，再次点击即可翻译成你的语言。","hintUser":"请用你选择的语言说话，再次点击即可翻译成韩语。","heardStaff":"店员说的韩语","heardUser":"你说的话"},"ja":{"staff":"店員 → 自分の言語","user":"自分の言葉 → 韓国語","hintStaff":"店員の韓国語を録音します。もう一度押すと自分の言語に翻訳します。","hintUser":"選択した言語で話してください。もう一度押すと韓国語に翻訳します。","heardStaff":"店員の韓国語","heardUser":"あなたが話した言葉"},"fr":{"staff":"Personnel → ma langue","user":"Moi → coréen","hintStaff":"Enregistrez le personnel parlant coréen. Appuyez à nouveau pour traduire dans votre langue.","hintUser":"Parlez dans la langue sélectionnée. Appuyez à nouveau pour traduire en coréen.","heardStaff":"Personnel (coréen)","heardUser":"Vous avez dit"},"de":{"staff":"Personal → meine Sprache","user":"Ich → Koreanisch","hintStaff":"Nimm auf, was das Personal auf Koreanisch sagt. Tippe erneut, um es zu übersetzen.","hintUser":"Sprich in der ausgewählten Sprache. Tippe erneut, um deine Worte ins Koreanische zu übersetzen.","heardStaff":"Personal (Koreanisch)","heardUser":"Du hast gesagt"},"ar":{"staff":"الموظف ← لغتي","user":"كلامي ← الكورية","hintStaff":"سجّل كلام الموظف بالكورية، ثم اضغط مجددًا لترجمته إلى لغتك.","hintUser":"تحدث بلغتك المحددة، ثم اضغط مجددًا لترجمة كلامك إلى الكورية.","heardStaff":"كلام الموظف (بالكورية)","heardUser":"ما قلته"},"pt":{"staff":"Equipe → meu idioma","user":"Eu → coreano","hintStaff":"Grave a equipe falando coreano. Toque novamente para traduzir para seu idioma.","hintUser":"Fale no idioma selecionado. Toque novamente para traduzir suas palavras para coreano.","heardStaff":"Equipe (coreano)","heardUser":"Você disse"},"ru":{"staff":"Сотрудник → мой язык","user":"Моя речь → корейский","hintStaff":"Запишите речь сотрудника на корейском. Нажмите ещё раз, чтобы перевести на ваш язык.","hintUser":"Говорите на выбранном языке. Нажмите ещё раз, чтобы перевести ваши слова на корейский.","heardStaff":"Сотрудник (корейский)","heardUser":"Вы сказали"},"vi":{"staff":"Nhân viên → ngôn ngữ của tôi","user":"Tôi nói → tiếng Hàn","hintStaff":"Ghi âm lời nhân viên nói tiếng Hàn. Nhấn lần nữa để dịch sang ngôn ngữ của bạn.","hintUser":"Hãy nói bằng ngôn ngữ đã chọn. Nhấn lần nữa để dịch lời bạn sang tiếng Hàn.","heardStaff":"Nhân viên (tiếng Hàn)","heardUser":"Bạn đã nói"},"id":{"staff":"Staf → bahasa saya","user":"Ucapan saya → bahasa Korea","hintStaff":"Rekam ucapan staf dalam bahasa Korea. Tekan lagi untuk menerjemahkannya ke bahasa Anda.","hintUser":"Berbicaralah dalam bahasa yang dipilih. Tekan lagi untuk menerjemahkan ucapan Anda ke bahasa Korea.","heardStaff":"Ucapan staf (bahasa Korea)","heardUser":"Anda mengatakan"},"ne":{"staff":"कर्मचारी → मेरो भाषा","user":"मेरो कुरा → कोरियाली","hintStaff":"कर्मचारीले कोरियालीमा बोलेको रेकर्ड गर्नुहोस्। फेरि थिच्दा आफ्नो भाषामा अनुवाद हुन्छ।","hintUser":"छानिएको भाषामा बोल्नुहोस्। फेरि थिच्दा तपाईंको कुरा कोरियालीमा अनुवाद हुन्छ।","heardStaff":"कर्मचारीले भनेको (कोरियाली)","heardUser":"तपाईंले भन्नुभयो"},"th":{"staff":"พนักงาน → ภาษาของฉัน","user":"ฉันพูด → ภาษาเกาหลี","hintStaff":"บันทึกเสียงพนักงานที่พูดภาษาเกาหลี แล้วกดอีกครั้งเพื่อแปลเป็นภาษาของคุณ","hintUser":"พูดด้วยภาษาที่เลือก แล้วกดอีกครั้งเพื่อแปลคำพูดของคุณเป็นภาษาเกาหลี","heardStaff":"คำพูดของพนักงาน (ภาษาเกาหลี)","heardUser":"คุณพูดว่า"},"si":{"staff":"සේවකයා → මගේ භාෂාව","user":"මගේ කථනය → කොරියානු","hintStaff":"කොරියානු භාෂාවෙන් සේවකයා කියන දේ පටිගත කරන්න. නැවත ඔබන විට ඔබේ භාෂාවට පරිවර්තනය වේ.","hintUser":"තෝරාගත් භාෂාවෙන් කතා කරන්න. නැවත ඔබන විට ඔබේ කථනය කොරියානු භාෂාවට පරිවර්තනය වේ.","heardStaff":"සේවකයා පැවසූ දේ (කොරියානු)","heardUser":"ඔබ පැවසුවේ"}};
+interpreterModeLabels.ko={staff:"직원 말 → 내 언어",user:"내 말 → 한국어",hintStaff:"직원이 말할 때 녹음하세요. 다시 누르면 선택한 언어로 번역합니다.",hintUser:"선택한 언어로 말하세요. 다시 누르면 한국어로 번역합니다.",heardStaff:"직원이 말한 한국어",heardUser:"내가 말한 내용"};
+interpreterLabels.ko={launch:"직원 말 번역하기",sub:"버튼을 눌러 한국어를 듣고 선택한 언어로 번역",title:"한국어 음성 통역",hint:"직원이 말할 때 녹음 버튼을 누르세요. 말을 마치면 다시 눌러 번역합니다.",start:"눌러서 녹음 시작",stop:"녹음 종료 및 번역",working:"음성을 인식하고 번역하는 중…",ready:"준비 완료. 마이크는 꺼져 있습니다.",mic:"마이크 사용을 허용해 주세요.",heard:"직원이 말한 한국어",translated:"번역",listen:"번역 듣기",copy:"복사",copied:"복사했어요",unsupported:"이 브라우저에서는 음성 녹음을 지원하지 않습니다.",error:"번역에 실패했습니다. 다시 시도해 주세요.",empty:"음성이 감지되지 않았습니다."};
+let interpreterRecorder=null, interpreterStream=null, interpreterChunks=[], interpreterRecording=false, interpreterLastTranslation="", interpreterShouldTranslate=false, interpreterMode="staffToUser";
+function interpreterText(key){return (interpreterLabels[selectedLanguage]||interpreterLabels.en)[key]||(interpreterLabels.en[key]||"");}
+function setInterpreterMode(mode){
+ if(interpreterRecording){setInterpreterStatus(interpreterText("ready"));return;}
+ interpreterMode=mode;
+ document.getElementById("modeStaffToUser").classList.toggle("active",mode==="staffToUser");
+ document.getElementById("modeUserToStaff").classList.toggle("active",mode==="userToStaff");
+ refreshInterpreterLabels();
+ document.getElementById("interpreterResult").classList.remove("show");
+ interpreterLastTranslation="";
+}
+function refreshInterpreterLabels(){
+ const ids={interpreterLaunchTitle:"launch",interpreterLaunchSub:"sub",interpreterTitle:"title",interpreterHint:"hint",heardLabel:"heard",translatedLabel:"translated",speakTranslationText:"listen",copyTranslationButton:"copy"};
+ Object.entries(ids).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.textContent=interpreterText(key);});
+ const modes=interpreterModeLabels[selectedLanguage]||interpreterModeLabels.en;
+ document.getElementById("modeStaffToUser").textContent=modes.staff;
+ document.getElementById("modeUserToStaff").textContent=modes.user;
+ document.getElementById("interpreterHint").textContent=interpreterMode==="staffToUser"?modes.hintStaff:modes.hintUser;
+ document.getElementById("heardLabel").textContent=interpreterMode==="staffToUser"?modes.heardStaff:modes.heardUser;
+ const status=document.getElementById("interpreterStatus"); if(status&&!interpreterRecording&&status.dataset.busy!=="1")status.textContent=interpreterText("ready");
+ const btn=document.getElementById("recordButtonText");if(btn)btn.textContent=interpreterRecording?interpreterText("stop"):interpreterText("start");
+}
+function toggleInterpreter(open){
+ const panel=document.getElementById("interpreterPanel");panel.classList.toggle("open",!!open);
+ if(open){refreshInterpreterLabels();panel.scrollIntoView({behavior:"smooth",block:"nearest"});}
+ if(!open&&interpreterRecording)finishInterpreterRecording(false);
+}
+async function toggleRecording(){
+ if(interpreterRecording){finishInterpreterRecording(true);return;}
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){
+  setInterpreterStatus(interpreterText("unsupported"));return;
+ }
+ try{
+  interpreterStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+  const mimeCandidates=["audio/mp4","audio/webm;codecs=opus","audio/webm","audio/ogg;codecs=opus"];
+  const mime=mimeCandidates.find(t=>MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t));
+  interpreterRecorder=mime?new MediaRecorder(interpreterStream,{mimeType:mime}):new MediaRecorder(interpreterStream);
+  interpreterChunks=[];interpreterRecording=true;
+  interpreterRecorder.ondataavailable=e=>{if(e.data&&e.data.size)interpreterChunks.push(e.data);};
+  interpreterRecorder.onstop=()=>{if(interpreterShouldTranslate)processInterpreterAudio();};
+  interpreterRecorder.start();
+  document.getElementById("recordButton").classList.add("recording");
+  document.getElementById("recordButtonText").textContent=interpreterText("stop");
+  setInterpreterStatus(interpreterText("ready"));
+ }catch(err){setInterpreterStatus(interpreterText("mic"));}
+}
+function setInterpreterStatus(message,busy=false){
+ const el=document.getElementById("interpreterStatus");el.textContent=message;el.dataset.busy=busy?"1":"0";
+}
+function finishInterpreterRecording(translate){
+ if(!interpreterRecorder||!interpreterRecording)return;
+ interpreterRecording=false;
+ document.getElementById("recordButton").classList.remove("recording");
+ document.getElementById("recordButtonText").textContent=interpreterText("start");
+ interpreterShouldTranslate=!!translate;
+ if(interpreterRecorder.state!=="inactive")interpreterRecorder.stop();
+ if(interpreterStream){interpreterStream.getTracks().forEach(t=>t.stop());interpreterStream=null;}
+ if(!translate){interpreterChunks=[];setInterpreterStatus(interpreterText("ready"));return;}
+ setInterpreterStatus(interpreterText("working"),true);
+}
+async function processInterpreterAudio(){
+ const blob=new Blob(interpreterChunks,{type:interpreterRecorder&&interpreterRecorder.mimeType||"audio/webm"});
+ interpreterChunks=[];
+ if(!blob.size){setInterpreterStatus(interpreterText("empty"));return;}
+ const ext=blob.type.includes("mp4")?"m4a":blob.type.includes("ogg")?"ogg":"webm";
+ const form=new FormData();form.append("audio",blob,(interpreterMode==="staffToUser"?"staff-speech.":"traveler-speech.")+ext);form.append("language",selectedLanguage);form.append("direction",interpreterMode);
+ try{
+  const response=await fetch("/api/interpret",{method:"POST",body:form});
+  const data=await response.json();
+  if(!response.ok)throw new Error(data.error||"Request failed");
+  if(!data.transcript||!data.translation)throw new Error("Empty result");
+  document.getElementById("heardText").textContent=data.transcript;
+  document.getElementById("translatedText").textContent=data.translation;
+  interpreterLastTranslation=data.translation;
+  document.getElementById("interpreterResult").classList.add("show");
+  setInterpreterStatus(interpreterText("ready"));
+ }catch(err){console.error(err);setInterpreterStatus(interpreterText("error"));}
+}
+document.getElementById("languageSelect")?.addEventListener("change",refreshInterpreterLabels);
+refreshInterpreterLabels();
+function speakInterpreterTranslation(){
+ if(!interpreterLastTranslation||!window.speechSynthesis)return;
+ const utterance=new SpeechSynthesisUtterance(interpreterLastTranslation);
+ const voiceLang={en:"en-US",es:"es-ES",zh:"zh-CN",ja:"ja-JP",fr:"fr-FR",de:"de-DE",ar:"ar",pt:"pt-PT",ru:"ru-RU",vi:"vi-VN",id:"id-ID",ne:"ne-NP",th:"th-TH",si:"si-LK"};
+ utterance.lang=voiceLang[selectedLanguage]||"en-US";speechSynthesis.cancel();speechSynthesis.speak(utterance);
+}
+async function copyInterpreterTranslation(){
+ if(!interpreterLastTranslation)return;
+ try{await navigator.clipboard.writeText(interpreterLastTranslation);setInterpreterStatus(interpreterText("copied"));}
+ catch(e){setInterpreterStatus(interpreterLastTranslation);}
+}
+
 </script> <!-- JavaScript를 종료합니다. -->
 </body> <!-- 화면 내용을 종료합니다. -->
 </html> <!-- HTML 문서를 종료합니다. -->
