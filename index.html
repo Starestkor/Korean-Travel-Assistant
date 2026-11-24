@@ -151,6 +151,24 @@ body.app-entered .app{display:block}
 .moment-card p{margin:0;color:#9997ab;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
 .moment-card .moment-privacy{display:inline-block;margin-top:6px;color:#8c82b8;font-size:10px}
 
+.community-entry{width:100%;margin:0 0 16px;padding:14px 16px;border:1px solid #fff;border-radius:17px;background:linear-gradient(120deg,#eef7f5,#f3f0fb);color:#647590;display:flex;align-items:center;gap:12px;text-align:left;box-shadow:0 8px 20px #6473961c}
+.community-entry .moments-entry-icon{background:#fff}
+.community-workspace{margin:14px 0 22px;padding:18px;border:1px solid #fff;border-radius:22px;background:#ffffffc9;box-shadow:0 12px 35px #68749620}
+.community-workspace[hidden]{display:none}
+.community-workspace-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.community-workspace h2{margin:0;color:#596a88;font-family:Georgia,serif;font-weight:500}
+.community-workspace-head p{margin:6px 0 0;color:#9295aa;font-size:12px}
+.community-refresh{border:1px solid #e5e5ef;border-radius:999px;background:#fff;padding:8px 12px;color:#71809d;font-size:12px}
+.community-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.community-card{overflow:hidden;border:1px solid #ececf4;border-radius:15px;background:#fff}
+.community-card img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#f1f1f5}
+.community-card-body{padding:11px}
+.community-card strong{display:block;color:#64718b;font-size:13px;margin-bottom:5px}
+.community-card p{margin:0;color:#9997ab;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.community-card time{display:block;margin-top:7px;color:#aaa8b8;font-size:10px}
+.community-status{min-height:20px;color:#8d91ad;font-size:12px;margin:0 0 10px}
+@media(max-width:380px){.community-list{grid-template-columns:1fr}}
+
 </style> <!-- CSS 디자인을 종료합니다. -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head> <!-- 문서 설정을 종료합니다. -->
@@ -243,6 +261,18 @@ body.app-entered .app{display:block}
  <p id="momentSaveStatus" class="moment-save-status" role="status"></p>
  <div class="moments-list-head"><h3>내 기록</h3><button type="button" onclick="loadMyMoments()">새로고침</button></div>
  <div id="myMomentsList" class="moments-list"></div>
+</section>
+<button class="community-entry" id="communityEntry" type="button" onclick="openCommunitySpots()">
+  <span class="moments-entry-icon">🌏</span>
+  <span><strong>Community Spots</strong><small>여행자들이 공개한 한국의 사진 명소를 둘러보세요.</small></span>
+</button>
+<section id="communityWorkspace" class="community-workspace" hidden>
+ <div class="community-workspace-head">
+  <div><h2>Community Spots</h2><p>여행자들이 공개한 사진과 장소</p></div>
+  <button type="button" class="community-refresh" onclick="loadCommunitySpots()">새로고침</button>
+ </div>
+ <p id="communityStatus" class="community-status" role="status">공개 사진을 불러오는 중…</p>
+ <div id="communityList" class="community-list"></div>
 </section>
 <button class="interpreter-launch" id="interpreterLaunch" type="button" onclick="toggleInterpreter(true)">
   <span class="launch-icon">🎙️</span>
@@ -1070,6 +1100,32 @@ async function loadMyMoments(){
  try{const r=await fetch(PHOTO_API,{headers:photoAuthHeaders()});const d=await r.json();if(!r.ok||!d.success)throw new Error(d.message||"기록을 불러오지 못했습니다.");list.innerHTML="";if(!d.items.length){list.textContent="아직 저장한 사진 스팟이 없습니다.";return;}
  for(const item of d.items){const card=document.createElement("article");card.className="moment-card";const img=document.createElement("img");img.alt=item.place_name;img.src="";const body=document.createElement("div");const title=document.createElement("strong");title.textContent=item.place_name;const note=document.createElement("p");note.textContent=item.note||new Date(item.created_at).toLocaleString();const privacy=document.createElement("span");privacy.className="moment-privacy";privacy.textContent=item.visibility==="public"?"커뮤니티 공개":"나만 보기";body.append(title,note,privacy);card.append(img,body);list.appendChild(card);fetch(item.image_url,{headers:photoAuthHeaders()}).then(res=>{if(!res.ok)throw new Error("사진을 불러오지 못했습니다.");return res.blob();}).then(blob=>{img.src=URL.createObjectURL(blob);}).catch(()=>{img.alt="사진을 불러오지 못했습니다.";});}}
  catch(e){list.textContent="불러오기 실패: "+e.message;}
+}
+// Public Community Spots feed: only rows marked public are returned by the server.
+const COMMUNITY_API = "https://korean-travel-assistant.pages.dev/api/community-spots";
+function openCommunitySpots(){
+ const section=document.getElementById("communityWorkspace");
+ section.hidden=false;section.scrollIntoView({behavior:"smooth",block:"start"});loadCommunitySpots();
+}
+async function loadCommunitySpots(){
+ const list=document.getElementById("communityList"),status=document.getElementById("communityStatus");
+ status.textContent="공개 사진을 불러오는 중…";list.innerHTML="";
+ try{
+  const response=await fetch(COMMUNITY_API,{headers:{"Accept":"application/json"}});
+  const data=await response.json();
+  if(!response.ok||!data.success)throw new Error(data.message||"커뮤니티 사진을 불러오지 못했습니다.");
+  if(!data.items?.length){status.textContent="아직 공개된 사진 스팟이 없습니다. 첫 번째 장소를 공유해 보세요.";return;}
+  status.textContent=`공개 사진 ${data.items.length}개`;
+  for(const item of data.items){
+   const card=document.createElement("article");card.className="community-card";
+   const img=document.createElement("img");img.loading="lazy";img.alt=item.place_name||"Community photo";img.src=item.image_url;
+   const body=document.createElement("div");body.className="community-card-body";
+   const title=document.createElement("strong");title.textContent=item.place_name||"이름 없는 장소";
+   const note=document.createElement("p");note.textContent=item.note||"";
+   const time=document.createElement("time");time.dateTime=item.created_at;time.textContent=item.created_at?new Date(item.created_at).toLocaleDateString():"";
+   body.append(title,note,time);card.append(img,body);list.append(card);
+  }
+ }catch(error){status.textContent="불러오기 실패: "+(error.message||"잠시 후 다시 시도해 주세요.");}
 }
 (function waitForGoogleIdentity(){let attempts=0;const timer=setInterval(()=>{attempts++;if(window.google?.accounts?.id){clearInterval(timer);initializeGoogleSignIn();}else if(attempts>=30){clearInterval(timer);const d=document.getElementById("accountDetail");if(d)d.textContent="Google 로그인 스크립트를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요."; }},300);})();
 
