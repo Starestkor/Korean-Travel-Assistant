@@ -93,9 +93,43 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent} /* 버튼에 마�
 .interpreter-mode{border:1px solid #fff;border-radius:12px;padding:11px 8px;background:#fff;color:#7c86a0;font-size:11px;font-weight:700;line-height:1.4}
 .interpreter-mode.active{background:#e9e5f5;border-color:#cfc6e7;color:#655d8e;box-shadow:inset 0 0 0 1px #d7cfea}
 
+
+/* Seoul Moments cinematic intro */
+body.intro-active{background:#101827;overflow:hidden}
+#introScreen{position:fixed;inset:0;z-index:9999;overflow:hidden;background:#111827;color:#f8e8c6;display:flex;align-items:center;justify-content:center}
+#introScreen video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+#introScreen:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,14,25,.16),rgba(8,14,25,.05) 45%,rgba(8,14,25,.58))}
+.intro-content{position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 20px}
+.intro-brand{margin-top:auto;margin-bottom:auto;padding-top:8vh;text-shadow:0 3px 18px #130d08aa}
+.intro-brand h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(42px,10vw,76px);line-height:.98;letter-spacing:-1.8px;margin:0;color:#f4d58b}
+.intro-brand .intro-sub{font-size:10px;letter-spacing:.42em;color:#f8e8c6;margin-top:18px;font-weight:700}
+.intro-seal{display:inline-grid;place-items:center;margin-top:18px;width:37px;height:37px;border:1px solid #d9ad55;border-radius:8px;background:linear-gradient(145deg,#8d201b,#4e100f);color:#f6d78c;font-family:serif;font-size:23px;box-shadow:0 4px 16px #0005}
+.intro-start{margin-top:auto;margin-bottom:7vh;min-width:min(78vw,310px);padding:16px 26px;border:1px solid rgba(245,213,151,.9);border-radius:999px;background:linear-gradient(135deg,rgba(255,246,222,.82),rgba(219,187,132,.32));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#39291b;font-weight:750;font-size:17px;letter-spacing:.04em;box-shadow:0 8px 28px #0005,inset 0 1px 0 #fff9}
+.intro-start:active{transform:scale(.98)}
+#introScreen.intro-ended video{filter:brightness(.92)}
+.app{display:none}
+body.app-entered{overflow:auto;background:linear-gradient(135deg,#f1edf9,#eaf2f8 48%,#f9edf1)}
+body.app-entered .app{display:block}
+@media(min-aspect-ratio: 1/1){#introScreen video{object-position:center}.intro-brand{padding-top:4vh}.intro-start{margin-bottom:5vh}}
+
 </style> <!-- CSS 디자인을 종료합니다. -->
 </head> <!-- 문서 설정을 종료합니다. -->
-<body> <!-- 화면 내용을 시작합니다. -->
+
+<body class="intro-active">
+<div id="introScreen" aria-label="Seoul Moments intro">
+  <video id="introVideo" autoplay muted playsinline preload="auto" poster="seoul-moments-intro-poster.jpg">
+    <source src="seoul-moments-intro.mp4" type="video/mp4">
+  </video>
+  <div class="intro-content">
+    <div class="intro-brand">
+      <h1>Seoul<br>Moments</h1>
+      <div class="intro-seal" aria-label="정">情</div>
+      <div class="intro-sub">KOREA TRAVEL ASSISTANT</div>
+    </div>
+    <button class="intro-start" type="button" onclick="enterSeoulMoments()">여행 시작하기&nbsp; ›</button>
+  </div>
+</div>
+ <!-- 화면 내용을 시작합니다. -->
 <main class="app"> <!-- 앱 전체 영역입니다. -->
 <header class="header"> <!-- 앱 상단 영역입니다. -->
 <div class="logo">Seoul Moments</div> <!-- 앱 이름입니다. -->
@@ -878,6 +912,27 @@ async function copyInterpreterTranslation(){
  try{await navigator.clipboard.writeText(interpreterLastTranslation);setInterpreterStatus(interpreterText("copied"));}
  catch(e){setInterpreterStatus(interpreterLastTranslation);}
 }
+
+
+function enterSeoulMoments(){
+  const intro=document.getElementById("introScreen");
+  const video=document.getElementById("introVideo");
+  if(video){try{video.pause();}catch(e){}}
+  if(intro)intro.remove();
+  document.body.classList.remove("intro-active");
+  document.body.classList.add("app-entered");
+  window.scrollTo(0,0);
+}
+(function initSeoulIntro(){
+  const video=document.getElementById("introVideo");
+  const intro=document.getElementById("introScreen");
+  if(!video||!intro)return;
+  video.addEventListener("ended",()=>intro.classList.add("intro-ended"));
+  const playPromise=video.play();
+  if(playPromise&&typeof playPromise.catch==="function"){
+    playPromise.catch(()=>intro.classList.add("intro-ended"));
+  }
+})();
 
 </script> <!-- JavaScript를 종료합니다. -->
 </body> <!-- 화면 내용을 종료합니다. -->
