@@ -112,7 +112,21 @@ body.app-entered{overflow:auto;background:linear-gradient(135deg,#f1edf9,#eaf2f8
 body.app-entered .app{display:block}
 @media(min-aspect-ratio: 1/1){#introScreen video{object-position:center}.intro-brand{padding-top:4vh}.intro-start{margin-bottom:5vh}}
 
+
+/* Google account and Photo Spots entry */
+.account-panel{margin:0 0 16px;padding:14px 16px;border:1px solid #fff;border-radius:18px;background:#ffffffa8;box-shadow:0 8px 20px #6473961c;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.account-copy{min-width:0;flex:1}.account-title{font-size:13px;font-weight:750;color:#647590}.account-detail{font-size:11px;color:#9997ab;margin-top:4px;overflow-wrap:anywhere}
+.google-login-slot{min-height:40px;display:flex;align-items:center;justify-content:flex-end}
+.account-logout{border:1px solid #fff;border-radius:12px;padding:9px 12px;background:#fff;color:#71809d;font-size:11px}
+.moments-entry{width:100%;margin:0 0 15px;padding:14px 16px;border:1px solid #fff;border-radius:17px;background:linear-gradient(120deg,#fff8e9,#f4effb);color:#716486;display:flex;align-items:center;gap:12px;text-align:left;box-shadow:0 8px 20px #6473961c}
+.moments-entry-icon{width:40px;height:40px;border-radius:13px;background:#fff;display:grid;place-items:center;font-size:21px;flex-shrink:0}
+.moments-entry strong{display:block;font-size:14px}.moments-entry small{display:block;color:#9997ab;font-size:11px;margin-top:4px;line-height:1.4}
+#momentsNotice{display:none;margin:0 0 15px;padding:13px 15px;border-radius:14px;background:#fff;border:1px solid #eee6f5;color:#7c7392;font-size:12px;line-height:1.55}
+#momentsNotice.show{display:block}
+@media(max-width:420px){.account-panel{align-items:flex-start}.google-login-slot{width:100%;justify-content:flex-start}}
+
 </style> <!-- CSS 디자인을 종료합니다. -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head> <!-- 문서 설정을 종료합니다. -->
 
 <body class="intro-active">
@@ -133,8 +147,16 @@ body.app-entered .app{display:block}
 <main class="app"> <!-- 앱 전체 영역입니다. -->
 <header class="header"> <!-- 앱 상단 영역입니다. -->
 <div class="logo">Seoul Moments</div> <!-- 앱 이름입니다. -->
-<div class="header-icon">✦</div> <!-- 장식 아이콘입니다. -->
+<div class="header-icon" aria-hidden="true">情</div> <!-- 브랜드 인장입니다. -->
 </header> <!-- 앱 상단 영역을 종료합니다. -->
+<section class="account-panel" aria-live="polite">
+  <div class="account-copy">
+    <div class="account-title" id="accountTitle">Google 계정으로 로그인</div>
+    <div class="account-detail" id="accountDetail">로그인하면 개인 사진 스팟 기능을 이용할 수 있습니다.</div>
+  </div>
+  <div class="google-login-slot" id="googleLoginSlot"><div id="googleSignInButton"></div></div>
+  <button class="account-logout hidden" id="googleLogoutButton" type="button" onclick="signOutGoogleAccount()">로그아웃</button>
+</section>
 <section class="main"> <!-- 메인 콘텐츠 영역입니다. -->
 
 <section id="home"> <!-- 첫 화면을 시작합니다. -->
@@ -159,6 +181,11 @@ body.app-entered .app{display:block}
 <option value="th">ไทย</option> <!-- 태국어 사용자를 위한 발음 표기입니다. -->
 </select> <!-- 언어 선택 메뉴를 종료합니다. -->
 </div> <!-- 언어 선택 영역을 종료합니다. -->
+<button class="moments-entry" id="momentsEntry" type="button" onclick="openMyMoments()">
+  <span class="moments-entry-icon">📍</span>
+  <span><strong>My Moments · Photo Spots</strong><small>여행 중 찍은 사진과 장소를 개인 기록으로 남기고 커뮤니티와 공유하기</small></span>
+</button>
+<div id="momentsNotice" role="status"></div>
 <button class="interpreter-launch" id="interpreterLaunch" type="button" onclick="toggleInterpreter(true)">
   <span class="launch-icon">🎙️</span>
   <span><strong id="interpreterLaunchTitle">직원 말 번역하기</strong><small id="interpreterLaunchSub">버튼을 눌러 한국어를 듣고 내 언어로 번역</small></span>
@@ -932,6 +959,79 @@ function enterSeoulMoments(){
   if(playPromise&&typeof playPromise.catch==="function"){
     playPromise.catch(()=>intro.classList.add("intro-ended"));
   }
+})();
+
+
+// Google account sign-in. The ID token is verified by the Cloudflare Pages Function.
+const GOOGLE_OAUTH_CLIENT_ID = "425547130232-9desigd89o2kq5mi1vef82csth33doij.apps.googleusercontent.com";
+let verifiedGoogleUser = null;
+let googleIdentityInitialized = false;
+function updateGoogleAccountUI() {
+ const title=document.getElementById("accountTitle");
+ const detail=document.getElementById("accountDetail");
+ const loginSlot=document.getElementById("googleLoginSlot");
+ const logout=document.getElementById("googleLogoutButton");
+ if(verifiedGoogleUser){
+  title.textContent=verifiedGoogleUser.name||"Google 계정 로그인 완료";
+  detail.textContent=verifiedGoogleUser.email||"인증된 Google 계정";
+  loginSlot.classList.add("hidden");logout.classList.remove("hidden");
+ }else{
+  title.textContent="Google 계정으로 로그인";
+  detail.textContent="로그인하면 개인 사진 스팟 기능을 이용할 수 있습니다.";
+  loginSlot.classList.remove("hidden");logout.classList.add("hidden");
+ }
+}
+window.handleGoogleCredential = async function(response) {
+ const detail=document.getElementById("accountDetail");
+ detail.textContent="Google 계정을 확인하고 있습니다…";
+ try{
+  const result=await fetch("https://korean-travel-assistant.pages.dev/api/auth/google",{
+   method:"POST",headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({credential:response.credential})
+  });
+  const data=await result.json();
+  if(!result.ok||!data.success||!data.user) throw new Error(data.message||"Google 로그인 확인에 실패했습니다.");
+  verifiedGoogleUser=data.user;
+  updateGoogleAccountUI();
+  const notice=document.getElementById("momentsNotice");
+  notice.textContent="Google 계정 확인이 완료되었습니다. 개인 사진 저장과 커뮤니티 공유를 사용하려면 다음 단계에서 서버 세션 및 사진 저장 권한 연결이 필요합니다.";
+  notice.classList.add("show");
+ }catch(error){
+  verifiedGoogleUser=null;updateGoogleAccountUI();
+  detail.textContent="로그인 실패: "+(error.message||"다시 시도해 주세요.");
+  console.error("Google sign-in verification error:",error);
+ }
+};
+function initializeGoogleSignIn() {
+ if(googleIdentityInitialized) return;
+ if(!window.google||!google.accounts||!google.accounts.id) return;
+ googleIdentityInitialized=true;
+ google.accounts.id.initialize({client_id:GOOGLE_OAUTH_CLIENT_ID,callback:window.handleGoogleCredential,auto_select:false});
+ google.accounts.id.renderButton(document.getElementById("googleSignInButton"),{theme:"outline",size:"large",shape:"pill",text:"signin_with",locale:"en"});
+}
+function signOutGoogleAccount() {
+ verifiedGoogleUser=null;
+ if(window.google&&google.accounts&&google.accounts.id) google.accounts.id.disableAutoSelect();
+ document.getElementById("momentsNotice").classList.remove("show");
+ updateGoogleAccountUI();
+}
+function openMyMoments() {
+ const notice=document.getElementById("momentsNotice");
+ if(!verifiedGoogleUser){
+  notice.textContent="개인 사진 스팟을 이용하려면 먼저 Google 계정으로 로그인해 주세요.";
+ }else{
+  notice.textContent="Google 계정 확인은 완료되었습니다. 사진 업로드와 개인·커뮤니티 저장 기능은 D1/R2 권한 및 API 연결을 마친 뒤 활성화됩니다.";
+ }
+ notice.classList.add("show");
+ notice.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+(function waitForGoogleIdentity() {
+ let attempts=0;
+ const timer=setInterval(()=>{
+  attempts++;
+  if(window.google&&google.accounts&&google.accounts.id){clearInterval(timer);initializeGoogleSignIn();}
+  else if(attempts>=30){clearInterval(timer);document.getElementById("accountDetail").textContent="Google 로그인 스크립트를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.";}
+ },300);
 })();
 
 </script> <!-- JavaScript를 종료합니다. -->
