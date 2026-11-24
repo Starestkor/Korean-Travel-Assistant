@@ -125,6 +125,32 @@ body.app-entered .app{display:block}
 #momentsNotice.show{display:block}
 @media(max-width:420px){.account-panel{align-items:flex-start}.google-login-slot{width:100%;justify-content:flex-start}}
 
+
+/* My Moments photo record workspace */
+.moments-workspace{margin:14px 0 22px;padding:18px;border:1px solid #fff;border-radius:22px;background:#ffffffc9;box-shadow:0 12px 35px #68749620}
+.moments-workspace[hidden]{display:none}
+.moments-workspace-head,.moments-list-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.moments-workspace h2,.moments-workspace h3{margin:0;color:#596a88;font-family:Georgia,serif;font-weight:500}
+.moments-workspace-head p{margin:6px 0 14px;color:#9295aa;font-size:12px}
+.moments-close,.moments-list-head button{border:1px solid #e5e5ef;border-radius:999px;background:#fff;padding:8px 12px;color:#71809d;font-size:12px}
+.moments-field{display:flex;flex-direction:column;gap:7px;margin:12px 0;color:#71809d;font-size:12px;font-weight:700}
+.moments-field input,.moments-field textarea,.moments-field select,.moments-coordinates input{width:100%;border:1px solid #e5e7f0;border-radius:12px;background:#fff;padding:12px;color:#59647a;font:inherit;font-size:13px}
+.moments-field textarea{resize:vertical}
+.moment-preview{min-height:75px;display:grid;place-items:center;margin:8px 0 12px;padding:10px;border:1px dashed #d7d9e8;border-radius:14px;color:#9997ab;font-size:12px;text-align:center;overflow:hidden}
+.moment-preview img{max-width:100%;max-height:240px;border-radius:10px;object-fit:cover}
+.moments-coordinate-row{display:flex;align-items:center;gap:10px;margin:8px 0;color:#9997ab;font-size:11px}
+.moments-coordinate-row button{border:0;border-radius:999px;background:#e9e5f5;color:#655d8e;padding:10px 13px;font-size:12px}
+.moments-coordinates{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.moments-save{width:100%;border:0;border-radius:14px;padding:14px;background:linear-gradient(135deg,#8c82b8,#7799b8);color:white;font-weight:700}
+.moment-save-status{min-height:18px;color:#7c86a0;font-size:12px}
+.moments-list-head{margin:22px 0 10px}
+.moments-list{display:grid;grid-template-columns:1fr;gap:10px}
+.moment-card{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:10px;border:1px solid #ececf4;border-radius:14px;background:#fff}
+.moment-card img{width:92px;height:92px;object-fit:cover;border-radius:10px}
+.moment-card strong{display:block;color:#64718b;font-size:13px;margin:2px 0 5px}
+.moment-card p{margin:0;color:#9997ab;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.moment-card .moment-privacy{display:inline-block;margin-top:6px;color:#8c82b8;font-size:10px}
+
 </style> <!-- CSS 디자인을 종료합니다. -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head> <!-- 문서 설정을 종료합니다. -->
@@ -186,6 +212,37 @@ body.app-entered .app{display:block}
   <span><strong>My Moments · Photo Spots</strong><small>여행 중 찍은 사진과 장소를 개인 기록으로 남기고 커뮤니티와 공유하기</small></span>
 </button>
 <div id="momentsNotice" role="status"></div>
+<section id="momentsWorkspace" class="moments-workspace" hidden>
+ <div class="moments-workspace-head">
+  <div><h2>My Moments</h2><p>여행의 순간을 사진과 장소로 기록하세요.</p></div>
+  <button type="button" class="moments-close" onclick="closeMyMoments()">닫기</button>
+ </div>
+ <label class="moments-field">사진 선택
+  <input id="momentPhoto" type="file" accept="image/jpeg,image/png,image/webp" capture="environment">
+ </label>
+ <div id="momentPreview" class="moment-preview">사진을 선택하면 미리보기가 표시됩니다.</div>
+ <label class="moments-field">장소 이름
+  <input id="momentPlace" type="text" maxlength="120" placeholder="예: 경복궁">
+ </label>
+ <div class="moments-coordinate-row">
+  <button type="button" onclick="useCurrentMomentLocation()">현재 위치 가져오기</button>
+  <span id="momentLocationStatus">위치는 선택 사항입니다.</span>
+ </div>
+ <div class="moments-coordinates">
+  <input id="momentLat" type="number" step="any" placeholder="위도">
+  <input id="momentLng" type="number" step="any" placeholder="경도">
+ </div>
+ <label class="moments-field">메모
+  <textarea id="momentNote" maxlength="1000" rows="3" placeholder="이 장소에서의 기억을 적어보세요."></textarea>
+ </label>
+ <label class="moments-field">공개 설정
+  <select id="momentVisibility"><option value="private">나만 보기 (기본값)</option><option value="public">커뮤니티에 공개</option></select>
+ </label>
+ <button type="button" class="moments-save" id="saveMomentButton" onclick="saveMoment()">사진 스팟 저장하기</button>
+ <p id="momentSaveStatus" class="moment-save-status" role="status"></p>
+ <div class="moments-list-head"><h3>내 기록</h3><button type="button" onclick="loadMyMoments()">새로고침</button></div>
+ <div id="myMomentsList" class="moments-list"></div>
+</section>
 <button class="interpreter-launch" id="interpreterLaunch" type="button" onclick="toggleInterpreter(true)">
   <span class="launch-icon">🎙️</span>
   <span><strong id="interpreterLaunchTitle">직원 말 번역하기</strong><small id="interpreterLaunchSub">버튼을 눌러 한국어를 듣고 내 언어로 번역</small></span>
@@ -962,77 +1019,58 @@ function enterSeoulMoments(){
 })();
 
 
-// Google account sign-in. The ID token is verified by the Cloudflare Pages Function.
+// Google identity is verified on every private Photo Spots API request.
 const GOOGLE_OAUTH_CLIENT_ID = "425547130232-9desigd89o2kq5mi1vef82csth33doij.apps.googleusercontent.com";
+const PHOTO_API = "https://korean-travel-assistant.pages.dev/api/photo-spots";
 let verifiedGoogleUser = null;
+let googleCredentialToken = null;
 let googleIdentityInitialized = false;
 function updateGoogleAccountUI() {
- const title=document.getElementById("accountTitle");
- const detail=document.getElementById("accountDetail");
- const loginSlot=document.getElementById("googleLoginSlot");
- const logout=document.getElementById("googleLogoutButton");
- if(verifiedGoogleUser){
-  title.textContent=verifiedGoogleUser.name||"Google 계정 로그인 완료";
-  detail.textContent=verifiedGoogleUser.email||"인증된 Google 계정";
-  loginSlot.classList.add("hidden");logout.classList.remove("hidden");
- }else{
-  title.textContent="Google 계정으로 로그인";
-  detail.textContent="로그인하면 개인 사진 스팟 기능을 이용할 수 있습니다.";
-  loginSlot.classList.remove("hidden");logout.classList.add("hidden");
- }
+ const title=document.getElementById("accountTitle"), detail=document.getElementById("accountDetail");
+ const loginSlot=document.getElementById("googleLoginSlot"), logout=document.getElementById("googleLogoutButton");
+ if(verifiedGoogleUser){title.textContent=verifiedGoogleUser.name||"Google 계정 로그인 완료";detail.textContent=verifiedGoogleUser.email||"인증된 Google 계정";loginSlot.classList.add("hidden");logout.classList.remove("hidden");}
+ else{title.textContent="Google 계정으로 로그인";detail.textContent="로그인하면 개인 사진 스팟 기능을 이용할 수 있습니다.";loginSlot.classList.remove("hidden");logout.classList.add("hidden");}
 }
+function photoAuthHeaders(){if(!googleCredentialToken)throw new Error("Google 로그인이 필요합니다.");return {"Authorization":"Bearer "+googleCredentialToken};}
 window.handleGoogleCredential = async function(response) {
- const detail=document.getElementById("accountDetail");
- detail.textContent="Google 계정을 확인하고 있습니다…";
+ const detail=document.getElementById("accountDetail");detail.textContent="Google 계정을 확인하고 있습니다…";
  try{
-  const result=await fetch("https://korean-travel-assistant.pages.dev/api/auth/google",{
-   method:"POST",headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({credential:response.credential})
-  });
-  const data=await result.json();
-  if(!result.ok||!data.success||!data.user) throw new Error(data.message||"Google 로그인 확인에 실패했습니다.");
-  verifiedGoogleUser=data.user;
-  updateGoogleAccountUI();
-  const notice=document.getElementById("momentsNotice");
-  notice.textContent="Google 계정 확인이 완료되었습니다. 개인 사진 저장과 커뮤니티 공유를 사용하려면 다음 단계에서 서버 세션 및 사진 저장 권한 연결이 필요합니다.";
-  notice.classList.add("show");
- }catch(error){
-  verifiedGoogleUser=null;updateGoogleAccountUI();
-  detail.textContent="로그인 실패: "+(error.message||"다시 시도해 주세요.");
-  console.error("Google sign-in verification error:",error);
- }
+  const result=await fetch("https://korean-travel-assistant.pages.dev/api/auth/google",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({credential:response.credential})});
+  const data=await result.json();if(!result.ok||!data.success||!data.user)throw new Error(data.message||"Google 로그인 확인에 실패했습니다.");
+  verifiedGoogleUser=data.user;googleCredentialToken=response.credential;updateGoogleAccountUI();
+  const notice=document.getElementById("momentsNotice");notice.textContent="로그인되었습니다. 사진 기록을 안전하게 저장할 수 있습니다.";notice.classList.add("show");
+  if(!document.getElementById("momentsWorkspace").hidden)loadMyMoments();
+ }catch(error){verifiedGoogleUser=null;googleCredentialToken=null;updateGoogleAccountUI();detail.textContent="로그인 실패: "+(error.message||"다시 시도해 주세요.");console.error(error);}
 };
-function initializeGoogleSignIn() {
- if(googleIdentityInitialized) return;
- if(!window.google||!google.accounts||!google.accounts.id) return;
- googleIdentityInitialized=true;
- google.accounts.id.initialize({client_id:GOOGLE_OAUTH_CLIENT_ID,callback:window.handleGoogleCredential,auto_select:false});
- google.accounts.id.renderButton(document.getElementById("googleSignInButton"),{theme:"outline",size:"large",shape:"pill",text:"signin_with",locale:"en"});
-}
-function signOutGoogleAccount() {
- verifiedGoogleUser=null;
- if(window.google&&google.accounts&&google.accounts.id) google.accounts.id.disableAutoSelect();
- document.getElementById("momentsNotice").classList.remove("show");
- updateGoogleAccountUI();
-}
-function openMyMoments() {
+function initializeGoogleSignIn(){if(googleIdentityInitialized||!window.google?.accounts?.id)return;googleIdentityInitialized=true;google.accounts.id.initialize({client_id:GOOGLE_OAUTH_CLIENT_ID,callback:window.handleGoogleCredential,auto_select:false});google.accounts.id.renderButton(document.getElementById("googleSignInButton"),{theme:"outline",size:"large",shape:"pill",text:"signin_with",locale:"en"});}
+function signOutGoogleAccount(){googleCredentialToken=null;verifiedGoogleUser=null;if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect();document.getElementById("momentsNotice").classList.remove("show");document.getElementById("momentsWorkspace").hidden=true;updateGoogleAccountUI();}
+function openMyMoments(){
  const notice=document.getElementById("momentsNotice");
- if(!verifiedGoogleUser){
-  notice.textContent="개인 사진 스팟을 이용하려면 먼저 Google 계정으로 로그인해 주세요.";
- }else{
-  notice.textContent="Google 계정 확인은 완료되었습니다. 사진 업로드와 개인·커뮤니티 저장 기능은 D1/R2 권한 및 API 연결을 마친 뒤 활성화됩니다.";
- }
- notice.classList.add("show");
- notice.scrollIntoView({behavior:"smooth",block:"nearest"});
+ if(!verifiedGoogleUser){notice.textContent="사진 스팟을 저장하려면 먼저 Google 계정으로 로그인해 주세요.";notice.classList.add("show");return;}
+ notice.classList.remove("show");const workspace=document.getElementById("momentsWorkspace");workspace.hidden=false;workspace.scrollIntoView({behavior:"smooth",block:"start"});loadMyMoments();
 }
-(function waitForGoogleIdentity() {
- let attempts=0;
- const timer=setInterval(()=>{
-  attempts++;
-  if(window.google&&google.accounts&&google.accounts.id){clearInterval(timer);initializeGoogleSignIn();}
-  else if(attempts>=30){clearInterval(timer);document.getElementById("accountDetail").textContent="Google 로그인 스크립트를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.";}
- },300);
-})();
+function closeMyMoments(){document.getElementById("momentsWorkspace").hidden=true;}
+document.getElementById("momentPhoto")?.addEventListener("change",e=>{const f=e.target.files?.[0],p=document.getElementById("momentPreview");if(!f){p.textContent="사진을 선택하면 미리보기가 표시됩니다.";return;}if(!["image/jpeg","image/png","image/webp"].includes(f.type)||f.size>8*1024*1024){e.target.value="";p.textContent="JPG, PNG, WebP 형식의 8MB 이하 사진만 가능합니다.";return;}const url=URL.createObjectURL(f);p.innerHTML="";const img=document.createElement("img");img.src=url;img.alt="선택한 사진 미리보기";p.appendChild(img);});
+function useCurrentMomentLocation(){const s=document.getElementById("momentLocationStatus");if(!navigator.geolocation){s.textContent="이 기기에서 위치 기능을 사용할 수 없습니다.";return;}s.textContent="현재 위치를 확인하고 있습니다…";navigator.geolocation.getCurrentPosition(pos=>{document.getElementById("momentLat").value=pos.coords.latitude.toFixed(6);document.getElementById("momentLng").value=pos.coords.longitude.toFixed(6);s.textContent="현재 위치를 가져왔습니다.";},err=>{s.textContent=err.code===1?"위치 권한을 허용해 주세요.":"위치를 가져오지 못했습니다.";},{enableHighAccuracy:true,timeout:12000});}
+async function saveMoment(){
+ const status=document.getElementById("momentSaveStatus"),btn=document.getElementById("saveMomentButton"),file=document.getElementById("momentPhoto").files?.[0];
+ if(!verifiedGoogleUser||!googleCredentialToken){status.textContent="먼저 Google 로그인을 해주세요.";return;}
+ if(!file){status.textContent="저장할 사진을 선택해 주세요.";return;}
+ const place=document.getElementById("momentPlace").value.trim();if(!place){status.textContent="장소 이름을 입력해 주세요.";return;}
+ const fd=new FormData();fd.append("photo",file);fd.append("place_name",place);fd.append("note",document.getElementById("momentNote").value.trim());fd.append("visibility",document.getElementById("momentVisibility").value);
+ const lat=document.getElementById("momentLat").value,lng=document.getElementById("momentLng").value;if(lat&&lng){fd.append("latitude",lat);fd.append("longitude",lng);}
+ btn.disabled=true;status.textContent="사진을 업로드하고 있습니다…";
+ try{const r=await fetch(PHOTO_API,{method:"POST",headers:photoAuthHeaders(),body:fd});const d=await r.json();if(!r.ok||!d.success)throw new Error(d.message||"저장에 실패했습니다.");status.textContent="사진 스팟을 저장했습니다.";document.getElementById("momentPhoto").value="";document.getElementById("momentNote").value="";document.getElementById("momentPreview").textContent="사진을 선택하면 미리보기가 표시됩니다.";await loadMyMoments();}
+ catch(e){status.textContent="저장 실패: "+e.message;}
+ finally{btn.disabled=false;}
+}
+async function loadMyMoments(){
+ const list=document.getElementById("myMomentsList");if(!googleCredentialToken){list.textContent="로그인 후 내 기록을 확인할 수 있습니다.";return;}list.textContent="기록을 불러오는 중…";
+ try{const r=await fetch(PHOTO_API,{headers:photoAuthHeaders()});const d=await r.json();if(!r.ok||!d.success)throw new Error(d.message||"기록을 불러오지 못했습니다.");list.innerHTML="";if(!d.items.length){list.textContent="아직 저장한 사진 스팟이 없습니다.";return;}
+ for(const item of d.items){const card=document.createElement("article");card.className="moment-card";const img=document.createElement("img");img.alt=item.place_name;img.src="";const body=document.createElement("div");const title=document.createElement("strong");title.textContent=item.place_name;const note=document.createElement("p");note.textContent=item.note||new Date(item.created_at).toLocaleString();const privacy=document.createElement("span");privacy.className="moment-privacy";privacy.textContent=item.visibility==="public"?"커뮤니티 공개":"나만 보기";body.append(title,note,privacy);card.append(img,body);list.appendChild(card);fetch(item.image_url,{headers:photoAuthHeaders()}).then(res=>{if(!res.ok)throw new Error("사진을 불러오지 못했습니다.");return res.blob();}).then(blob=>{img.src=URL.createObjectURL(blob);}).catch(()=>{img.alt="사진을 불러오지 못했습니다.";});}}
+ catch(e){list.textContent="불러오기 실패: "+e.message;}
+}
+(function waitForGoogleIdentity(){let attempts=0;const timer=setInterval(()=>{attempts++;if(window.google?.accounts?.id){clearInterval(timer);initializeGoogleSignIn();}else if(attempts>=30){clearInterval(timer);const d=document.getElementById("accountDetail");if(d)d.textContent="Google 로그인 스크립트를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요."; }},300);})();
 
 </script> <!-- JavaScript를 종료합니다. -->
 </body> <!-- 화면 내용을 종료합니다. -->
