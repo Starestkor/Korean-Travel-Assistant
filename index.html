@@ -186,7 +186,7 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent} /* 버튼에 마�
 </div> <!-- 대화 카드를 종료합니다. -->
 <div class="choice-list" id="choices"></div> <!-- 대화 선택지가 표시됩니다. -->
 <div class="input-row"><input id="userInput" type="text" placeholder="Type in what you want to ask..."><button class="send-button" onclick="submitText()">Send</button></div> <!-- 사용자가 자신의 언어로 입력할 수 있는 영역입니다. -->
-<div class="tools"><button class="tool-button" onclick="listen()">🎙 Speak</button><button class="tool-button" onclick="speakCurrent()">🔊 Listen</button></div> <!-- 음성 입력과 문장 듣기 버튼입니다. -->
+<div class="tools"><button class="tool-button" onclick="openConversationInterpreter('userToStaff')">🎙 Speak</button><button class="tool-button" onclick="openConversationInterpreter('staffToUser')">🔊 Listen</button></div> <!-- 음성 입력과 문장 듣기 버튼입니다. -->
 <div class="status" id="status">Choose a response or type a phrase.</div> <!-- 현재 상태를 안내합니다. -->
 </section> <!-- 대화 화면을 종료합니다. -->
 
@@ -240,11 +240,7 @@ stay:[ // 숙소에서 사용할 상황입니다.
 
 const conversations={ // 각 상황에서 사용할 대화 데이터를 저장합니다.
 cafe_order:[ // 카페 음료 주문 대화입니다.
-{en:"Hello! What can I get for you?",ko:"안녕하세요! 무엇을 드릴까요?",ro:"Annyeonghaseyo! Mueoseul deurilkkayo?",choices:[["One Americano, please.","아메리카노 한 잔 주세요.","Amerikano han jan juseyo."],["One matcha latte, please.","말차라테 한 잔 주세요.","Malcha rate han jan juseyo."]]}, // 주문을 시작합니다.
-{en:"Would you like it decaffeinated?",ko:"디카페인으로 드릴까요?",ro:"Dikapeineuro deurilkkayo?",choices:[["Yes, decaf, please.","네, 디카페인으로 주세요.","Ne, dikapeineuro juseyo."],["No, regular is fine.","아니요, 일반으로 주세요.","Aniyo, ilbaneuro juseyo."]]}, // 디카페인 여부를 묻습니다.
-{en:"Would you like an extra shot?",ko:"샷 추가해 드릴까요?",ro:"Syat chugahae deurilkkayo?",choices:[["Yes, please.","네, 추가해 주세요.","Ne, chugahae juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 샷 추가 여부를 묻습니다.
-{en:"What size would you like?",ko:"어떤 사이즈로 드릴까요?",ro:"Eotteon saijeuro deurilkkayo?",choices:[["A medium, please.","미디엄으로 주세요.","Midieomeuro juseyo."],["A large, please.","라지로 주세요.","Rajiro juseyo."]]}, // 사이즈를 묻습니다.
-{en:"Would you like it hot or iced?",ko:"따뜻하게 드릴까요, 아이스로 드릴까요?",ro:"Ttatteuthage deurilkkayo, aiseuro deurilkkayo?",choices:[["Iced, please.","아이스로 주세요.","Aiseuro juseyo."],["Hot, please.","따뜻하게 해 주세요.","Ttatteuthage hae juseyo."]]}, // 온도를 묻습니다.
+{en:"Welcome! Are you ready to order?",ko:"어서오세요, 주문하시겠어요?",ro:"Eoseo oseyo, jumunhasigesseoyo?",choices:[["One Americano, please.","아메리카노 한 잔 주세요.","Amerikano han jan juseyo."],["One matcha latte, please.","말차라테 한 잔 주세요.","Malcha rate han jan juseyo."]]}, // 주문을 시작합니다.
 {en:"For here or to go?",ko:"드시고 가시나요, 포장하시나요?",ro:"Deusigo gasinayo, pojanghasinayo?",choices:[["For here, please.","먹고 갈게요.","Meokgo galgeyo."],["To go, please.","포장해 주세요.","Pojanghae juseyo."]]}, // 매장 또는 포장을 묻습니다.
 {en:"Would you like a receipt?",ko:"영수증 드릴까요?",ro:"Yeongsujeung deurilkkayo?",choices:[["Yes, please.","네, 주세요.","Ne, juseyo."],["No, thank you.","아니요, 괜찮아요.","Aniyo, gwaenchanayo."]]}, // 영수증을 묻습니다.
 {en:"Enjoy your drink!",ko:"맛있게 드세요!",ro:"Masitge deuseyo!",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 주문을 마칩니다.
@@ -256,9 +252,8 @@ cafe_payment:[ // 카페 결제 대화입니다.
 {en:"Thank you. Have a nice day!",ko:"감사합니다. 좋은 하루 보내세요!",ro:"Gamsahamnida. Joeun haru bonaeseyo!",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 결제를 마칩니다.
 ], // 카페 결제 대화를 종료합니다.
 cafe_request:[ // 카페 추가 요청 대화입니다.
-{en:"Is there anything else you need?",ko:"또 필요한 것 있으세요?",ro:"Tto piryohan geo isseuseyo?",choices:[["Could I have some water?","물 좀 주세요.","Mul jom juseyo."],["Could I have a napkin?","냅킨 좀 주세요.","Naepkin jom juseyo."]]}, // 추가 요청을 묻습니다.
-{en:"Of course. Anything else?",ko:"물론이죠. 또 필요한 게 있으세요?",ro:"Mullonjyo. Tto piryohan ge isseuseyo?",choices:[["That's all, thank you.","이게 전부예요. 감사합니다.","Ige jeonbuyeyo. Gamsahamnida."],["Could you make it less sweet?","덜 달게 해 주시겠어요?","Deol dalge hae jusigesseoyo."]]}, // 추가 요청을 확인합니다.
-{en:"Sure. I'll bring it right away.",ko:"네. 바로 가져다드릴게요.",ro:"Ne. Baro gajyeodadeurilgeyo.",choices:[["Thank you!","감사합니다!","Gamsahamnida!"]]} // 요청을 마칩니다.
+{en:"Would you like anything else?",ko:"더 필요한 것 있으세요?",ro:"Tto piryohan geo isseuseyo?",choices:[["Could I have some water?","물 좀 주세요.","Mul jom juseyo."]]}, // 추가 요청을 묻습니다.
+{en:"Sure. Anything else?",ko:"네, 더 필요하신 건 없으시고요?",ro:"Ne, deo piryohasin geon eopseusigoyo?",choices:[["No, that's all. Thank you.","네, 없어요. 감사합니다.","Ne, eopseoyo. Gamsahamnida."]]}, // 추가 요청을 확인합니다.
 ], // 카페 요청 대화를 종료합니다.
 restaurant_order:[ // 식당 음식 주문 대화입니다.
 {en:"Welcome! How many people?",ko:"어서 오세요! 몇 분이세요?",ro:"Eoseo oseyo! Myeot buniseyo?",choices:[["One person.","한 명이에요.","Han myeongieyo."],["Two people.","두 명이에요.","Du myeongieyo."],["Three people.","세 명이에요.","Se myeongieyo."]]}, // 인원을 확인합니다.
@@ -444,7 +439,20 @@ const phraseOverrides = {
  th:{"아메리카노 한 잔 주세요.":"ขออเมริกาโนหนึ่งแก้วค่ะ/ครับ","말차라테 한 잔 주세요.":"ขอมัทฉะลาเต้หนึ่งแก้วค่ะ/ครับ"},
  si:{"아메리카노 한 잔 주세요.":"කරුණාකර ඇමරිකානෝ කෝප්පයක් දෙන්න.","말차라테 한 잔 주세요.":"කරුණාකර මැචා ලාටේ කෝප්පයක් දෙන්න."},
  vi:{"아메리카노 한 잔 주세요.":"Cho tôi một ly Americano.","말차라테 한 잔 주세요.":"Cho tôi một ly matcha latte."},
- id:{"아메리카노 한 잔 주세요.":"Satu Americano, ya.","말차라테 한 잔 주세요.":"Satu matcha latte, ya."}
+ id:{"아메리카노 한 잔 주세요.":"Satu Americano, ya.","말차라테 한 잔 주세요.":"Satu matcha latte, ya."},
+ zh:{"어서오세요, 주문하시겠어요?":"欢迎光临，您要点餐吗？","네, 더 필요하신 건 없으시고요?":"好的，您不需要其他东西了吗？","네, 없어요. 감사합니다.":"没有了，谢谢。"},
+ ja:{"어서오세요, 주문하시겠어요?":"いらっしゃいませ。ご注文はお決まりですか？","네, 더 필요하신 건 없으시고요?":"はい、ほかにご入り用のものはございませんか？","네, 없어요. 감사합니다.":"はい、ありません。ありがとうございます。"},
+ fr:{"어서오세요, 주문하시겠어요?":"Bonjour, vous souhaitez commander ?","네, 더 필요하신 건 없으시고요?":"Très bien. Vous n’avez besoin de rien d’autre ?","네, 없어요. 감사합니다.":"Non, c’est tout. Merci."},
+ de:{"어서오세요, 주문하시겠어요?":"Willkommen! Möchten Sie bestellen?","네, 더 필요하신 건 없으시고요?":"Alles klar. Brauchen Sie sonst noch etwas?","네, 없어요. 감사합니다.":"Nein, das ist alles. Vielen Dank."},
+ es:{"어서오세요, 주문하시겠어요?":"¡Bienvenido! ¿Está listo para pedir?","네, 더 필요하신 건 없으시고요?":"De acuerdo. ¿Necesita algo más?","네, 없어요. 감사합니다.":"No, nada más. Gracias."},
+ pt:{"어서오세요, 주문하시겠어요?":"Olá! Já sabe o que vai pedir?","네, 더 필요하신 건 없으시고요?":"Certo. Precisa de mais alguma coisa?","네, 없어요. 감사합니다.":"Não, é só isso. Obrigado/a."},
+ ar:{"어서오세요, 주문하시겠어요?":"أهلًا وسهلًا، هل ترغب في الطلب؟","네, 더 필요하신 건 없으시고요?":"حسنًا، هل تحتاج إلى أي شيء آخر؟","네, 없어요. 감사합니다.":"لا، هذا كل شيء. شكرًا لك."},
+ ru:{"어서오세요, 주문하시겠어요?":"Добро пожаловать! Вы готовы сделать заказ?","네, 더 필요하신 건 없으시고요?":"Хорошо. Вам больше ничего не нужно?","네, 없어요. 감사합니다.":"Нет, больше ничего. Спасибо."},
+ ne:{"어서오세요, 주문하시겠어요?":"स्वागत छ! के तपाईं अर्डर गर्न चाहनुहुन्छ?","네, 더 필요하신 건 없으시고요?":"हुन्छ, अरू केही चाहिँदैन?","네, 없어요. 감사합니다.":"होइन, अरू केही चाहिँदैन। धन्यवाद।"},
+ th:{"어서오세요, 주문하시겠어요?":"ยินดีต้อนรับค่ะ/ครับ รับอะไรดีคะ/ครับ?","네, 더 필요하신 건 없으시고요?":"ได้ค่ะ/ครับ ต้องการอย่างอื่นอีกไหมคะ/ครับ?","네, 없어요. 감사합니다.":"ไม่แล้วค่ะ/ครับ ขอบคุณค่ะ/ครับ"},
+ si:{"어서오세요, 주문하시겠어요?":"ආයුබෝවන්! ඔබ ඇණවුම් කරන්න සූදානම්ද?","네, 더 필요하신 건 없으시고요?":"හොඳයි. තවත් කිසිවක් අවශ්‍ය නැද්ද?","네, 없어요. 감사합니다.":"නැහැ, එච්චරයි. ස්තුතියි."},
+ vi:{"어서오세요, 주문하시겠어요?":"Xin chào quý khách! Quý khách muốn gọi món chưa ạ?","네, 더 필요하신 건 없으시고요?":"Vâng, quý khách có cần thêm gì nữa không ạ?","네, 없어요. 감사합니다.":"Không, vậy là đủ rồi. Cảm ơn."},
+ id:{"어서오세요, 주문하시겠어요?":"Selamat datang! Mau pesan sekarang?","네, 더 필요하신 건 없으시고요?":"Baik, ada lagi yang Anda perlukan?","네, 없어요. 감사합니다.":"Tidak, itu saja. Terima kasih."}
 };
 // Add your own recordings as MP3 files in the repository folder /audio, using the generated keys as filenames.
 function playPhraseAudio(key){
@@ -631,10 +639,10 @@ document.getElementById("status").textContent=selectedLanguage==="zh"?"对话结
 
 function submitText(){ // 사용자가 입력창에 쓴 문장을 처리합니다.
 const input=document.getElementById("userInput"); // 입력창 요소를 가져옵니다.
-const typed=input.value.trim().replace(/\s/g,""); // 입력 문장의 앞뒤와 모든 공백을 제거합니다.
+const typed=input.value.trim().toLocaleLowerCase().replace(/[\s.,!?。！？]/g,""); // 입력 문장의 앞뒤와 모든 공백을 제거합니다.
 if(!typed)return; // 아무것도 입력하지 않았다면 종료합니다.
 const step=conversations[currentScenario][currentStep]; // 현재 대화 단계의 선택지를 가져옵니다.
-const matched=step.choices.find(choice=>choice[1].replace(/\s/g,"")===typed); // 입력 문장이 선택지 한국어와 정확히 같은지 확인합니다.
+const matched=step.choices.find(choice=>[choice[1],choice[0]].some(value=>value.toLocaleLowerCase().replace(/[\s.,!?。！？]/g,"")===typed)); // 입력 문장이 선택지 한국어와 정확히 같은지 확인합니다.
 if(matched){chooseAnswer(matched);}else{document.getElementById("status").textContent=selectedLanguage==="zh"?"目前请从上方的韩语回答中选择。":selectedLanguage==="ja"?"上に表示された韓国語の回答を選んでください。":selectedLanguage==="fr"?"Pour le moment, choisissez l’une des réponses coréennes ci-dessus.":selectedLanguage==="de"?"Bitte wählen Sie zunächst eine der oben angezeigten koreanischen Antworten.":selectedLanguage==="es"?"Por ahora, elija una de las respuestas en coreano que aparecen arriba.":selectedLanguage==="pt"?"Por enquanto, escolha uma das respostas em coreano apresentadas acima.":selectedLanguage==="ar"?"يرجى اختيار إحدى الإجابات الكورية المعروضة أعلاه في الوقت الحالي.":selectedLanguage==="ru"?"Пока выберите один из приведённых выше ответов на корейском языке.":selectedLanguage==="vi"?"Hiện tại, hãy chọn một trong các câu trả lời tiếng Hàn ở trên.":"For now, choose one of the Korean responses shown above."; } // 일치하면 다음 단계로 가고 아니면 선택지를 안내합니다.
 input.value=""; // 입력창을 비웁니다.
 } // 직접 입력 함수를 종료합니다.
@@ -727,6 +735,12 @@ interpreterModeLabels.ko={staff:"직원 말 → 내 언어",user:"내 말 → �
 interpreterLabels.ko={launch:"직원 말 번역하기",sub:"버튼을 눌러 한국어를 듣고 선택한 언어로 번역",title:"한국어 음성 통역",hint:"직원이 말할 때 녹음 버튼을 누르세요. 말을 마치면 다시 눌러 번역합니다.",start:"눌러서 녹음 시작",stop:"녹음 종료 및 번역",working:"음성을 인식하고 번역하는 중…",ready:"준비 완료. 마이크는 꺼져 있습니다.",mic:"마이크 사용을 허용해 주세요.",heard:"직원이 말한 한국어",translated:"번역",listen:"번역 듣기",copy:"복사",copied:"복사했어요",unsupported:"이 브라우저에서는 음성 녹음을 지원하지 않습니다.",error:"번역에 실패했습니다. 다시 시도해 주세요.",empty:"음성이 감지되지 않았습니다."};
 let interpreterRecorder=null, interpreterStream=null, interpreterChunks=[], interpreterRecording=false, interpreterLastTranslation="", interpreterShouldTranslate=false, interpreterMode="staffToUser";
 function interpreterText(key){return (interpreterLabels[selectedLanguage]||interpreterLabels.en)[key]||(interpreterLabels.en[key]||"");}
+function openConversationInterpreter(mode){
+ setInterpreterMode(mode);
+ toggleInterpreter(true);
+ document.getElementById("interpreterResult").classList.add("show");
+ document.getElementById("interpreterStatus").textContent=mode==="staffToUser"?"직원의 한국어를 녹음하세요. 번역문은 아래에 글자로 표시되고 자동으로 읽어줍니다.":"원하는 언어로 말하세요. 한국어 번역문이 아래에 표시되고 자동으로 읽어줍니다.";
+}
 function setInterpreterMode(mode){
  if(interpreterRecording){setInterpreterStatus(interpreterText("ready"));return;}
  interpreterMode=mode;
