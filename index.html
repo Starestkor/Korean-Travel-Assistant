@@ -217,8 +217,9 @@ body.app-entered .app{display:block}
   <div><h2>My Moments</h2><p>여행의 순간을 사진과 장소로 기록하세요.</p></div>
   <button type="button" class="moments-close" onclick="closeMyMoments()">닫기</button>
  </div>
- <label class="moments-field">사진 선택
-  <input id="momentPhoto" type="file" accept="image/jpeg,image/png,image/webp" capture="environment">
+ <label class="moments-field">사진 촬영 또는 사진 보관함에서 선택
+  <input id="momentPhoto" type="file" accept="image/*">
+  <small>아이폰에서는 사진 촬영, 사진 보관함 또는 파일 앱에서 선택할 수 있습니다.</small>
  </label>
  <div id="momentPreview" class="moment-preview">사진을 선택하면 미리보기가 표시됩니다.</div>
  <label class="moments-field">장소 이름
