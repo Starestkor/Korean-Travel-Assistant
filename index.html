@@ -169,6 +169,22 @@ body.app-entered .app{display:block}
 .community-status{min-height:20px;color:#8d91ad;font-size:12px;margin:0 0 10px}
 @media(max-width:380px){.community-list{grid-template-columns:1fr}}
 
+
+/* Photo Journey - sixth independent tab */
+.photo-journey-entry{width:100%;margin:0 0 16px;padding:16px;border:1px solid #fff;border-radius:19px;background:linear-gradient(120deg,#f7eee2,#eeeaf7 58%,#eaf2f1);color:#655c70;display:flex;align-items:center;gap:13px;text-align:left;box-shadow:0 10px 25px #64739620}
+.photo-journey-entry .moments-entry-icon{background:#fffdf8}
+.photo-journey-entry strong{display:block;font-family:Georgia,serif;font-size:17px;font-weight:600}.photo-journey-entry small{display:block;color:#9992a0;font-size:11px;margin-top:4px;line-height:1.45}
+#photoJourneyWorkspace{position:relative;margin:14px 0 22px;padding:17px;border:1px solid #fff;border-radius:24px;background:#f7f3eb;box-shadow:0 15px 38px #5c55451c;color:#635d55}
+#photoJourneyWorkspace[hidden]{display:none}
+.pj-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:13px}.pj-kicker{font-size:9px;letter-spacing:.22em;color:#a58d70;font-weight:800}.pj-head h2{font:500 27px Georgia,serif;color:#51483f;margin:5px 0}.pj-head p{font-size:11px;color:#9a9185;margin:0;line-height:1.5}.pj-close{border:1px solid #e5ddd0;border-radius:50%;width:34px;height:34px;background:#fffaf2;color:#82786c;font-size:18px}
+.pj-switch{display:flex;gap:7px;margin:14px 0 10px}.pj-switch button{flex:1;border:1px solid #e5ddcf;border-radius:999px;background:#fffaf3;padding:10px;color:#877c6e;font-size:11px}.pj-switch button.active{background:#71675b;color:#fff;border-color:#71675b}
+#photoJourneyMap{height: min(62vh,520px);min-height:340px;border-radius:18px;overflow:hidden;background:#e8e3d9;border:1px solid #e5ddd0}
+.pj-map-note{display:flex;justify-content:space-between;gap:10px;margin:9px 2px 0;color:#9a9185;font-size:10px}
+.pj-photo-marker{width:70px;height:82px;padding:5px 5px 13px;background:#fffdf8;border:1px solid #e6dfd3;box-shadow:0 5px 14px #40382c44;transform:rotate(-3deg);cursor:pointer;transition:transform .18s}.pj-photo-marker:nth-child(even){transform:rotate(3deg)}.pj-photo-marker img{display:block;width:60px;height:59px;object-fit:cover}.pj-photo-marker span{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;text-align:center;font:9px Georgia,serif;color:#6c6256;margin-top:3px}
+.pj-photo-info{width:190px;padding:7px;background:#fffdf8;border-radius:12px;box-shadow:0 7px 20px #40382c22}.pj-photo-info img{width:100%;height:112px;object-fit:cover;border-radius:7px}.pj-photo-info strong{display:block;margin:7px 2px 3px;font:15px Georgia,serif;color:#5a5045}.pj-photo-info p{margin:0 2px 4px;color:#928779;font-size:10px;line-height:1.4}
+.pj-empty{padding:16px;text-align:center;color:#9a9185;font-size:12px;background:#fffaf3;border-radius:13px;margin-top:10px}
+@media(max-width:420px){#photoJourneyMap{height:56vh;min-height:330px}.pj-photo-marker{width:64px;height:76px}.pj-photo-marker img{width:54px;height:53px}}
+
 </style> <!-- CSS 디자인을 종료합니다. -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head> <!-- 문서 설정을 종료합니다. -->
@@ -273,6 +289,17 @@ body.app-entered .app{display:block}
  </div>
  <p id="communityStatus" class="community-status" role="status">공개 사진을 불러오는 중…</p>
  <div id="communityList" class="community-list"></div>
+</section>
+<button class="photo-journey-entry" id="photoJourneyEntry" type="button" onclick="openPhotoJourney()">
+  <span class="moments-entry-icon">🖼️</span>
+  <span><strong>06 · Photo Journey</strong><small>지도 위에 작은 사진 액자를 놓고, 여행의 순간을 다시 만나보세요.</small></span>
+</button>
+<section id="photoJourneyWorkspace" hidden>
+  <div class="pj-head"><div><div class="pj-kicker">SEOUL MOMENTS · 06</div><h2>Photo Journey</h2><p>Your memories, on the map.<br>여행의 순간을 지도 위에 남겨보세요.</p></div><button class="pj-close" type="button" onclick="closePhotoJourney()" aria-label="닫기">×</button></div>
+  <div class="pj-switch"><button id="pjMyButton" class="active" type="button" onclick="setPhotoJourneyMode('mine')">My Memories</button><button id="pjCommunityButton" type="button" onclick="setPhotoJourneyMode('community')">Community</button></div>
+  <div id="photoJourneyMap" role="application" aria-label="여행 사진 지도"></div>
+  <div class="pj-map-note"><span id="photoJourneyStatus">지도를 불러오는 중…</span><span>사진 액자를 눌러보세요</span></div>
+  <div id="photoJourneyEmpty" class="pj-empty" hidden></div>
 </section>
 <button class="interpreter-launch" id="interpreterLaunch" type="button" onclick="toggleInterpreter(true)">
   <span class="launch-icon">🎙️</span>
@@ -1051,7 +1078,7 @@ function enterSeoulMoments(){
 
 
 // Google identity is verified on every private Photo Spots API request.
-const GOOGLE_OAUTH_CLIENT_ID = "425547130232-9desigd89o2kq5mi1vef82csth33doij.apps.googleusercontent.com";
+const GOOGLE_OAUTH_CLIENT_ID = "796455374188-nrarc1flkn4jav3mjujn71lkr1e96g34.apps.googleusercontent.com";
 const PHOTO_API = "https://korean-travel-assistant.pages.dev/api/photo-spots";
 let verifiedGoogleUser = null;
 let googleCredentialToken = null;
@@ -1127,6 +1154,45 @@ async function loadCommunitySpots(){
   }
  }catch(error){status.textContent="불러오기 실패: "+(error.message||"잠시 후 다시 시도해 주세요.");}
 }
+
+// Photo Journey map: photo-frame markers use Google Maps Advanced Markers.
+// Add the new project's browser key below before deployment.
+const GOOGLE_MAPS_BROWSER_KEY = "PASTE_NEW_MAPS_API_KEY_HERE";
+let photoJourneyMap=null, photoJourneyMode="mine", photoJourneyMarkers=[], photoJourneyInfo=null, photoJourneyMapsLoading=null;
+function openPhotoJourney(){
+ const section=document.getElementById("photoJourneyWorkspace");
+ section.hidden=false;section.scrollIntoView({behavior:"smooth",block:"start"});
+ if(photoJourneyMode==="mine"&&!googleCredentialToken){document.getElementById("photoJourneyStatus").textContent="내 사진을 보려면 Google 로그인 후 다시 열어주세요.";}
+ loadPhotoJourneyMap();
+}
+function closePhotoJourney(){document.getElementById("photoJourneyWorkspace").hidden=true;}
+function setPhotoJourneyMode(mode){photoJourneyMode=mode;document.getElementById("pjMyButton").classList.toggle("active",mode==="mine");document.getElementById("pjCommunityButton").classList.toggle("active",mode==="community");if(photoJourneyMap)loadPhotoJourneyPins();}
+function loadGoogleMaps(){
+ if(window.google?.maps?.importLibrary)return Promise.resolve();
+ if(photoJourneyMapsLoading)return photoJourneyMapsLoading;
+ if(!GOOGLE_MAPS_BROWSER_KEY||GOOGLE_MAPS_BROWSER_KEY.includes("PASTE_"))return Promise.reject(new Error("새 Google Maps API 키를 코드에 입력해야 합니다."));
+ photoJourneyMapsLoading=new Promise((resolve,reject)=>{window.__seoulMapsReady=()=>resolve();const script=document.createElement("script");script.src="https://maps.googleapis.com/maps/api/js?key="+encodeURIComponent(GOOGLE_MAPS_BROWSER_KEY)+"&v=weekly&callback=__seoulMapsReady&loading=async";script.async=true;script.onerror=()=>reject(new Error("Google Maps를 불러오지 못했습니다. API 키와 도메인 제한을 확인해 주세요."));document.head.appendChild(script);});return photoJourneyMapsLoading;
+}
+async function loadPhotoJourneyMap(){
+ const status=document.getElementById("photoJourneyStatus");
+ try{await loadGoogleMaps();const {Map}=await google.maps.importLibrary("maps");await google.maps.importLibrary("marker");if(!photoJourneyMap){photoJourneyMap=new Map(document.getElementById("photoJourneyMap"),{center:{lat:37.5665,lng:126.9780},zoom:12,mapTypeControl:false,streetViewControl:false,fullscreenControl:true,gestureHandling:"greedy",mapId:"DEMO_MAP_ID"});photoJourneyInfo=new google.maps.InfoWindow();}setTimeout(()=>google.maps.event.trigger(photoJourneyMap,"resize"),100);await loadPhotoJourneyPins();}
+ catch(e){status.textContent=e.message||"지도를 불러오지 못했습니다.";document.getElementById("photoJourneyEmpty").hidden=false;document.getElementById("photoJourneyEmpty").textContent="지도 연결 준비가 필요합니다. 새 Maps API 키와 Maps JavaScript API 활성화를 확인해 주세요.";}
+}
+async function photoJourneyItems(){
+ if(photoJourneyMode==="community"){const r=await fetch(COMMUNITY_API,{headers:{Accept:"application/json"}});const d=await r.json();if(!r.ok||!d.success)throw new Error(d.message||"공개 사진을 불러오지 못했습니다.");return d.items||[];}
+ if(!googleCredentialToken)throw new Error("내 사진은 Google 로그인 후 볼 수 있습니다.");const r=await fetch(PHOTO_API,{headers:photoAuthHeaders()});const d=await r.json();if(!r.ok||!d.success)throw new Error(d.message||"내 사진을 불러오지 못했습니다.");return d.items||[];
+}
+async function loadPhotoJourneyPins(){
+ if(!photoJourneyMap)return;const status=document.getElementById("photoJourneyStatus"),empty=document.getElementById("photoJourneyEmpty");status.textContent="사진을 지도에 놓고 있습니다…";empty.hidden=true;
+ photoJourneyMarkers.forEach(m=>m.map=null);photoJourneyMarkers=[];
+ try{const items=await photoJourneyItems();const located=items.filter(x=>x.latitude!==null&&x.latitude!==undefined&&x.longitude!==null&&x.longitude!==undefined&&Number.isFinite(Number(x.latitude))&&Number.isFinite(Number(x.longitude)));if(!located.length){status.textContent=`사진 ${items.length}개 · 위치 정보가 있는 사진이 없습니다.`;empty.hidden=false;empty.textContent=items.length?"사진을 저장할 때 현재 위치를 추가하거나 위도·경도를 입력하면 지도에 액자가 표시됩니다.":"아직 사진이 없습니다. 사진을 추가하고 위치를 기록해 보세요.";return;}
+ const bounds=new google.maps.LatLngBounds();for(const item of located){const position={lat:Number(item.latitude),lng:Number(item.longitude)};bounds.extend(position);let imageUrl=item.image_url;
+ if(photoJourneyMode==="mine"){try{const res=await fetch(item.image_url,{headers:photoAuthHeaders()});if(!res.ok)continue;imageUrl=URL.createObjectURL(await res.blob());}catch{continue;}}
+ const frame=document.createElement("div");frame.className="pj-photo-marker";const img=document.createElement("img");img.src=imageUrl;img.alt=item.place_name||"여행 사진";const label=document.createElement("span");label.textContent=item.place_name||"A moment";frame.append(img,label);const marker=new google.maps.marker.AdvancedMarkerElement({map:photoJourneyMap,position,content:frame,title:item.place_name||"Photo memory"});marker.addListener("click",()=>{const wrap=document.createElement("div");wrap.className="pj-photo-info";const big=document.createElement("img");big.src=imageUrl;big.alt=item.place_name||"여행 사진";const title=document.createElement("strong");title.textContent=item.place_name||"이름 없는 장소";const note=document.createElement("p");note.textContent=item.note||"";const date=document.createElement("p");date.textContent=item.created_at?new Date(item.created_at).toLocaleDateString():"";wrap.append(big,title,note,date);photoJourneyInfo.setContent(wrap);photoJourneyInfo.open({anchor:marker,map:photoJourneyMap});});photoJourneyMarkers.push(marker);}
+ if(photoJourneyMarkers.length){photoJourneyMap.fitBounds(bounds);if(located.length===1)photoJourneyMap.setZoom(15);}status.textContent=`지도에 표시된 사진 ${photoJourneyMarkers.length}개`;
+ }catch(e){status.textContent=e.message||"사진을 불러오지 못했습니다.";}
+}
+
 (function waitForGoogleIdentity(){let attempts=0;const timer=setInterval(()=>{attempts++;if(window.google?.accounts?.id){clearInterval(timer);initializeGoogleSignIn();}else if(attempts>=30){clearInterval(timer);const d=document.getElementById("accountDetail");if(d)d.textContent="Google 로그인 스크립트를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요."; }},300);})();
 
 </script> <!-- JavaScript를 종료합니다. -->
