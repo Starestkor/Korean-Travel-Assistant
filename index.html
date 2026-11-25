@@ -106,7 +106,7 @@ body.intro-active{background:#101827;overflow:hidden}
 .intro-seal{display:inline-grid;place-items:center;margin-top:18px;width:37px;height:37px;border:1px solid #d9ad55;border-radius:8px;background:linear-gradient(145deg,#8d201b,#4e100f);color:#f6d78c;font-family:serif;font-size:23px;box-shadow:0 4px 16px #0005}
 .intro-actions{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:auto;margin-bottom:7vh;width:100%}
 .intro-play{display:none;min-width:min(78vw,310px);padding:13px 22px;border:1px solid rgba(245,213,151,.9);border-radius:999px;background:rgba(20,28,42,.72);color:#f8e8c6;font-weight:700;font-size:14px;letter-spacing:.03em}
-#introScreen.autoplay-blocked .intro-play{display:block}
+.intro-actions{pointer-events:none}
 .intro-start{margin-top:0;margin-bottom:0;min-width:min(78vw,310px);padding:16px 26px;border:1px solid rgba(245,213,151,.9);border-radius:999px;background:linear-gradient(135deg,rgba(255,246,222,.82),rgba(219,187,132,.32));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#39291b;font-weight:750;font-size:17px;letter-spacing:.04em;box-shadow:0 8px 28px #0005,inset 0 1px 0 #fff9}
 .intro-start:active{transform:scale(.98)}
 #introScreen.intro-ended video{filter:brightness(.92)}
@@ -217,7 +217,7 @@ body.app-entered .app{display:block}
 
 <body class="intro-active">
 <div id="introScreen" aria-label="Seoul Moments intro">
-  <video id="introVideo" muted playsinline webkit-playsinline preload="metadata" poster="seoul-moments-intro-poster.jpg">
+  <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto" poster="seoul-moments-intro-poster.jpg">
     <source src="seoul-moments-intro.mp4" type="video/mp4">
   </video>
   <div class="intro-content">
@@ -226,10 +226,7 @@ body.app-entered .app{display:block}
       <div class="intro-seal" aria-label="정">情</div>
       <div class="intro-sub">KOREA TRAVEL ASSISTANT</div>
     </div>
-    <div class="intro-actions">
-      <button class="intro-play" id="introPlayButton" type="button" onclick="playSeoulIntro(true)">▶ Play video</button>
-      <button class="intro-start" type="button" onclick="enterSeoulMoments()">Start exploring&nbsp; ›</button>
-    </div>
+    <div class="intro-actions" aria-hidden="true"></div>
   </div>
 </div>
  <!-- 화면 내용을 시작합니다. -->
@@ -722,14 +719,20 @@ const localizedPlaces = {"ne":{"cafe":"क्याफे","restaurant":"रे�
 
 // 처음 선택된 언어는 영어입니다.
 
+let activeNumberType="native";
 const numberData={
  native:[
-  {n:"1",ko:"하나",form:"한",en:"one",ro:"ha-na"},{n:"2",ko:"둘",form:"두",en:"two",ro:"dul"},{n:"3",ko:"셋",form:"세",en:"three",ro:"set"},{n:"4",ko:"넷",form:"네",en:"four",ro:"net"},{n:"5",ko:"다섯",form:"다섯",en:"five",ro:"da-seot"},{n:"6",ko:"여섯",form:"여섯",en:"six",ro:"yeo-seot"},{n:"7",ko:"일곱",form:"일곱",en:"seven",ro:"il-gop"},{n:"8",ko:"여덟",form:"여덟",en:"eight",ro:"yeo-deol"},{n:"9",ko:"아홉",form:"아홉",en:"nine",ro:"a-hop"},{n:"10",ko:"열",form:"열",en:"ten",ro:"yeol"}
+  {n:"1",ko:"하나",form:"한",en:"one",ro:"ha-na"},{n:"2",ko:"둘",form:"두",en:"two",ro:"dul"},{n:"3",ko:"셋",form:"세",en:"three",ro:"set"},{n:"4",ko:"넷",form:"네",en:"four",ro:"net"},{n:"5",ko:"다섯",form:"다섯",en:"five",ro:"da-seot"},{n:"6",ko:"여섯",form:"여섯",en:"six",ro:"yeo-seot"},{n:"7",ko:"일곱",form:"일곱",en:"seven",ro:"il-gop"},{n:"8",ko:"여덟",form:"여덟",en:"eight",ro:"yeo-deol"},{n:"9",ko:"아홉",form:"아홉",en:"nine",ro:"a-hop"},{n:"10",ko:"열",form:"열",en:"ten",ro:"yeol"},
+  {n:"20",ko:"스물",form:"스무",en:"twenty",ro:"seu-mul"},{n:"30",ko:"서른",form:"서른",en:"thirty",ro:"seo-reun"},{n:"40",ko:"마흔",form:"마흔",en:"forty",ro:"ma-heun"},{n:"50",ko:"쉰",form:"쉰",en:"fifty",ro:"swin"},{n:"60",ko:"예순",form:"예순",en:"sixty",ro:"ye-sun"},{n:"70",ko:"일흔",form:"일흔",en:"seventy",ro:"il-heun"},{n:"80",ko:"여든",form:"여든",en:"eighty",ro:"yeo-deun"},{n:"90",ko:"아흔",form:"아흔",en:"ninety",ro:"a-heun"}
  ],
  sino:[
   {n:"1",ko:"일",en:"one",ro:"il"},{n:"2",ko:"이",en:"two",ro:"i"},{n:"3",ko:"삼",en:"three",ro:"sam"},{n:"4",ko:"사",en:"four",ro:"sa"},{n:"5",ko:"오",en:"five",ro:"o"},{n:"6",ko:"육",en:"six",ro:"yuk"},{n:"7",ko:"칠",en:"seven",ro:"chil"},{n:"8",ko:"팔",en:"eight",ro:"pal"},{n:"9",ko:"구",en:"nine",ro:"gu"},{n:"10",ko:"십",en:"ten",ro:"sip"},{n:"100",ko:"백",en:"one hundred",ro:"baek"},{n:"1,000",ko:"천",en:"one thousand",ro:"cheon"},{n:"10,000",ko:"만",en:"ten thousand",ro:"man"}
  ]
 };
+const numberWordI18n = {"en": ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"], "es": ["uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"], "zh": ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "二十", "三十", "四十", "五十", "六十", "七十", "八十", "九十"], "ja": ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "二十", "三十", "四十", "五十", "六十", "七十", "八十", "九十"], "fr": ["un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix", "vingt", "trente", "quarante", "cinquante", "soixante", "soixante-dix", "quatre-vingts", "quatre-vingt-dix"], "de": ["eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht", "neun", "zehn", "zwanzig", "dreißig", "vierzig", "fünfzig", "sechzig", "siebzig", "achtzig", "neunzig"], "ar": ["واحد", "اثنان", "ثلاثة", "أربعة", "خمسة", "ستة", "سبعة", "ثمانية", "تسعة", "عشرة", "عشرون", "ثلاثون", "أربعون", "خمسون", "ستون", "سبعون", "ثمانون", "تسعون"], "pt": ["um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove", "dez", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"], "ru": ["один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять", "десять", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто"], "vi": ["một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín", "mười", "hai mươi", "ba mươi", "bốn mươi", "năm mươi", "sáu mươi", "bảy mươi", "tám mươi", "chín mươi"], "id": ["satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "dua puluh", "tiga puluh", "empat puluh", "lima puluh", "enam puluh", "tujuh puluh", "delapan puluh", "sembilan puluh"], "ne": ["एक", "दुई", "तीन", "चार", "पाँच", "छ", "सात", "आठ", "नौ", "दश", "बीस", "तीस", "चालीस", "पचास", "साठी", "सत्तरी", "असी", "नब्बे"], "si": ["එක", "දෙක", "තුන", "හතර", "පහ", "හය", "හත", "අට", "නවය", "දහය", "විස්ස", "තිහ", "හතළිහ", "පනහ", "හැට", "හැත්තෑව", "අසූව", "අනූව"], "th": ["หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า", "สิบ", "ยี่สิบ", "สามสิบ", "สี่สิบ", "ห้าสิบ", "หกสิบ", "เจ็ดสิบ", "แปดสิบ", "เก้าสิบ"]};
+const numberUiI18n = {"en": ["Native Numbers", "Counting and age", "Sino-Korean Numbers", "Money and prices", "Short form", "KOREAN NUMBER GUIDE", "Large units"], "es": ["Números nativos", "Contar y edad", "Números sino-coreanos", "Dinero y precios", "Forma abreviada", "GUÍA DE NÚMEROS COREANOS", "Unidades grandes"], "zh": ["固有数词", "计数与年龄", "汉字数词", "金额与价格", "缩略形式", "韩语数字指南", "大单位"], "ja": ["固有数詞", "数え方と年齢", "漢数詞", "お金と値段", "短縮形", "韓国語の数字ガイド", "大きな単位"], "fr": ["Nombres coréens natifs", "Compter et âge", "Nombres sino-coréens", "Argent et prix", "Forme courte", "GUIDE DES NOMBRES CORÉENS", "Grandes unités"], "de": ["Koreanische Grundzahlen", "Zählen und Alter", "Sino-koreanische Zahlen", "Geld und Preise", "Kurzform", "KOREANISCHER ZAHLENLEITFADEN", "Große Einheiten"], "ar": ["الأعداد الكورية الأصلية", "العد والعمر", "الأعداد الصينية الكورية", "المال والأسعار", "الصيغة المختصرة", "دليل الأرقام الكورية", "الوحدات الكبيرة"], "pt": ["Números nativos", "Contagem e idade", "Números sino-coreanos", "Dinheiro e preços", "Forma curta", "GUIA DE NÚMEROS COREANOS", "Unidades grandes"], "ru": ["Исконно корейские числа", "Счёт и возраст", "Китайско-корейские числа", "Деньги и цены", "Краткая форма", "СПРАВОЧНИК КОРЕЙСКИХ ЧИСЕЛ", "Крупные разряды"], "vi": ["Số thuần Hàn", "Đếm và tuổi", "Số Hán-Hàn", "Tiền và giá cả", "Dạng rút gọn", "HƯỚNG DẪN SỐ TIẾNG HÀN", "Đơn vị lớn"], "id": ["Bilangan asli Korea", "Menghitung dan usia", "Bilangan Sino-Korea", "Uang dan harga", "Bentuk pendek", "PANDUAN ANGKA KOREA", "Satuan besar"], "ne": ["मौलिक कोरियाली संख्या", "गन्ती र उमेर", "सिनो-कोरियाली संख्या", "पैसा र मूल्य", "छोटो रूप", "कोरियाली संख्या मार्गदर्शिका", "ठूला एकाइहरू"], "si": ["කොරියානු ස්වදේශීය සංඛ්‍යා", "ගණන් කිරීම සහ වයස", "සිනෝ-කොරියානු සංඛ්‍යා", "මුදල් සහ මිල", "කෙටි ආකාරය", "කොරියානු සංඛ්‍යා මාර්ගෝපදේශය", "විශාල ඒකක"], "th": ["ตัวเลขเกาหลีแท้", "การนับและอายุ", "ตัวเลขจีน-เกาหลี", "เงินและราคา", "รูปแบบย่อ", "คู่มือตัวเลขภาษาเกาหลี", "หน่วยขนาดใหญ่"]};
+const largeUnitI18n = {"en": ["one hundred", "one thousand", "ten thousand"], "es": ["cien", "mil", "diez mil"], "zh": ["一百", "一千", "一万"], "ja": ["百", "千", "一万"], "fr": ["cent", "mille", "dix mille"], "de": ["einhundert", "eintausend", "zehntausend"], "ar": ["مئة", "ألف", "عشرة آلاف"], "pt": ["cem", "mil", "dez mil"], "ru": ["сто", "тысяча", "десять тысяч"], "vi": ["một trăm", "một nghìn", "mười nghìn"], "id": ["seratus", "seribu", "sepuluh ribu"], "ne": ["एक सय", "एक हजार", "दश हजार"], "si": ["සියය", "දහස", "දස දහස"], "th": ["หนึ่งร้อย", "หนึ่งพัน", "หนึ่งหมื่น"]};
+function numberWord(item,index){return (numberWordI18n[selectedLanguage]||numberWordI18n.en)[index]||item.en;}
 const numberPronunciations={
  en:{"ha-na":"hah-nah","dul":"dool","set":"set","net":"net","da-seot":"dah-suht","yeo-seot":"yuh-suht","il-gop":"eel-gop","yeo-deol":"yuh-duhl","a-hop":"ah-hop","yeol":"yuhl","il":"eel","i":"ee","sam":"sahm","sa":"sah","o":"oh","yuk":"yook","chil":"chill","pal":"pahl","gu":"goo","sip":"sheep","baek":"behk","cheon":"chuhn","man":"mahn"},
  es:{"ha-na":"ja-na","dul":"dul","set":"set","net":"net","da-seot":"da-sot","yeo-seot":"yo-sot","il-gop":"il-gop","yeo-deol":"yo-dol","a-hop":"a-jop","yeol":"yol","il":"il","i":"i","sam":"sam","sa":"sa","o":"o","yuk":"yuk","chil":"chil","pal":"pal","gu":"gu","sip":"ship","baek":"bek","cheon":"chon","man":"man"},
@@ -739,27 +742,87 @@ const numberPronunciations={
  ja:{"ha-na":"ハナ","dul":"トゥル","set":"セッ","net":"ネッ","da-seot":"タソッ","yeo-seot":"ヨソッ","il-gop":"イルゴプ","yeo-deol":"ヨドル","a-hop":"アホプ","yeol":"ヨル","il":"イル","i":"イ","sam":"サム","sa":"サ","o":"オ","yuk":"ユク","chil":"チル","pal":"パル","gu":"ク","sip":"シプ","baek":"ペク","cheon":"チョン","man":"マン"},
  th:{"ha-na":"ฮานา","dul":"ดุล","set":"เซ็ต","net":"เน็ต","da-seot":"ทาซ็อต","yeo-seot":"ยอซ็อต","il-gop":"อิลกบ","yeo-deol":"ยอดอล","a-hop":"อาฮบ","yeol":"ยอล","il":"อิล","i":"อี","sam":"ซัม","sa":"ซา","o":"โอ","yuk":"ยุก","chil":"ชิล","pal":"พัล","gu":"กู","sip":"ชิบ","baek":"แพ็ก","cheon":"ชอน","man":"มัน"}
 };
-function localizedNumberSound(ro){const map=numberPronunciations[selectedLanguage];return map&&map[ro]?map[ro]:ro.replaceAll("-"," ");}
+const extraNumberPronunciations={
+ ar:{"seu-mul":"سُمول","seo-reun":"سورُن","ma-heun":"ماهُن","swin":"سوين","ye-sun":"يَسون","il-heun":"إلهُن","yeo-deun":"يودُن","a-heun":"آهُن"},
+ pt:{"seu-mul":"sê-mul","seo-reun":"sô-run","ma-heun":"ma-hun","swin":"suin","ye-sun":"iê-sun","il-heun":"il-hun","yeo-deun":"iô-dun","a-heun":"a-hun"},
+ ru:{"seu-mul":"сымуль","seo-reun":"сорын","ma-heun":"махын","swin":"свин","ye-sun":"есун","il-heun":"ильхын","yeo-deun":"ёдын","a-heun":"ахын"},
+ vi:{"seu-mul":"sư-mul","seo-reun":"sơ-rưn","ma-heun":"ma-hưn","swin":"suin","ye-sun":"ye-sun","il-heun":"il-hưn","yeo-deun":"yơ-dưn","a-heun":"a-hưn"},
+ ne:{"seu-mul":"स्युमुल","seo-reun":"सोरुन","ma-heun":"महुन","swin":"स्विन","ye-sun":"येसुन","il-heun":"इल्हुन","yeo-deun":"योडुन","a-heun":"आहुन"},
+ si:{"seu-mul":"සියුමුල්","seo-reun":"සොරන්","ma-heun":"මාහුන්","swin":"ස්වින්","ye-sun":"යේසුන්","il-heun":"ඉල්හුන්","yeo-deun":"යෝදුන්","a-heun":"ආහුන්"},
+ en:{"seu-mul": "suh-mool", "seo-reun": "suh-ruhn", "ma-heun": "mah-huhn", "swin": "swin", "ye-sun": "yeh-soon", "il-heun": "eel-huhn", "yeo-deun": "yuh-duhn", "a-heun": "ah-huhn"},
+es:{"seu-mul": "su-mul", "seo-reun": "so-run", "ma-heun": "ma-jun", "swin": "suin", "ye-sun": "ye-sun", "il-heun": "il-jun", "yeo-deun": "yo-dun", "a-heun": "a-jun"},
+fr:{"seu-mul": "seu-meul", "seo-reun": "sŏ-reun", "ma-heun": "ma-heun", "swin": "souine", "ye-sun": "yé-soun", "il-heun": "il-heun", "yeo-deun": "yeo-deun", "a-heun": "a-heun"},
+de:{"seu-mul": "sö-mul", "seo-reun": "sŏ-rön", "ma-heun": "ma-hön", "swin": "swin", "ye-sun": "ye-sun", "il-heun": "il-hön", "yeo-deun": "yŏ-dön", "a-heun": "a-hön"},
+zh:{"seu-mul": "瑟穆尔", "seo-reun": "瑟伦", "ma-heun": "马亨", "swin": "斯温", "ye-sun": "耶孙", "il-heun": "伊尔亨", "yeo-deun": "约登", "a-heun": "阿亨"},
+ja:{"seu-mul": "スムル", "seo-reun": "ソルン", "ma-heun": "マフン", "swin": "スィン", "ye-sun": "イェスン", "il-heun": "イルフン", "yeo-deun": "ヨドゥン", "a-heun": "アフン"},
+th:{"seu-mul": "ซือมุล", "seo-reun": "ซอรึน", "ma-heun": "มาฮึน", "swin": "ซวิน", "ye-sun": "เยซุน", "il-heun": "อิลฮึน", "yeo-deun": "ยอดึน", "a-heun": "อาฮึน"},
+id:{"seu-mul":"seu-mul","seo-reun":"so-reun","ma-heun":"ma-heun","swin":"swin","ye-sun":"ye-sun","il-heun":"il-heun","yeo-deun":"yeo-deun","a-heun":"a-heun"}
+};
+function localizedNumberSound(ro){
+ const map=numberPronunciations[selectedLanguage]||{};
+ const extra=extraNumberPronunciations[selectedLanguage]||{};
+ if(map[ro])return map[ro];
+ if(extra[ro])return extra[ro];
+ const labels={en:"Approx.",es:"Aprox.",fr:"Approximatif",de:"Ungefähr",zh:"近似读音",ja:"おおよその発音",ar:"نطق تقريبي",pt:"Aprox.",ru:"Приблизительно",vi:"Gần đúng",ne:"अनुमानित",si:"ආසන්න",th:"เสียงโดยประมาณ",id:"Perkiraan"};
+ return (labels[selectedLanguage]||"")+(labels[selectedLanguage]?" ":"")+ro.replaceAll("-"," ");
+}
 function openNumberTool(type){
+ activeNumberType=type;
  const panel=document.getElementById("numberTool");const content=document.getElementById("numberToolContent");
- const isNative=type==="native";document.getElementById("numberToolTitle").textContent=isNative?"Native Numbers":"Sino-Korean Numbers";
- document.getElementById("numberToolSubtitle").textContent=isNative?"Counting and age · 고유어 수":"Money and prices · 한자어 수";
+ const isNative=type==="native";const ui=numberUiI18n[selectedLanguage]||numberUiI18n.en;
+ document.getElementById("numberToolTitle").textContent=isNative?ui[0]:ui[2];
+ document.getElementById("numberToolSubtitle").textContent=isNative?ui[1]:ui[3];
+ document.querySelector(".number-kicker").textContent=ui[5];
  content.innerHTML="";
  const items=numberData[type];
  items.forEach((item,i)=>{
-  if(type==="sino"&&i===10){const h=document.createElement("div");h.className="number-section-title";h.textContent="LARGE UNITS · 큰 단위";content.appendChild(h);}
+  if(type==="sino"&&i===10){const h=document.createElement("div");h.className="number-section-title";h.textContent=ui[6];content.appendChild(h);}
   const card=document.createElement("div");card.className="number-item";
   const audioKey=(isNative?"native":"sino")+"-"+item.n.replace(/[^0-9]/g,"");
-  const extra=isNative&&item.form!==item.ko?`<div class="number-meaning">Short form: ${item.form}</div>`:(type==="sino"&&["1,000","10,000"].includes(item.n)?`<div class="number-meaning">${item.n} won unit</div>`:"");
-  card.innerHTML=`<div class="number-digit">${item.n}</div><div><div class="number-korean">${item.ko}</div><div class="number-pronunciation">${localizedNumberSound(item.ro)}</div>${extra}</div><button class="number-audio" type="button" aria-label="Play Korean pronunciation" onclick="playNumberAudio('${audioKey}','${item.ko}')">🔊</button>`;
+  const meaning=(type==="sino"&&["100","1,000","10,000"].includes(item.n))?((largeUnitI18n[selectedLanguage]||largeUnitI18n.en)[["100","1,000","10,000"].indexOf(item.n)]):numberWord(item,i);
+  const extra=isNative&&item.form!==item.ko?`<div class="number-meaning">${ui[4]}: ${item.form}</div>`:"";
+  card.innerHTML=`<div class="number-digit">${item.n}</div><div><div class="number-korean">${item.ko}</div><div class="number-pronunciation">${localizedNumberSound(item.ro)}</div><div class="number-meaning">${meaning}</div>${extra}</div><button class="number-audio" type="button" aria-label="Play Korean pronunciation" onclick="playNumberAudio('${audioKey}','${item.ko}')">🔊</button>`;
   content.appendChild(card);
  });
- document.getElementById("numberAudioNote").textContent="🔊 Play the Korean pronunciation. Your recorded voice files can be added in audio/numbers/.";
+ const audioNotes={en:"🔊 Play the Korean pronunciation. Add recordings in audio/numbers/.",es:"🔊 Escucha la pronunciación coreana. Añade grabaciones en audio/numbers/.",zh:"🔊 播放韩语发音。录音文件可放在 audio/numbers/。",ja:"🔊 韓国語の発音を再生します。音声ファイルは audio/numbers/ に追加できます。",fr:"🔊 Écoutez la prononciation coréenne. Ajoutez les fichiers dans audio/numbers/.",de:"🔊 Höre die koreanische Aussprache. Audiodateien können in audio/numbers/ abgelegt werden.",ar:"🔊 استمع إلى النطق الكوري. أضف التسجيلات إلى audio/numbers/.",pt:"🔊 Ouça a pronúncia coreana. Adicione gravações em audio/numbers/.",ru:"🔊 Прослушайте корейское произношение. Записи можно добавить в audio/numbers/.",vi:"🔊 Nghe cách phát âm tiếng Hàn. Thêm tệp ghi âm vào audio/numbers/.",id:"🔊 Dengarkan pelafalan Korea. Tambahkan rekaman ke audio/numbers/.",ne:"🔊 कोरियाली उच्चारण सुन्नुहोस्। अडियो audio/numbers/ मा राख्नुहोस्।",si:"🔊 කොරියානු උච්චාරණය අසන්න. audio/numbers/ වෙත පටිගත කිරීම් එක් කරන්න.",th:"🔊 ฟังการออกเสียงภาษาเกาหลี เพิ่มไฟล์เสียงใน audio/numbers/"};
+ document.getElementById("numberAudioNote").textContent=audioNotes[selectedLanguage]||audioNotes.en;
  panel.hidden=false;panel.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function closeNumberTool(){document.getElementById("numberTool").hidden=true;}
 function playNumberAudio(key,korean){
  const audio=new Audio(`audio/numbers/${key}.mp3`);audio.play().catch(()=>{if("speechSynthesis" in window){const u=new SpeechSynthesisUtterance(korean);u.lang="ko-KR";u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}else{alert("Audio recording is not available yet.");}});
+}
+
+const photoFeatureI18n = {"en": {"myTitle": "My Moments", "myDesc": "Keep personal photo memories and places from your trip.", "myHint": "Record your journey with photos and places.", "close": "Close", "photoLabel": "Take a photo or choose from your photo library", "photoHint": "On iPhone, you can take a photo or choose from Photos or Files.", "placeLabel": "Place name", "placePlaceholder": "e.g. Gyeongbokgung Palace", "getLocation": "Get current location", "locationOptional": "Location is optional.", "noteLabel": "Note", "notePlaceholder": "Write a memory from this place.", "privacyLabel": "Privacy", "private": "Private (only me)", "public": "Share with the community", "save": "Save photo spot", "myRecords": "My records", "refresh": "Refresh", "communityTitle": "Community Spots", "communityDesc": "Explore photo spots shared by travelers in Korea.", "communityWorkspaceDesc": "Photos and places shared by travelers", "communityLoading": "Loading public photos…", "communityRefresh": "Refresh", "journeyTitle": "Photo Journey", "journeyDesc": "Revisit your travel memories on the map.", "journeySubtitle": "Your memories, on the map.", "myMemories": "My Memories", "communityTab": "Community", "mapHint": "Tap a photo frame to explore"}, "es": {"myTitle": "Mis momentos", "myDesc": "Guarda recuerdos personales y lugares de tu viaje.", "myHint": "Registra tu viaje con fotos y lugares.", "close": "Cerrar", "photoLabel": "Toma una foto o elige una de tu galería", "photoHint": "En iPhone, puedes tomar una foto o elegirla desde Fotos o Archivos.", "placeLabel": "Nombre del lugar", "placePlaceholder": "p. ej., Palacio Gyeongbokgung", "getLocation": "Obtener ubicación actual", "locationOptional": "La ubicación es opcional.", "noteLabel": "Nota", "notePlaceholder": "Escribe un recuerdo de este lugar.", "privacyLabel": "Privacidad", "private": "Privado (solo yo)", "public": "Compartir con la comunidad", "save": "Guardar lugar fotográfico", "myRecords": "Mis recuerdos", "refresh": "Actualizar", "communityTitle": "Lugares de la comunidad", "communityDesc": "Explora lugares fotográficos compartidos por viajeros en Corea.", "communityWorkspaceDesc": "Fotos y lugares compartidos por viajeros", "communityLoading": "Cargando fotos públicas…", "communityRefresh": "Actualizar", "journeyTitle": "Recorrido fotográfico", "journeyDesc": "Vuelve a descubrir tus recuerdos de viaje en el mapa.", "journeySubtitle": "Tus recuerdos, en el mapa.", "myMemories": "Mis recuerdos", "communityTab": "Comunidad", "mapHint": "Toca un marco para explorar"}, "zh": {"myTitle": "我的瞬间", "myDesc": "保存旅途中的私人照片和地点。", "myHint": "用照片和地点记录你的旅程。", "close": "关闭", "photoLabel": "拍照或从相册中选择照片", "photoHint": "在 iPhone 上，你可以拍照，也可以从照片或文件中选择。", "placeLabel": "地点名称", "placePlaceholder": "例如：景福宫", "getLocation": "获取当前位置", "locationOptional": "位置为可选项。", "noteLabel": "备注", "notePlaceholder": "写下你在这个地方的回忆。", "privacyLabel": "公开范围", "private": "仅自己可见", "public": "分享给社区", "save": "保存照片地点", "myRecords": "我的记录", "refresh": "刷新", "communityTitle": "社区地点", "communityDesc": "浏览旅行者分享的韩国拍照地点。", "communityWorkspaceDesc": "旅行者分享的照片和地点", "communityLoading": "正在加载公开照片…", "communityRefresh": "刷新", "journeyTitle": "照片旅程", "journeyDesc": "在地图上重温旅行回忆。", "journeySubtitle": "让回忆留在地图上。", "myMemories": "我的回忆", "communityTab": "社区", "mapHint": "点击照片卡片查看"}, "ja": {"myTitle": "マイモーメント", "myDesc": "旅先の写真や場所を自分だけの記録として保存します。", "myHint": "写真と場所で旅の思い出を記録しましょう。", "close": "閉じる", "photoLabel": "写真を撮るか、写真ライブラリから選択", "photoHint": "iPhoneでは撮影するか、「写真」または「ファイル」から選べます。", "placeLabel": "場所の名前", "placePlaceholder": "例：景福宮", "getLocation": "現在地を取得", "locationOptional": "位置情報は任意です。", "noteLabel": "メモ", "notePlaceholder": "この場所での思い出を書いてください。", "privacyLabel": "公開設定", "private": "自分のみ", "public": "コミュニティに共有", "save": "写真スポットを保存", "myRecords": "自分の記録", "refresh": "更新", "communityTitle": "コミュニティスポット", "communityDesc": "旅行者が共有した韓国の写真スポットを見てみましょう。", "communityWorkspaceDesc": "旅行者が共有した写真と場所", "communityLoading": "公開写真を読み込み中…", "communityRefresh": "更新", "journeyTitle": "フォトジャーニー", "journeyDesc": "地図上で旅の思い出を振り返りましょう。", "journeySubtitle": "地図に思い出を残そう。", "myMemories": "自分の思い出", "communityTab": "コミュニティ", "mapHint": "写真をタップして見る"}, "fr": {"myTitle": "Mes moments", "myDesc": "Conservez vos photos et lieux de voyage dans un espace personnel.", "myHint": "Gardez une trace de votre voyage avec des photos et des lieux.", "close": "Fermer", "photoLabel": "Prendre une photo ou choisir dans la photothèque", "photoHint": "Sur iPhone, prenez une photo ou choisissez-la dans Photos ou Fichiers.", "placeLabel": "Nom du lieu", "placePlaceholder": "Ex. : palais Gyeongbokgung", "getLocation": "Obtenir ma position", "locationOptional": "La localisation est facultative.", "noteLabel": "Note", "notePlaceholder": "Écrivez un souvenir de cet endroit.", "privacyLabel": "Confidentialité", "private": "Privé (moi uniquement)", "public": "Partager avec la communauté", "save": "Enregistrer le lieu photo", "myRecords": "Mes souvenirs", "refresh": "Actualiser", "communityTitle": "Lieux de la communauté", "communityDesc": "Découvrez les lieux photo partagés par les voyageurs en Corée.", "communityWorkspaceDesc": "Photos et lieux partagés par les voyageurs", "communityLoading": "Chargement des photos publiques…", "communityRefresh": "Actualiser", "journeyTitle": "Voyage en photos", "journeyDesc": "Retrouvez vos souvenirs de voyage sur la carte.", "journeySubtitle": "Vos souvenirs sur la carte.", "myMemories": "Mes souvenirs", "communityTab": "Communauté", "mapHint": "Touchez un cadre photo pour l’ouvrir"}, "de": {"myTitle": "Meine Momente", "myDesc": "Speichere persönliche Fotos und Orte deiner Reise.", "myHint": "Halte deine Reise mit Fotos und Orten fest.", "close": "Schließen", "photoLabel": "Foto aufnehmen oder aus der Fotomediathek wählen", "photoHint": "Auf dem iPhone kannst du ein Foto aufnehmen oder es aus Fotos bzw. Dateien auswählen.", "placeLabel": "Ortsname", "placePlaceholder": "z. B. Gyeongbokgung-Palast", "getLocation": "Aktuellen Standort abrufen", "locationOptional": "Der Standort ist optional.", "noteLabel": "Notiz", "notePlaceholder": "Schreibe eine Erinnerung an diesen Ort auf.", "privacyLabel": "Sichtbarkeit", "private": "Privat (nur ich)", "public": "Mit der Community teilen", "save": "Fotospot speichern", "myRecords": "Meine Einträge", "refresh": "Aktualisieren", "communityTitle": "Community-Spots", "communityDesc": "Entdecke Fotospots, die Reisende in Korea geteilt haben.", "communityWorkspaceDesc": "Von Reisenden geteilte Fotos und Orte", "communityLoading": "Öffentliche Fotos werden geladen…", "communityRefresh": "Aktualisieren", "journeyTitle": "Foto-Reise", "journeyDesc": "Erlebe deine Reiseerinnerungen auf der Karte erneut.", "journeySubtitle": "Deine Erinnerungen auf der Karte.", "myMemories": "Meine Erinnerungen", "communityTab": "Community", "mapHint": "Tippe auf einen Fotorahmen"}, "ar": {"myTitle": "لحظاتي", "myDesc": "احتفظ بصورك وأماكن رحلتك كسجل شخصي.", "myHint": "سجّل رحلتك بالصور والأماكن.", "close": "إغلاق", "photoLabel": "التقط صورة أو اخترها من مكتبة الصور", "photoHint": "على iPhone، يمكنك التقاط صورة أو الاختيار من الصور أو الملفات.", "placeLabel": "اسم المكان", "placePlaceholder": "مثال: قصر غيونغبوكغونغ", "getLocation": "الحصول على الموقع الحالي", "locationOptional": "الموقع اختياري.", "noteLabel": "ملاحظة", "notePlaceholder": "اكتب ذكرى من هذا المكان.", "privacyLabel": "الخصوصية", "private": "خاص (أنا فقط)", "public": "المشاركة مع المجتمع", "save": "حفظ موقع الصورة", "myRecords": "سجلاتي", "refresh": "تحديث", "communityTitle": "أماكن المجتمع", "communityDesc": "استكشف مواقع التصوير التي شاركها المسافرون في كوريا.", "communityWorkspaceDesc": "صور وأماكن شاركها المسافرون", "communityLoading": "جارٍ تحميل الصور العامة…", "communityRefresh": "تحديث", "journeyTitle": "رحلة الصور", "journeyDesc": "استرجع ذكريات رحلتك على الخريطة.", "journeySubtitle": "ذكرياتك على الخريطة.", "myMemories": "ذكرياتي", "communityTab": "المجتمع", "mapHint": "اضغط على إطار الصورة"}, "pt": {"myTitle": "Meus Momentos", "myDesc": "Guarde fotos e lugares da sua viagem em um registro pessoal.", "myHint": "Registre sua viagem com fotos e lugares.", "close": "Fechar", "photoLabel": "Tire uma foto ou escolha da biblioteca", "photoHint": "No iPhone, você pode tirar uma foto ou escolher em Fotos ou Arquivos.", "placeLabel": "Nome do local", "placePlaceholder": "Ex.: Palácio Gyeongbokgung", "getLocation": "Obter localização atual", "locationOptional": "A localização é opcional.", "noteLabel": "Nota", "notePlaceholder": "Escreva uma lembrança deste lugar.", "privacyLabel": "Privacidade", "private": "Privado (somente eu)", "public": "Compartilhar com a comunidade", "save": "Salvar local da foto", "myRecords": "Meus registros", "refresh": "Atualizar", "communityTitle": "Locais da comunidade", "communityDesc": "Explore locais para fotos compartilhados por viajantes na Coreia.", "communityWorkspaceDesc": "Fotos e locais compartilhados por viajantes", "communityLoading": "Carregando fotos públicas…", "communityRefresh": "Atualizar", "journeyTitle": "Jornada fotográfica", "journeyDesc": "Reviva suas lembranças de viagem no mapa.", "journeySubtitle": "Suas lembranças no mapa.", "myMemories": "Minhas lembranças", "communityTab": "Comunidade", "mapHint": "Toque em uma foto para explorar"}, "ru": {"myTitle": "Мои моменты", "myDesc": "Сохраняйте личные фотографии и места из путешествия.", "myHint": "Записывайте путешествие с помощью фотографий и мест.", "close": "Закрыть", "photoLabel": "Сделать фото или выбрать из галереи", "photoHint": "На iPhone можно сделать снимок или выбрать его в Фото или Файлах.", "placeLabel": "Название места", "placePlaceholder": "Например: дворец Кёнбоккун", "getLocation": "Получить текущее местоположение", "locationOptional": "Местоположение указывать необязательно.", "noteLabel": "Заметка", "notePlaceholder": "Запишите воспоминание об этом месте.", "privacyLabel": "Доступ", "private": "Личное (только я)", "public": "Поделиться с сообществом", "save": "Сохранить фотоместо", "myRecords": "Мои записи", "refresh": "Обновить", "communityTitle": "Места сообщества", "communityDesc": "Посмотрите фотоместа в Корее, которыми поделились путешественники.", "communityWorkspaceDesc": "Фото и места, опубликованные путешественниками", "communityLoading": "Загрузка общедоступных фото…", "communityRefresh": "Обновить", "journeyTitle": "Фотопутешествие", "journeyDesc": "Вспомните путешествие, просматривая карту.", "journeySubtitle": "Ваши воспоминания на карте.", "myMemories": "Мои воспоминания", "communityTab": "Сообщество", "mapHint": "Нажмите на фото, чтобы открыть"}, "vi": {"myTitle": "Khoảnh khắc của tôi", "myDesc": "Lưu ảnh và địa điểm chuyến đi trong nhật ký cá nhân.", "myHint": "Ghi lại hành trình bằng ảnh và địa điểm.", "close": "Đóng", "photoLabel": "Chụp ảnh hoặc chọn từ thư viện ảnh", "photoHint": "Trên iPhone, bạn có thể chụp ảnh hoặc chọn từ Ảnh hay Tệp.", "placeLabel": "Tên địa điểm", "placePlaceholder": "Ví dụ: Cung điện Gyeongbokgung", "getLocation": "Lấy vị trí hiện tại", "locationOptional": "Vị trí không bắt buộc.", "noteLabel": "Ghi chú", "notePlaceholder": "Viết lại kỷ niệm ở địa điểm này.", "privacyLabel": "Quyền riêng tư", "private": "Riêng tư (chỉ mình tôi)", "public": "Chia sẻ với cộng đồng", "save": "Lưu địa điểm ảnh", "myRecords": "Bản ghi của tôi", "refresh": "Làm mới", "communityTitle": "Địa điểm cộng đồng", "communityDesc": "Khám phá các địa điểm chụp ảnh được du khách chia sẻ tại Hàn Quốc.", "communityWorkspaceDesc": "Ảnh và địa điểm do du khách chia sẻ", "communityLoading": "Đang tải ảnh công khai…", "communityRefresh": "Làm mới", "journeyTitle": "Hành trình ảnh", "journeyDesc": "Xem lại kỷ niệm chuyến đi trên bản đồ.", "journeySubtitle": "Kỷ niệm của bạn trên bản đồ.", "myMemories": "Kỷ niệm của tôi", "communityTab": "Cộng đồng", "mapHint": "Nhấn vào khung ảnh để xem"}, "id": {"myTitle": "Momen Saya", "myDesc": "Simpan foto dan tempat perjalanan sebagai catatan pribadi.", "myHint": "Catat perjalanan Anda dengan foto dan tempat.", "close": "Tutup", "photoLabel": "Ambil foto atau pilih dari galeri foto", "photoHint": "Di iPhone, Anda dapat mengambil foto atau memilih dari Foto maupun File.", "placeLabel": "Nama tempat", "placePlaceholder": "Contoh: Istana Gyeongbokgung", "getLocation": "Gunakan lokasi saat ini", "locationOptional": "Lokasi bersifat opsional.", "noteLabel": "Catatan", "notePlaceholder": "Tuliskan kenangan dari tempat ini.", "privacyLabel": "Privasi", "private": "Pribadi (hanya saya)", "public": "Bagikan ke komunitas", "save": "Simpan spot foto", "myRecords": "Catatan saya", "refresh": "Muat ulang", "communityTitle": "Spot Komunitas", "communityDesc": "Jelajahi spot foto di Korea yang dibagikan para wisatawan.", "communityWorkspaceDesc": "Foto dan tempat yang dibagikan wisatawan", "communityLoading": "Memuat foto publik…", "communityRefresh": "Muat ulang", "journeyTitle": "Perjalanan Foto", "journeyDesc": "Kenang kembali perjalanan Anda melalui peta.", "journeySubtitle": "Kenangan Anda di peta.", "myMemories": "Kenangan Saya", "communityTab": "Komunitas", "mapHint": "Ketuk bingkai foto untuk melihat"}, "ne": {"myTitle": "मेरा पलहरू", "myDesc": "यात्राका फोटो र स्थानहरू व्यक्तिगत रूपमा सुरक्षित गर्नुहोस्।", "myHint": "फोटो र स्थानमार्फत आफ्नो यात्रा सम्झनुहोस्।", "close": "बन्द गर्नुहोस्", "photoLabel": "फोटो खिच्नुहोस् वा ग्यालरीबाट छान्नुहोस्", "photoHint": "iPhone मा फोटो खिच्न वा Photos वा Files बाट छान्न सक्नुहुन्छ।", "placeLabel": "स्थानको नाम", "placePlaceholder": "जस्तै: ग्योङबोकगुङ दरबार", "getLocation": "हालको स्थान लिनुहोस्", "locationOptional": "स्थान वैकल्पिक हो।", "noteLabel": "टिप्पणी", "notePlaceholder": "यस ठाउँको सम्झना लेख्नुहोस्।", "privacyLabel": "गोपनीयता", "private": "निजी (मात्र म)", "public": "समुदायसँग साझा गर्नुहोस्", "save": "फोटो स्थान सुरक्षित गर्नुहोस्", "myRecords": "मेरा रेकर्डहरू", "refresh": "रिफ्रेस", "communityTitle": "समुदायका स्थानहरू", "communityDesc": "यात्रुहरूले साझा गरेका कोरियाका फोटो स्थानहरू हेर्नुहोस्।", "communityWorkspaceDesc": "यात्रुहरूले साझा गरेका फोटो र स्थानहरू", "communityLoading": "सार्वजनिक फोटो लोड हुँदैछ…", "communityRefresh": "रिफ्रेस", "journeyTitle": "फोटो यात्रा", "journeyDesc": "नक्सामा यात्राका सम्झनाहरू फेरि हेर्नुहोस्।", "journeySubtitle": "नक्सामा तपाईंका सम्झनाहरू।", "myMemories": "मेरा सम्झनाहरू", "communityTab": "समुदाय", "mapHint": "फोटो फ्रेम थिच्नुहोस्"}, "si": {"myTitle": "මගේ මතකයන්", "myDesc": "ඔබගේ ගමනේ ඡායාරූප සහ ස්ථාන පුද්ගලිකව සුරකින්න.", "myHint": "ඡායාරූප සහ ස්ථාන සමඟ ඔබගේ ගමන සටහන් කරන්න.", "close": "වසන්න", "photoLabel": "ඡායාරූපයක් ගන්න හෝ ගැලරියෙන් තෝරන්න", "photoHint": "iPhone හි ඡායාරූපයක් ගත හැකි අතර Photos හෝ Files වෙතින් තෝරාගත හැක.", "placeLabel": "ස්ථානයේ නම", "placePlaceholder": "උදා: ග්යොංබොක්ගුං මාලිගය", "getLocation": "වත්මන් ස්ථානය ලබාගන්න", "locationOptional": "ස්ථානය විකල්පයකි.", "noteLabel": "සටහන", "notePlaceholder": "මෙම ස්ථානයේ මතකයක් ලියන්න.", "privacyLabel": "පෞද්ගලිකත්වය", "private": "පුද්ගලික (මට පමණි)", "public": "ප්‍රජාව සමඟ බෙදාගන්න", "save": "ඡායාරූප ස්ථානය සුරකින්න", "myRecords": "මගේ සටහන්", "refresh": "නැවුම් කරන්න", "communityTitle": "ප්‍රජා ස්ථාන", "communityDesc": "සංචාරකයන් බෙදාගත් කොරියාවේ ඡායාරූප ස්ථාන බලන්න.", "communityWorkspaceDesc": "සංචාරකයන් බෙදාගත් ඡායාරූප සහ ස්ථාන", "communityLoading": "පොදු ඡායාරූප පූරණය වෙමින්…", "communityRefresh": "නැවුම් කරන්න", "journeyTitle": "ඡායාරූප ගමන", "journeyDesc": "සිතියමේ ඔබගේ සංචාරක මතකයන් නැවත බලන්න.", "journeySubtitle": "සිතියමේ ඔබගේ මතකයන්.", "myMemories": "මගේ මතකයන්", "communityTab": "ප්‍රජාව", "mapHint": "ඡායාරූප රාමුව තට්ටු කරන්න"}, "th": {"myTitle": "ช่วงเวลาของฉัน", "myDesc": "เก็บภาพและสถานที่จากการเดินทางไว้เป็นบันทึกส่วนตัว", "myHint": "บันทึกการเดินทางด้วยภาพถ่ายและสถานที่", "close": "ปิด", "photoLabel": "ถ่ายภาพหรือเลือกจากคลังรูปภาพ", "photoHint": "บน iPhone คุณสามารถถ่ายภาพหรือเลือกจากแอปรูปภาพหรือไฟล์ได้", "placeLabel": "ชื่อสถานที่", "placePlaceholder": "เช่น พระราชวังคยองบกกุง", "getLocation": "ใช้ตำแหน่งปัจจุบัน", "locationOptional": "ตำแหน่งเป็นตัวเลือกเสริม", "noteLabel": "บันทึก", "notePlaceholder": "เขียนความทรงจำจากสถานที่นี้", "privacyLabel": "ความเป็นส่วนตัว", "private": "ส่วนตัว (เฉพาะฉัน)", "public": "แชร์กับชุมชน", "save": "บันทึกจุดถ่ายภาพ", "myRecords": "บันทึกของฉัน", "refresh": "รีเฟรช", "communityTitle": "จุดถ่ายภาพชุมชน", "communityDesc": "สำรวจจุดถ่ายภาพในเกาหลีที่นักเดินทางแชร์ไว้", "communityWorkspaceDesc": "ภาพถ่ายและสถานที่ที่นักเดินทางแชร์", "communityLoading": "กำลังโหลดภาพสาธารณะ…", "communityRefresh": "รีเฟรช", "journeyTitle": "เส้นทางภาพถ่าย", "journeyDesc": "ย้อนชมความทรงจำการเดินทางบนแผนที่", "journeySubtitle": "ความทรงจำของคุณบนแผนที่", "myMemories": "ความทรงจำของฉัน", "communityTab": "ชุมชน", "mapHint": "แตะกรอบรูปเพื่อดู"}};
+function photoT(key){return (photoFeatureI18n[selectedLanguage]||photoFeatureI18n.en)[key]||photoFeatureI18n.en[key]||key;}
+
+function applyPhotoFeatureLanguage(){
+ const q=(sel)=>document.querySelector(sel);
+ const setText=(sel,key)=>{const el=q(sel);if(el)el.textContent=photoT(key);};
+ const setFirstText=(sel,key)=>{const el=q(sel);if(!el)return;for(const node of el.childNodes){if(node.nodeType===Node.TEXT_NODE&&node.nodeValue.trim()){node.nodeValue=photoT(key)+" ";return;}}};
+ setText("#momentsEntry strong","myTitle");setText("#momentsEntry small","myDesc");
+ setText("#momentsWorkspace h2","myTitle");setText("#momentsWorkspace .moments-workspace-head p","myHint");
+ setText("#momentsWorkspace .moments-close","close");
+ const fields=document.querySelectorAll("#momentsWorkspace .moments-field");
+ const fieldKeys=["photoLabel","placeLabel","noteLabel","privacyLabel"];
+ fields.forEach((el,i)=>{if(fieldKeys[i]){for(const node of el.childNodes){if(node.nodeType===Node.TEXT_NODE&&node.nodeValue.trim()){node.nodeValue=photoT(fieldKeys[i])+" ";break;}}}});
+ const photoSmall=q("#momentsWorkspace .moments-field small");if(photoSmall)photoSmall.textContent=photoT("photoHint");
+ const preview=q("#momentPreview");if(preview&&!preview.querySelector("img"))preview.textContent=selectedLanguage==="en"?"Select a photo to see a preview.":({es:"Selecciona una foto para ver la vista previa.",zh:"选择照片后会显示预览。",ja:"写真を選択するとプレビューが表示されます。",fr:"Choisissez une photo pour afficher l’aperçu.",de:"Wähle ein Foto für die Vorschau.",ar:"اختر صورة لعرض المعاينة.",pt:"Selecione uma foto para ver a prévia.",ru:"Выберите фото, чтобы увидеть предварительный просмотр.",vi:"Chọn ảnh để xem bản xem trước.",id:"Pilih foto untuk melihat pratinjau.",ne:"पूर्वावलोकन हेर्न फोटो छान्नुहोस्।",si:"පෙරදසුන බැලීමට ඡායාරූපයක් තෝරන්න.",th:"เลือกรูปภาพเพื่อดูตัวอย่าง"}[selectedLanguage]||"Select a photo to see a preview.");
+ const place=q("#momentPlace");if(place)place.placeholder=photoT("placePlaceholder");
+ const note=q("#momentNote");if(note)note.placeholder=photoT("notePlaceholder");
+ const locationButton=q(".moments-coordinate-row button");if(locationButton)locationButton.textContent=photoT("getLocation");
+ const locationStatus=q("#momentLocationStatus");if(locationStatus)locationStatus.textContent=photoT("locationOptional");
+ const visibility=q("#momentVisibility");if(visibility){visibility.options[0].text=photoT("private");visibility.options[1].text=photoT("public");}
+ setText("#saveMomentButton","save");setText("#momentsWorkspace .moments-list-head h3","myRecords");
+ setText("#momentsWorkspace .moments-list-head button","refresh");
+ setText("#communityEntry strong","communityTitle");setText("#communityEntry small","communityDesc");
+ setText("#communityWorkspace h2","communityTitle");setText("#communityWorkspace .community-workspace-head p","communityWorkspaceDesc");
+ setText("#communityWorkspace .community-refresh","communityRefresh");
+ setText("#photoJourneyEntry strong","journeyTitle");setText("#photoJourneyEntry small","journeyDesc");
+ setText("#photoJourneyWorkspace .pj-head h2","journeyTitle");
+ const pjP=q("#photoJourneyWorkspace .pj-head p");if(pjP)pjP.innerHTML=photoT("journeySubtitle")+"<br>"+photoT("journeyDesc");
+ setText("#pjMyButton","myMemories");setText("#pjCommunityButton","communityTab");
+ const mapHint=q("#photoJourneyWorkspace .pj-map-note span:last-child");if(mapHint)mapHint.textContent=photoT("mapHint");
 }
 
 function setLanguage(language){ // 사용자가 언어를 바꾸면 실행합니다.
@@ -769,8 +832,8 @@ selectedLanguage=language; // 선택한 언어 코드를 저장합니다.
 const text=interfaceText[language]||interfaceText.en; // 선택한 언어의 번역을 가져옵니다.
 document.documentElement.lang=language; // HTML 문서의 언어 설정을 바꿉니다.
 document.getElementById("languageLabel").textContent=text.language;
- document.getElementById("nativeQuickLabel").textContent=({en:"Native · Counting / Age",es:"Nativos · Contar / Edad",fr:"Nombres natifs · Compter / Âge",de:"Einheimische Zahlen · Zählen / Alter",zh:"固有数词 · 数数 / 年龄",ja:"固有数詞 · 数え方 / 年齢",th:"เลขเกาหลีแท้ · นับ / อายุ"}[language]||"Native Numbers · Counting / Age");
- document.getElementById("sinoQuickLabel").textContent=({en:"Sino-Korean · Money",es:"Sino-coreanos · Dinero",fr:"Sino-coréens · Argent",de:"Sino-koreanisch · Geld",zh:"汉字数词 · 金额",ja:"漢数詞 · お金",th:"เลขจีนเกาหลี · เงิน"}[language]||"Sino-Korean · Money");
+ document.getElementById("nativeQuickLabel").textContent=({en:"Native · Counting / Age",es:"Nativos · Contar / Edad",fr:"Nombres natifs · Compter / Âge",de:"Einheimische Zahlen · Zählen / Alter",zh:"固有数词 · 数数 / 年龄",ja:"固有数詞 · 数え方 / 年齢",th:"เลขเกาหลีแท้ · นับ / อายุ",ar:"الأعداد الأصلية · العد / العمر",pt:"Nativos · Contagem / Idade",ru:"Исконные · Счёт / Возраст",vi:"Số thuần Hàn · Đếm / Tuổi",id:"Asli · Hitung / Usia",ne:"मौलिक · गन्ती / उमेर",si:"ස්වදේශීය · ගණන් / වයස"}[language]||"Native Numbers · Counting / Age");
+ document.getElementById("sinoQuickLabel").textContent=({en:"Sino-Korean · Money",es:"Sino-coreanos · Dinero",fr:"Sino-coréens · Argent",de:"Sino-koreanisch · Geld",zh:"汉字数词 · 金额",ja:"漢数詞 · お金",th:"เลขจีนเกาหลี · เงิน",ar:"الصينية الكورية · المال",pt:"Sino-coreanos · Dinheiro",ru:"Китайско-корейские · Деньги",vi:"Hán-Hàn · Tiền",id:"Sino-Korea · Uang",ne:"सिनो-कोरियाली · पैसा",si:"සිනෝ-කොරියානු · මුදල්"}[language]||"Sino-Korean · Money");
 document.querySelectorAll(".place-name[data-place]").forEach(el=>{el.textContent=getPlaceName(el.dataset.place);});
 document.querySelectorAll("img[data-place-alt]").forEach(el=>{el.alt=getPlaceName(el.dataset.placeAlt);});
  // 언어 선택 안내를 번역합니다.
@@ -787,6 +850,8 @@ document.querySelector(".send-button").textContent=text.send; // 전송 버튼�
 document.querySelectorAll(".tool-button")[0].textContent="🎙 "+text.speak; // 음성 입력 버튼을 번역합니다.
 document.querySelectorAll(".tool-button")[1].textContent="🔊 "+text.listen; // 문장 듣기 버튼을 번역합니다.
 document.getElementById("status").textContent=text.status; // 상태 안내를 번역합니다.
+applyPhotoFeatureLanguage();
+if(!document.getElementById("numberTool").hidden){openNumberTool(activeNumberType);}
 } // 언어 변경 함수를 종료합니다.
 
 function showScreen(screenId){ // 지정한 화면만 보이게 하는 함수입니다.
@@ -1143,35 +1208,28 @@ function enterSeoulMoments(){
   document.body.classList.add("app-entered");
   window.scrollTo(0,0);
 }
-function playSeoulIntro(fromUser=false){
+function playSeoulIntro(){
   const video=document.getElementById("introVideo");
-  const intro=document.getElementById("introScreen");
-  if(!video||!intro)return;
-  intro.classList.remove("intro-ended","autoplay-blocked");
-  try{video.pause();}catch(e){}
-  const startPlayback=()=>{
-    try{video.currentTime=0;}catch(e){}
-    const p=video.play();
-    if(p&&typeof p.then==="function"){
-      p.then(()=>intro.classList.remove("autoplay-blocked"))
-       .catch(()=>intro.classList.add("autoplay-blocked"));
+  if(!video)return;
+  video.muted=true;
+  video.playsInline=true;
+  const attempt=()=>{
+    const result=video.play();
+    if(result&&typeof result.catch==="function"){
+      result.catch(()=>{ /* 브라우저가 자동 재생을 차단하면 화면 터치로 재시도합니다. */ });
     }
   };
-  if(video.readyState>=1){startPlayback();}
-  else{
-    video.addEventListener("loadedmetadata",startPlayback,{once:true});
-    try{video.load();}catch(e){intro.classList.add("autoplay-blocked");}
-  }
+  if(video.readyState>=2)attempt();
+  else video.addEventListener("canplay",attempt,{once:true});
 }
 (function initSeoulIntro(){
   const video=document.getElementById("introVideo");
-  const intro=document.getElementById("introScreen");
-  if(!video||!intro)return;
-  video.addEventListener("ended",()=>intro.classList.add("intro-ended"));
-  video.addEventListener("error",()=>intro.classList.add("autoplay-blocked"));
-  const attempt=()=>playSeoulIntro(false);
-  if(video.readyState>=1)attempt();
-  else video.addEventListener("loadedmetadata",attempt,{once:true});
+  if(!video)return;
+  video.addEventListener("ended",enterSeoulMoments,{once:true});
+  video.addEventListener("error",()=>enterSeoulMoments(),{once:true});
+  // iOS 등에서 자동 재생이 제한되면 화면을 한 번 터치하는 즉시 재생을 재시도합니다.
+  document.getElementById("introScreen").addEventListener("pointerdown",playSeoulIntro);
+  playSeoulIntro();
 })();
 
 
@@ -1202,7 +1260,7 @@ function initializeGoogleSignIn(){if(googleIdentityInitialized||!window.google?.
 function signOutGoogleAccount(){googleCredentialToken=null;verifiedGoogleUser=null;if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect();document.getElementById("momentsNotice").classList.remove("show");document.getElementById("momentsWorkspace").hidden=true;updateGoogleAccountUI();}
 function openMyMoments(){
  const notice=document.getElementById("momentsNotice");
- if(!verifiedGoogleUser){notice.textContent="사진 스팟을 저장하려면 먼저 Google 계정으로 로그인해 주세요.";notice.classList.add("show");return;}
+ if(!verifiedGoogleUser){notice.textContent=({en:"Please sign in with Google to save your photo spots.",es:"Inicia sesión con Google para guardar tus lugares fotográficos.",zh:"请先使用 Google 账号登录以保存照片地点。",ja:"写真スポットを保存するには、Google アカウントでログインしてください。",fr:"Connectez-vous avec Google pour enregistrer vos lieux photo.",de:"Melde dich mit Google an, um Fotospots zu speichern.",ar:"يرجى تسجيل الدخول باستخدام Google لحفظ مواقع الصور.",pt:"Faça login com o Google para salvar seus locais de fotos.",ru:"Войдите через Google, чтобы сохранять фотоместа.",vi:"Đăng nhập Google để lưu địa điểm ảnh.",id:"Masuk dengan Google untuk menyimpan spot foto.",ne:"फोटो स्थान सुरक्षित गर्न Google मा लगइन गर्नुहोस्।",si:"ඡායාරූප ස්ථාන සුරැකීමට Google වෙත පුරන්න.",th:"โปรดเข้าสู่ระบบ Google เพื่อบันทึกจุดถ่ายภาพ"}[selectedLanguage]||"Please sign in with Google to save your photo spots.");notice.classList.add("show");return;}
  notice.classList.remove("show");const workspace=document.getElementById("momentsWorkspace");workspace.hidden=false;workspace.scrollIntoView({behavior:"smooth",block:"start"});loadMyMoments();
 }
 function closeMyMoments(){document.getElementById("momentsWorkspace").hidden=true;}
@@ -1234,12 +1292,12 @@ function openCommunitySpots(){
 }
 async function loadCommunitySpots(){
  const list=document.getElementById("communityList"),status=document.getElementById("communityStatus");
- status.textContent="공개 사진을 불러오는 중…";list.innerHTML="";
+ status.textContent=({en:"Loading public photos…",es:"Cargando fotos públicas…",zh:"正在加载公开照片…",ja:"公開写真を読み込み中…",fr:"Chargement des photos publiques…",de:"Öffentliche Fotos werden geladen…",ar:"جارٍ تحميل الصور العامة…",pt:"Carregando fotos públicas…",ru:"Загрузка общедоступных фото…",vi:"Đang tải ảnh công khai…",id:"Memuat foto publik…",ne:"सार्वजनिक फोटो लोड हुँदैछ…",si:"පොදු ඡායාරූප පූරණය වෙමින්…",th:"กำลังโหลดภาพสาธารณะ…"}[selectedLanguage]||"Loading public photos…");list.innerHTML="";
  try{
   const response=await fetch(COMMUNITY_API,{headers:{"Accept":"application/json"}});
   const data=await response.json();
   if(!response.ok||!data.success)throw new Error(data.message||"커뮤니티 사진을 불러오지 못했습니다.");
-  if(!data.items?.length){status.textContent="아직 공개된 사진 스팟이 없습니다. 첫 번째 장소를 공유해 보세요.";return;}
+  if(!data.items?.length){status.textContent=({en:"No public photo spots yet. Be the first to share one.",es:"Todavía no hay lugares públicos. ¡Comparte el primero!",zh:"还没有公开的照片地点。来分享第一个吧。",ja:"公開された写真スポットはまだありません。最初の場所を共有しましょう。",fr:"Aucun lieu photo public pour le moment. Soyez le premier à en partager un.",de:"Noch keine öffentlichen Fotospots. Teile den ersten!",ar:"لا توجد مواقع صور عامة بعد. كن أول من يشارك موقعًا.",pt:"Ainda não há locais públicos. Compartilhe o primeiro!",ru:"Пока нет общедоступных фотомест. Поделитесь первым!",vi:"Chưa có địa điểm ảnh công khai. Hãy chia sẻ địa điểm đầu tiên!",id:"Belum ada spot foto publik. Jadilah yang pertama membagikannya.",ne:"अहिलेसम्म सार्वजनिक फोटो स्थान छैन। पहिलो साझा गर्नुहोस्।",si:"තවම පොදු ඡායාරූප ස්ථාන නැත. පළමුව බෙදාගන්න.",th:"ยังไม่มีจุดถ่ายภาพสาธารณะ แชร์เป็นคนแรกได้เลย"}[selectedLanguage]||"No public photo spots yet. Be the first to share one.");return;}
   status.textContent=`공개 사진 ${data.items.length}개`;
   for(const item of data.items){
    const card=document.createElement("article");card.className="community-card";
