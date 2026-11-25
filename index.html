@@ -105,8 +105,7 @@ body.intro-active{background:#101827;overflow:hidden}
 .intro-brand .intro-sub{font-size:10px;letter-spacing:.42em;color:#f8e8c6;margin-top:18px;font-weight:700}
 .intro-seal{display:inline-grid;place-items:center;margin-top:18px;width:37px;height:37px;border:1px solid #d9ad55;border-radius:8px;background:linear-gradient(145deg,#8d201b,#4e100f);color:#f6d78c;font-family:serif;font-size:23px;box-shadow:0 4px 16px #0005}
 .intro-actions{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:auto;margin-bottom:7vh;width:100%}
-.intro-replay,.intro-play{display:none;min-width:min(78vw,310px);padding:13px 22px;border:1px solid rgba(245,213,151,.9);border-radius:999px;background:rgba(20,28,42,.72);color:#f8e8c6;font-weight:700;font-size:14px;letter-spacing:.03em}
-#introScreen.intro-ended .intro-replay{display:block}
+.intro-play{display:none;min-width:min(78vw,310px);padding:13px 22px;border:1px solid rgba(245,213,151,.9);border-radius:999px;background:rgba(20,28,42,.72);color:#f8e8c6;font-weight:700;font-size:14px;letter-spacing:.03em}
 #introScreen.autoplay-blocked .intro-play{display:block}
 .intro-start{margin-top:0;margin-bottom:0;min-width:min(78vw,310px);padding:16px 26px;border:1px solid rgba(245,213,151,.9);border-radius:999px;background:linear-gradient(135deg,rgba(255,246,222,.82),rgba(219,187,132,.32));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#39291b;font-weight:750;font-size:17px;letter-spacing:.04em;box-shadow:0 8px 28px #0005,inset 0 1px 0 #fff9}
 .intro-start:active{transform:scale(.98)}
@@ -189,6 +188,29 @@ body.app-entered .app{display:block}
 .pj-empty{padding:16px;text-align:center;color:#9a9185;font-size:12px;background:#fffaf3;border-radius:13px;margin-top:10px}
 @media(max-width:420px){#photoJourneyMap{height:56vh;min-height:330px}.pj-photo-marker{width:64px;height:76px}.pj-photo-marker img{width:54px;height:53px}}
 
+
+/* Quick number tools: available on every travel screen */
+.number-quickbar{position:sticky;top:0;z-index:30;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px;padding:9px 0;background:rgba(241,237,249,.94);backdrop-filter:blur(12px)}
+.number-quickbar button{min-height:44px;border:1px solid #fff;border-radius:13px;background:#fff;color:#66728d;padding:9px 10px;font-size:11px;font-weight:750;box-shadow:0 5px 14px #64739618}
+.number-tool{position:relative;z-index:25;margin:0 0 18px;padding:17px;border:1px solid #fff;border-radius:20px;background:#fffdf8;box-shadow:0 12px 30px #64739624;color:#625d56}
+.number-tool[hidden]{display:none}
+.number-tool-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.number-kicker{margin:0;color:#aa9474;font-size:9px;letter-spacing:.16em;font-weight:800}
+.number-tool-head h2{margin:4px 0;color:#51483f;font:500 24px Georgia,serif}
+.number-tool-head p:last-child{margin:0;color:#999083;font-size:11px}
+.number-close{width:32px;height:32px;border:1px solid #e8e0d4;border-radius:50%;background:#fff;color:#756b60;font-size:20px}
+.number-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.number-item{display:grid;grid-template-columns:38px 1fr 38px;align-items:center;gap:8px;padding:10px;border:1px solid #eee9df;border-radius:13px;background:#fff}
+.number-digit{font-size:17px;font-weight:800;color:#9b8060;text-align:center}
+.number-korean{font-size:17px;font-weight:800;color:#51483f}
+.number-pronunciation{margin-top:3px;color:#8e8a86;font-size:10px;line-height:1.35;overflow-wrap:anywhere}
+.number-meaning{margin-top:3px;color:#a59b8e;font-size:10px}
+.number-audio{width:34px;height:34px;border:0;border-radius:50%;background:#f0ece4;color:#77664f;font-size:16px}
+.number-section-title{grid-column:1/-1;margin:12px 2px 2px;color:#9a8669;font-size:11px;font-weight:800;letter-spacing:.04em}
+.number-audio-note{margin:12px 2px 0;color:#a49b8e;font-size:10px;line-height:1.5}
+.memory-tools-footer{margin-top:28px;padding-top:18px;border-top:1px solid #ffffffb5}
+@media(max-width:380px){.number-quickbar button{font-size:10px;padding:8px 6px}.number-list{gap:6px}.number-item{grid-template-columns:30px 1fr 32px;padding:8px 6px}.number-korean{font-size:15px}}
+
 </style> <!-- CSS 디자인을 종료합니다. -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head> <!-- 문서 설정을 종료합니다. -->
@@ -205,9 +227,8 @@ body.app-entered .app{display:block}
       <div class="intro-sub">KOREA TRAVEL ASSISTANT</div>
     </div>
     <div class="intro-actions">
-      <button class="intro-play" id="introPlayButton" type="button" onclick="playSeoulIntro(true)">▶ 영상 재생</button>
-      <button class="intro-replay" type="button" onclick="playSeoulIntro(true)">↻ 다시 보기</button>
-      <button class="intro-start" type="button" onclick="enterSeoulMoments()">여행 시작하기&nbsp; ›</button>
+      <button class="intro-play" id="introPlayButton" type="button" onclick="playSeoulIntro(true)">▶ Play video</button>
+      <button class="intro-start" type="button" onclick="enterSeoulMoments()">Start exploring&nbsp; ›</button>
     </div>
   </div>
 </div>
@@ -217,6 +238,15 @@ body.app-entered .app{display:block}
 <div class="logo">Seoul Moments</div> <!-- 앱 이름입니다. -->
 <div class="header-icon" aria-hidden="true">情</div> <!-- 브랜드 인장입니다. -->
 </header> <!-- 앱 상단 영역을 종료합니다. -->
+<nav class="number-quickbar" aria-label="Quick number tools">
+ <button type="button" onclick="openNumberTool('native')">🔢 <span id="nativeQuickLabel">Native Numbers · Counting / Age</span></button>
+ <button type="button" onclick="openNumberTool('sino')">💰 <span id="sinoQuickLabel">Sino-Korean Numbers · Money</span></button>
+</nav>
+<section id="numberTool" class="number-tool" hidden aria-live="polite">
+ <div class="number-tool-head"><div><p class="number-kicker">KOREAN NUMBER GUIDE</p><h2 id="numberToolTitle">Native Numbers</h2><p id="numberToolSubtitle">Counting and age</p></div><button type="button" class="number-close" onclick="closeNumberTool()" aria-label="Close">×</button></div>
+ <div id="numberToolContent"></div>
+ <p class="number-audio-note" id="numberAudioNote">Audio buttons will play the recorded voice files.</p>
+</section>
 <section class="account-panel" aria-live="polite">
   <div class="account-copy">
     <div class="account-title" id="accountTitle">Google 계정으로 로그인</div>
@@ -249,7 +279,46 @@ body.app-entered .app{display:block}
 <option value="th">ไทย</option> <!-- 태국어 사용자를 위한 발음 표기입니다. -->
 </select> <!-- 언어 선택 메뉴를 종료합니다. -->
 </div> <!-- 언어 선택 영역을 종료합니다. -->
-<button class="moments-entry" id="momentsEntry" type="button" onclick="openMyMoments()">
+<button class="interpreter-launch" id="interpreterLaunch" type="button" onclick="toggleInterpreter(true)">
+  <span class="launch-icon">🎙️</span>
+  <span><strong id="interpreterLaunchTitle">직원 말 번역하기</strong><small id="interpreterLaunchSub">버튼을 눌러 한국어를 듣고 내 언어로 번역</small></span>
+</button>
+<section id="interpreterPanel" aria-live="polite">
+  <div class="interpreter-top">
+    <div class="interpreter-title" id="interpreterTitle">한국어 음성 통역</div>
+    <button class="interpreter-close" type="button" onclick="toggleInterpreter(false)" aria-label="Close">×</button>
+  </div>
+  <div class="interpreter-modes" role="group" aria-label="Translation direction">
+    <button type="button" class="interpreter-mode active" id="modeStaffToUser" onclick="setInterpreterMode('staffToUser')">직원 말 → 내 언어</button>
+    <button type="button" class="interpreter-mode" id="modeUserToStaff" onclick="setInterpreterMode('userToStaff')">내 말 → 한국어</button>
+  </div>
+  <p class="interpreter-hint" id="interpreterHint">직원이 말할 때 녹음 버튼을 누르세요. 말을 마치면 버튼을 다시 눌러 번역합니다.</p>
+  <button class="record-button" id="recordButton" type="button" onclick="toggleRecording()">● <span id="recordButtonText">눌러서 녹음 시작</span></button>
+  <div class="interpreter-status" id="interpreterStatus">마이크 권한이 필요합니다.</div>
+  <div class="interpreter-result" id="interpreterResult">
+    <div class="interpreter-result-card"><div class="interpreter-result-label" id="heardLabel">직원이 말한 한국어</div><div class="interpreter-result-text" id="heardText"></div></div>
+    <div class="interpreter-result-card"><div class="interpreter-result-label" id="translatedLabel">번역</div><div class="interpreter-result-text" id="translatedText"></div></div>
+    <div class="interpreter-actions">
+      <button type="button" id="speakTranslationButton" onclick="speakInterpreterTranslation()">🔊 <span id="speakTranslationText">번역 듣기</span></button>
+      <button type="button" id="copyTranslationButton" onclick="copyInterpreterTranslation()">복사</button>
+    </div>
+  </div>
+</section>
+<div class="place-grid"> <!-- 장소 선택 카드들을 배치합니다. -->
+<button class="place-card" onclick="selectPlace('cafe')"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700" alt="Cafe" data-place-alt="cafe"><span class="place-overlay"></span><span class="place-name" data-place="cafe">Cafe</span></button> <!-- 카페를 선택합니다. -->
+<button class="place-card" onclick="selectPlace('restaurant')"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700" alt="Restaurant" data-place-alt="restaurant"><span class="place-overlay"></span><span class="place-name" data-place="restaurant">Restaurant</span></button> <!-- 식당을 선택합니다. -->
+<button class="place-card" onclick="selectPlace('transport')"><img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700" alt="Transport" data-place-alt="transport"><span class="place-overlay"></span><span class="place-name" data-place="transport">Transport</span></button> <!-- 교통을 선택합니다. -->
+<button class="place-card" onclick="selectPlace('shopping')"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700" alt="Shopping" data-place-alt="shopping"><span class="place-overlay"></span><span class="place-name" data-place="shopping">Shopping</span></button> <!-- 쇼핑을 선택합니다. -->
+<button class="place-card" onclick="selectPlace('stay')"><img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700" alt="Accommodation" data-place-alt="stay"><span class="place-overlay"></span><span class="place-name" data-place="stay">Stay</span></button> <!-- 숙소를 선택합니다. -->
+</div> <!-- 장소 카드 영역을 종료합니다. -->
+<h2 class="section-title" id="learnTitle">Learn Korean</h2> <!-- 학습 카테고리 제목입니다. -->
+<div class="feature-grid"> <!-- 학습 카테고리 카드를 배치합니다. -->
+<button class="feature-card" onclick="openLibrary('expressions')"><span class="feature-icon">🗣️</span><span class="feature-name" id="featureExpressions">Essential Expressions</span><span class="feature-desc" id="featureExpressionsDesc">Useful phrases for everyday situations</span></button> <!-- 공통 표현으로 이동합니다. -->
+<button class="feature-card" onclick="openLibrary('grammar')"><span class="feature-icon">📖</span><span class="feature-name" id="featureGrammar">Useful Grammar</span><span class="feature-desc" id="featureGrammarDesc">Practical grammar with travel examples</span></button> <!-- 실전 문법으로 이동합니다. -->
+
+
+</div> <!-- 학습 카테고리 영역을 종료합니다. -->
+<div class="memory-tools-footer"><button class="moments-entry" id="momentsEntry" type="button" onclick="openMyMoments()">
   <span class="moments-entry-icon">📍</span>
   <span><strong>My Moments · Photo Spots</strong><small>여행 중 찍은 사진과 장소를 개인 기록으로 남기고 커뮤니티와 공유하기</small></span>
 </button>
@@ -300,54 +369,17 @@ body.app-entered .app{display:block}
 </section>
 <button class="photo-journey-entry" id="photoJourneyEntry" type="button" onclick="openPhotoJourney()">
   <span class="moments-entry-icon">🖼️</span>
-  <span><strong>06 · Photo Journey</strong><small>지도 위에 작은 사진 액자를 놓고, 여행의 순간을 다시 만나보세요.</small></span>
+  <span><strong>Photo Journey</strong><small>지도 위에 작은 사진 액자를 놓고, 여행의 순간을 다시 만나보세요.</small></span>
 </button>
 <section id="photoJourneyWorkspace" hidden>
-  <div class="pj-head"><div><div class="pj-kicker">SEOUL MOMENTS · 06</div><h2>Photo Journey</h2><p>Your memories, on the map.<br>여행의 순간을 지도 위에 남겨보세요.</p></div><button class="pj-close" type="button" onclick="closePhotoJourney()" aria-label="닫기">×</button></div>
+  <div class="pj-head"><div><div class="pj-kicker">SEOUL MOMENTS</div><h2>Photo Journey</h2><p>Your memories, on the map.<br>여행의 순간을 지도 위에 남겨보세요.</p></div><button class="pj-close" type="button" onclick="closePhotoJourney()" aria-label="닫기">×</button></div>
   <div class="pj-switch"><button id="pjMyButton" class="active" type="button" onclick="setPhotoJourneyMode('mine')">My Memories</button><button id="pjCommunityButton" type="button" onclick="setPhotoJourneyMode('community')">Community</button></div>
   <div id="photoJourneyMap" role="application" aria-label="여행 사진 지도"></div>
   <div class="pj-map-note"><span id="photoJourneyStatus">지도를 불러오는 중…</span><span>사진 액자를 눌러보세요</span></div>
   <div id="photoJourneyEmpty" class="pj-empty" hidden></div>
 </section>
-<button class="interpreter-launch" id="interpreterLaunch" type="button" onclick="toggleInterpreter(true)">
-  <span class="launch-icon">🎙️</span>
-  <span><strong id="interpreterLaunchTitle">직원 말 번역하기</strong><small id="interpreterLaunchSub">버튼을 눌러 한국어를 듣고 내 언어로 번역</small></span>
-</button>
-<section id="interpreterPanel" aria-live="polite">
-  <div class="interpreter-top">
-    <div class="interpreter-title" id="interpreterTitle">한국어 음성 통역</div>
-    <button class="interpreter-close" type="button" onclick="toggleInterpreter(false)" aria-label="Close">×</button>
-  </div>
-  <div class="interpreter-modes" role="group" aria-label="Translation direction">
-    <button type="button" class="interpreter-mode active" id="modeStaffToUser" onclick="setInterpreterMode('staffToUser')">직원 말 → 내 언어</button>
-    <button type="button" class="interpreter-mode" id="modeUserToStaff" onclick="setInterpreterMode('userToStaff')">내 말 → 한국어</button>
-  </div>
-  <p class="interpreter-hint" id="interpreterHint">직원이 말할 때 녹음 버튼을 누르세요. 말을 마치면 버튼을 다시 눌러 번역합니다.</p>
-  <button class="record-button" id="recordButton" type="button" onclick="toggleRecording()">● <span id="recordButtonText">눌러서 녹음 시작</span></button>
-  <div class="interpreter-status" id="interpreterStatus">마이크 권한이 필요합니다.</div>
-  <div class="interpreter-result" id="interpreterResult">
-    <div class="interpreter-result-card"><div class="interpreter-result-label" id="heardLabel">직원이 말한 한국어</div><div class="interpreter-result-text" id="heardText"></div></div>
-    <div class="interpreter-result-card"><div class="interpreter-result-label" id="translatedLabel">번역</div><div class="interpreter-result-text" id="translatedText"></div></div>
-    <div class="interpreter-actions">
-      <button type="button" id="speakTranslationButton" onclick="speakInterpreterTranslation()">🔊 <span id="speakTranslationText">번역 듣기</span></button>
-      <button type="button" id="copyTranslationButton" onclick="copyInterpreterTranslation()">복사</button>
-    </div>
-  </div>
-</section>
-<div class="place-grid"> <!-- 장소 선택 카드들을 배치합니다. -->
-<button class="place-card" onclick="selectPlace('cafe')"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=700" alt="Cafe" data-place-alt="cafe"><span class="place-overlay"></span><span class="place-name" data-place="cafe">Cafe</span></button> <!-- 카페를 선택합니다. -->
-<button class="place-card" onclick="selectPlace('restaurant')"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=700" alt="Restaurant" data-place-alt="restaurant"><span class="place-overlay"></span><span class="place-name" data-place="restaurant">Restaurant</span></button> <!-- 식당을 선택합니다. -->
-<button class="place-card" onclick="selectPlace('transport')"><img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=700" alt="Transport" data-place-alt="transport"><span class="place-overlay"></span><span class="place-name" data-place="transport">Transport</span></button> <!-- 교통을 선택합니다. -->
-<button class="place-card" onclick="selectPlace('shopping')"><img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=700" alt="Shopping" data-place-alt="shopping"><span class="place-overlay"></span><span class="place-name" data-place="shopping">Shopping</span></button> <!-- 쇼핑을 선택합니다. -->
-<button class="place-card" onclick="selectPlace('stay')"><img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=700" alt="Accommodation" data-place-alt="stay"><span class="place-overlay"></span><span class="place-name" data-place="stay">Stay</span></button> <!-- 숙소를 선택합니다. -->
-</div> <!-- 장소 카드 영역을 종료합니다. -->
-<h2 class="section-title" id="learnTitle">Learn Korean</h2> <!-- 학습 카테고리 제목입니다. -->
-<div class="feature-grid"> <!-- 학습 카테고리 카드를 배치합니다. -->
-<button class="feature-card" onclick="openLibrary('expressions')"><span class="feature-icon">🗣️</span><span class="feature-name" id="featureExpressions">Essential Expressions</span><span class="feature-desc" id="featureExpressionsDesc">Useful phrases for everyday situations</span></button> <!-- 공통 표현으로 이동합니다. -->
-<button class="feature-card" onclick="openLibrary('grammar')"><span class="feature-icon">📖</span><span class="feature-name" id="featureGrammar">Useful Grammar</span><span class="feature-desc" id="featureGrammarDesc">Practical grammar with travel examples</span></button> <!-- 실전 문법으로 이동합니다. -->
-<button class="feature-card" onclick="openLibrary('dietary')"><span class="feature-icon">🥗</span><span class="feature-name" id="featureDietary">Dietary Needs</span><span class="feature-desc" id="featureDietaryDesc">Vegetarian, vegan, halal and gluten-free</span></button> <!-- 식이 제한 표현으로 이동합니다. -->
-<button class="feature-card" onclick="openLibrary('all')"><span class="feature-icon">✨</span><span class="feature-name" id="featureAll">All Learning Materials</span><span class="feature-desc" id="featureAllDesc">Browse all expressions and grammar</span></button> <!-- 모든 학습 자료로 이동합니다. -->
-</div> <!-- 학습 카테고리 영역을 종료합니다. -->
+</div>
+
 </section> <!-- 첫 화면을 종료합니다. -->
 
 <section id="scenarios" class="hidden"> <!-- 장소별 상황 선택 화면입니다. -->
@@ -690,6 +722,46 @@ const localizedPlaces = {"ne":{"cafe":"क्याफे","restaurant":"रे�
 
 // 처음 선택된 언어는 영어입니다.
 
+const numberData={
+ native:[
+  {n:"1",ko:"하나",form:"한",en:"one",ro:"ha-na"},{n:"2",ko:"둘",form:"두",en:"two",ro:"dul"},{n:"3",ko:"셋",form:"세",en:"three",ro:"set"},{n:"4",ko:"넷",form:"네",en:"four",ro:"net"},{n:"5",ko:"다섯",form:"다섯",en:"five",ro:"da-seot"},{n:"6",ko:"여섯",form:"여섯",en:"six",ro:"yeo-seot"},{n:"7",ko:"일곱",form:"일곱",en:"seven",ro:"il-gop"},{n:"8",ko:"여덟",form:"여덟",en:"eight",ro:"yeo-deol"},{n:"9",ko:"아홉",form:"아홉",en:"nine",ro:"a-hop"},{n:"10",ko:"열",form:"열",en:"ten",ro:"yeol"}
+ ],
+ sino:[
+  {n:"1",ko:"일",en:"one",ro:"il"},{n:"2",ko:"이",en:"two",ro:"i"},{n:"3",ko:"삼",en:"three",ro:"sam"},{n:"4",ko:"사",en:"four",ro:"sa"},{n:"5",ko:"오",en:"five",ro:"o"},{n:"6",ko:"육",en:"six",ro:"yuk"},{n:"7",ko:"칠",en:"seven",ro:"chil"},{n:"8",ko:"팔",en:"eight",ro:"pal"},{n:"9",ko:"구",en:"nine",ro:"gu"},{n:"10",ko:"십",en:"ten",ro:"sip"},{n:"100",ko:"백",en:"one hundred",ro:"baek"},{n:"1,000",ko:"천",en:"one thousand",ro:"cheon"},{n:"10,000",ko:"만",en:"ten thousand",ro:"man"}
+ ]
+};
+const numberPronunciations={
+ en:{"ha-na":"hah-nah","dul":"dool","set":"set","net":"net","da-seot":"dah-suht","yeo-seot":"yuh-suht","il-gop":"eel-gop","yeo-deol":"yuh-duhl","a-hop":"ah-hop","yeol":"yuhl","il":"eel","i":"ee","sam":"sahm","sa":"sah","o":"oh","yuk":"yook","chil":"chill","pal":"pahl","gu":"goo","sip":"sheep","baek":"behk","cheon":"chuhn","man":"mahn"},
+ es:{"ha-na":"ja-na","dul":"dul","set":"set","net":"net","da-seot":"da-sot","yeo-seot":"yo-sot","il-gop":"il-gop","yeo-deol":"yo-dol","a-hop":"a-jop","yeol":"yol","il":"il","i":"i","sam":"sam","sa":"sa","o":"o","yuk":"yuk","chil":"chil","pal":"pal","gu":"gu","sip":"ship","baek":"bek","cheon":"chon","man":"man"},
+ fr:{"ha-na":"ha-na","dul":"doul","set":"sèt","net":"nèt","da-seot":"da-sot","yeo-seot":"yeo-sot","il-gop":"il-gop","yeo-deol":"yeo-deol","a-hop":"a-hop","yeol":"yeol","il":"il","i":"i","sam":"sam","sa":"sa","o":"o","yuk":"youk","chil":"tchil","pal":"pal","gu":"gou","sip":"chip","baek":"bèk","cheon":"tcheon","man":"man"},
+ de:{"ha-na":"ha-na","dul":"dul","set":"set","net":"net","da-seot":"da-sot","yeo-seot":"yo-sot","il-gop":"il-gop","yeo-deol":"yo-dol","a-hop":"a-hop","yeol":"yol","il":"il","i":"i","sam":"sam","sa":"sa","o":"o","yuk":"yuk","chil":"tschil","pal":"pal","gu":"gu","sip":"schip","baek":"bek","cheon":"tschon","man":"man"},
+ zh:{"ha-na":"哈娜","dul":"杜尔","set":"塞特","net":"内特","da-seot":"达瑟特","yeo-seot":"约瑟特","il-gop":"伊尔戈普","yeo-deol":"约多尔","a-hop":"阿霍普","yeol":"约尔","il":"伊尔","i":"伊","sam":"萨姆","sa":"萨","o":"奥","yuk":"尤克","chil":"奇尔","pal":"帕尔","gu":"古","sip":"西普","baek":"贝克","cheon":"琼","man":"曼"},
+ ja:{"ha-na":"ハナ","dul":"トゥル","set":"セッ","net":"ネッ","da-seot":"タソッ","yeo-seot":"ヨソッ","il-gop":"イルゴプ","yeo-deol":"ヨドル","a-hop":"アホプ","yeol":"ヨル","il":"イル","i":"イ","sam":"サム","sa":"サ","o":"オ","yuk":"ユク","chil":"チル","pal":"パル","gu":"ク","sip":"シプ","baek":"ペク","cheon":"チョン","man":"マン"},
+ th:{"ha-na":"ฮานา","dul":"ดุล","set":"เซ็ต","net":"เน็ต","da-seot":"ทาซ็อต","yeo-seot":"ยอซ็อต","il-gop":"อิลกบ","yeo-deol":"ยอดอล","a-hop":"อาฮบ","yeol":"ยอล","il":"อิล","i":"อี","sam":"ซัม","sa":"ซา","o":"โอ","yuk":"ยุก","chil":"ชิล","pal":"พัล","gu":"กู","sip":"ชิบ","baek":"แพ็ก","cheon":"ชอน","man":"มัน"}
+};
+function localizedNumberSound(ro){const map=numberPronunciations[selectedLanguage];return map&&map[ro]?map[ro]:ro.replaceAll("-"," ");}
+function openNumberTool(type){
+ const panel=document.getElementById("numberTool");const content=document.getElementById("numberToolContent");
+ const isNative=type==="native";document.getElementById("numberToolTitle").textContent=isNative?"Native Numbers":"Sino-Korean Numbers";
+ document.getElementById("numberToolSubtitle").textContent=isNative?"Counting and age · 고유어 수":"Money and prices · 한자어 수";
+ content.innerHTML="";
+ const items=numberData[type];
+ items.forEach((item,i)=>{
+  if(type==="sino"&&i===10){const h=document.createElement("div");h.className="number-section-title";h.textContent="LARGE UNITS · 큰 단위";content.appendChild(h);}
+  const card=document.createElement("div");card.className="number-item";
+  const audioKey=(isNative?"native":"sino")+"-"+item.n.replace(/[^0-9]/g,"");
+  const extra=isNative&&item.form!==item.ko?`<div class="number-meaning">Short form: ${item.form}</div>`:(type==="sino"&&["1,000","10,000"].includes(item.n)?`<div class="number-meaning">${item.n} won unit</div>`:"");
+  card.innerHTML=`<div class="number-digit">${item.n}</div><div><div class="number-korean">${item.ko}</div><div class="number-pronunciation">${localizedNumberSound(item.ro)}</div>${extra}</div><button class="number-audio" type="button" aria-label="Play Korean pronunciation" onclick="playNumberAudio('${audioKey}','${item.ko}')">🔊</button>`;
+  content.appendChild(card);
+ });
+ document.getElementById("numberAudioNote").textContent="🔊 Play the Korean pronunciation. Your recorded voice files can be added in audio/numbers/.";
+ panel.hidden=false;panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function closeNumberTool(){document.getElementById("numberTool").hidden=true;}
+function playNumberAudio(key,korean){
+ const audio=new Audio(`audio/numbers/${key}.mp3`);audio.play().catch(()=>{if("speechSynthesis" in window){const u=new SpeechSynthesisUtterance(korean);u.lang="ko-KR";u.rate=.82;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}else{alert("Audio recording is not available yet.");}});
+}
+
 function setLanguage(language){ // 사용자가 언어를 바꾸면 실행합니다.
 selectedLanguage=language; // 선택한 언어 코드를 저장합니다.
  try{localStorage.setItem("travelKoreanLanguage",language);}catch(e){}
@@ -697,6 +769,8 @@ selectedLanguage=language; // 선택한 언어 코드를 저장합니다.
 const text=interfaceText[language]||interfaceText.en; // 선택한 언어의 번역을 가져옵니다.
 document.documentElement.lang=language; // HTML 문서의 언어 설정을 바꿉니다.
 document.getElementById("languageLabel").textContent=text.language;
+ document.getElementById("nativeQuickLabel").textContent=({en:"Native · Counting / Age",es:"Nativos · Contar / Edad",fr:"Nombres natifs · Compter / Âge",de:"Einheimische Zahlen · Zählen / Alter",zh:"固有数词 · 数数 / 年龄",ja:"固有数詞 · 数え方 / 年齢",th:"เลขเกาหลีแท้ · นับ / อายุ"}[language]||"Native Numbers · Counting / Age");
+ document.getElementById("sinoQuickLabel").textContent=({en:"Sino-Korean · Money",es:"Sino-coreanos · Dinero",fr:"Sino-coréens · Argent",de:"Sino-koreanisch · Geld",zh:"汉字数词 · 金额",ja:"漢数詞 · お金",th:"เลขจีนเกาหลี · เงิน"}[language]||"Sino-Korean · Money");
 document.querySelectorAll(".place-name[data-place]").forEach(el=>{el.textContent=getPlaceName(el.dataset.place);});
 document.querySelectorAll("img[data-place-alt]").forEach(el=>{el.alt=getPlaceName(el.dataset.placeAlt);});
  // 언어 선택 안내를 번역합니다.
@@ -707,10 +781,6 @@ document.getElementById("featureExpressions").textContent=text.expressions; // �
 document.getElementById("featureExpressionsDesc").textContent=text.expressionsDesc; // 공통 표현 설명을 번역합니다.
 document.getElementById("featureGrammar").textContent=text.grammar; // 문법 제목을 번역합니다.
 document.getElementById("featureGrammarDesc").textContent=text.grammarDesc; // 문법 설명을 번역합니다.
-document.getElementById("featureDietary").textContent=text.dietary; // 식이 제한 제목을 번역합니다.
-document.getElementById("featureDietaryDesc").textContent=text.dietaryDesc; // 식이 제한 설명을 번역합니다.
-document.getElementById("featureAll").textContent=text.all; // 전체 자료 제목을 번역합니다.
-document.getElementById("featureAllDesc").textContent=text.allDesc; // 전체 자료 설명을 번역합니다.
 document.getElementById("scenarioSubheading").textContent=text.situation; // 상황 선택 안내를 번역합니다.
 document.getElementById("userInput").placeholder=text.placeholder; // 입력창 안내를 번역합니다.
 document.querySelector(".send-button").textContent=text.send; // 전송 버튼을 번역합니다.
