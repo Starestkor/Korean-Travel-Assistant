@@ -104,13 +104,17 @@ body.intro-active{background:#101827;overflow:hidden}
 .intro-brand h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(42px,10vw,76px);line-height:.98;letter-spacing:-1.8px;margin:0;color:#f4d58b}
 .intro-brand .intro-sub{font-size:10px;letter-spacing:.42em;color:#f8e8c6;margin-top:18px;font-weight:700}
 .intro-seal{display:inline-grid;place-items:center;margin-top:18px;width:37px;height:37px;border:1px solid #d9ad55;border-radius:8px;background:linear-gradient(145deg,#8d201b,#4e100f);color:#f6d78c;font-family:serif;font-size:23px;box-shadow:0 4px 16px #0005}
-.intro-start{margin-top:auto;margin-bottom:7vh;min-width:min(78vw,310px);padding:16px 26px;border:1px solid rgba(245,213,151,.9);border-radius:999px;background:linear-gradient(135deg,rgba(255,246,222,.82),rgba(219,187,132,.32));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#39291b;font-weight:750;font-size:17px;letter-spacing:.04em;box-shadow:0 8px 28px #0005,inset 0 1px 0 #fff9}
+.intro-actions{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:auto;margin-bottom:7vh;width:100%}
+.intro-replay,.intro-play{display:none;min-width:min(78vw,310px);padding:13px 22px;border:1px solid rgba(245,213,151,.9);border-radius:999px;background:rgba(20,28,42,.72);color:#f8e8c6;font-weight:700;font-size:14px;letter-spacing:.03em}
+#introScreen.intro-ended .intro-replay{display:block}
+#introScreen.autoplay-blocked .intro-play{display:block}
+.intro-start{margin-top:0;margin-bottom:0;min-width:min(78vw,310px);padding:16px 26px;border:1px solid rgba(245,213,151,.9);border-radius:999px;background:linear-gradient(135deg,rgba(255,246,222,.82),rgba(219,187,132,.32));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#39291b;font-weight:750;font-size:17px;letter-spacing:.04em;box-shadow:0 8px 28px #0005,inset 0 1px 0 #fff9}
 .intro-start:active{transform:scale(.98)}
 #introScreen.intro-ended video{filter:brightness(.92)}
 .app{display:none}
 body.app-entered{overflow:auto;background:linear-gradient(135deg,#f1edf9,#eaf2f8 48%,#f9edf1)}
 body.app-entered .app{display:block}
-@media(min-aspect-ratio: 1/1){#introScreen video{object-position:center}.intro-brand{padding-top:4vh}.intro-start{margin-bottom:5vh}}
+@media(min-aspect-ratio: 1/1){#introScreen video{object-position:center}.intro-brand{padding-top:4vh}.intro-actions{margin-bottom:5vh}}
 
 
 /* Google account and Photo Spots entry */
@@ -191,7 +195,7 @@ body.app-entered .app{display:block}
 
 <body class="intro-active">
 <div id="introScreen" aria-label="Seoul Moments intro">
-  <video id="introVideo" autoplay muted playsinline preload="auto" poster="seoul-moments-intro-poster.jpg">
+  <video id="introVideo" muted playsinline webkit-playsinline preload="metadata" poster="seoul-moments-intro-poster.jpg">
     <source src="seoul-moments-intro.mp4" type="video/mp4">
   </video>
   <div class="intro-content">
@@ -200,7 +204,11 @@ body.app-entered .app{display:block}
       <div class="intro-seal" aria-label="정">情</div>
       <div class="intro-sub">KOREA TRAVEL ASSISTANT</div>
     </div>
-    <button class="intro-start" type="button" onclick="enterSeoulMoments()">여행 시작하기&nbsp; ›</button>
+    <div class="intro-actions">
+      <button class="intro-play" id="introPlayButton" type="button" onclick="playSeoulIntro(true)">▶ 영상 재생</button>
+      <button class="intro-replay" type="button" onclick="playSeoulIntro(true)">↻ 다시 보기</button>
+      <button class="intro-start" type="button" onclick="enterSeoulMoments()">여행 시작하기&nbsp; ›</button>
+    </div>
   </div>
 </div>
  <!-- 화면 내용을 시작합니다. -->
@@ -1065,15 +1073,35 @@ function enterSeoulMoments(){
   document.body.classList.add("app-entered");
   window.scrollTo(0,0);
 }
+function playSeoulIntro(fromUser=false){
+  const video=document.getElementById("introVideo");
+  const intro=document.getElementById("introScreen");
+  if(!video||!intro)return;
+  intro.classList.remove("intro-ended","autoplay-blocked");
+  try{video.pause();}catch(e){}
+  const startPlayback=()=>{
+    try{video.currentTime=0;}catch(e){}
+    const p=video.play();
+    if(p&&typeof p.then==="function"){
+      p.then(()=>intro.classList.remove("autoplay-blocked"))
+       .catch(()=>intro.classList.add("autoplay-blocked"));
+    }
+  };
+  if(video.readyState>=1){startPlayback();}
+  else{
+    video.addEventListener("loadedmetadata",startPlayback,{once:true});
+    try{video.load();}catch(e){intro.classList.add("autoplay-blocked");}
+  }
+}
 (function initSeoulIntro(){
   const video=document.getElementById("introVideo");
   const intro=document.getElementById("introScreen");
   if(!video||!intro)return;
   video.addEventListener("ended",()=>intro.classList.add("intro-ended"));
-  const playPromise=video.play();
-  if(playPromise&&typeof playPromise.catch==="function"){
-    playPromise.catch(()=>intro.classList.add("intro-ended"));
-  }
+  video.addEventListener("error",()=>intro.classList.add("autoplay-blocked"));
+  const attempt=()=>playSeoulIntro(false);
+  if(video.readyState>=1)attempt();
+  else video.addEventListener("loadedmetadata",attempt,{once:true});
 })();
 
 
